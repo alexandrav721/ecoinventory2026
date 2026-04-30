@@ -294,16 +294,12 @@ const InventoryStats = () => {
 
   if (loading) {
     return (
-      <div className="grid gap-3 md:grid-cols-3 lg:grid-cols-5">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 border-t border-l border-border/60">
         {[...Array(9)].map((_, i) => (
-          <Card key={i} className="animate-pulse">
-            <CardHeader className="pb-2">
-              <div className="h-3 bg-muted rounded w-20" />
-            </CardHeader>
-            <CardContent className="pb-3">
-              <div className="h-6 bg-muted rounded w-12" />
-            </CardContent>
-          </Card>
+          <div key={i} className="border-r border-b border-border/60 p-5 animate-pulse">
+            <div className="h-3 bg-muted rounded w-20 mb-3" />
+            <div className="h-8 bg-muted rounded w-16" />
+          </div>
         ))}
       </div>
     );
@@ -311,29 +307,24 @@ const InventoryStats = () => {
 
   return (
     <TooltipProvider>
-      <div className="grid gap-3 md:grid-cols-3 lg:grid-cols-5">
-        {statCards.map((stat) => (
-          <Card 
-            key={stat.title}
-            data-metric={(stat as any).dataMetric}
-            className={`shadow-sm hover:shadow-md transition-all ${
-              stat.highlight ? 'border-primary/30 bg-primary/5' : ''
-            } ${
-              (stat as any).negative ? 'border-destructive/30 bg-destructive/5' : ''
-            }`}
-          >
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 pt-4 px-4">
-              <div className="flex items-center gap-2">
-                <stat.icon className={`h-4 w-4 ${
-                  stat.highlight ? 'text-primary' : (stat as any).negative ? 'text-destructive' : 'text-muted-foreground'
-                }`} />
-                <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                  {stat.title}
-                </CardTitle>
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 border-t border-l border-border/60">
+        {statCards.map((stat, idx) => {
+          const isNegative = (stat as any).negative;
+          return (
+            <div
+              key={stat.title}
+              data-metric={(stat as any).dataMetric}
+              className="group relative border-r border-b border-border/60 p-5 transition-colors hover:bg-muted/30"
+            >
+              {/* Section number, magazine-style */}
+              <div className="flex items-baseline justify-between mb-3">
+                <span className="text-[10px] font-mono text-muted-foreground/60 tracking-wider">
+                  § {String(idx + 1).padStart(2, '0')}
+                </span>
                 {(stat as any).tooltip && (
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <Info className="h-3 w-3 text-muted-foreground cursor-help" />
+                      <Info className="h-3 w-3 text-muted-foreground/50 cursor-help hover:text-foreground" />
                     </TooltipTrigger>
                     <TooltipContent className="max-w-xs">
                       <p className="text-sm">{(stat as any).tooltip}</p>
@@ -341,15 +332,29 @@ const InventoryStats = () => {
                   </Tooltip>
                 )}
               </div>
-            </CardHeader>
-            <CardContent className="px-4 pb-4">
-              <div className={`text-xl font-bold mb-0.5 ${(stat as any).negative ? 'text-destructive' : ''}`}>
-                {(stat as any).negative && '-'}{stat.value}
+
+              {/* Label — lowercase italic, editorial */}
+              <p className="text-xs italic text-muted-foreground mb-2 lowercase">
+                {stat.title}
+              </p>
+
+              {/* The number — oversized Fraunces serif */}
+              <div
+                className={`font-display font-light leading-none tracking-tight mb-2 ${
+                  isNegative ? 'text-destructive' : 'text-foreground'
+                }`}
+                style={{ fontSize: 'clamp(1.75rem, 3vw, 2.5rem)' }}
+              >
+                {isNegative && '−'}{stat.value}
               </div>
-              <p className="text-xs text-muted-foreground">{stat.description}</p>
-            </CardContent>
-          </Card>
-        ))}
+
+              {/* Description — hairline above */}
+              <p className="text-[11px] text-muted-foreground/80 pt-2 border-t border-border/40">
+                {stat.description}
+              </p>
+            </div>
+          );
+        })}
       </div>
     </TooltipProvider>
   );
