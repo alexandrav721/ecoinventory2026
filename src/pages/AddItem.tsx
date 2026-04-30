@@ -832,16 +832,16 @@ const AddItem = () => {
               
               <TabsContent value="text" className="space-y-4 mt-4">
                 <div className="space-y-2">
-                  <Label>Describe your item</Label>
+                  <Label>Describe your item(s)</Label>
                   <Textarea
-                    placeholder="e.g., 'Black Nike running shoes, size 42' or 'Red leather couch from IKEA'"
+                    placeholder={"List one or many — AI will sort them out.\n\ne.g.\n• Black Nike running shoes, size 42\n• Red leather IKEA couch\n• 6 white dinner plates\n• KitchenAid stand mixer, barely used"}
                     value={smartInput}
                     onChange={(e) => setSmartInput(e.target.value)}
-                    rows={4}
+                    rows={6}
                     className="resize-none"
                   />
                   <p className="text-xs text-muted-foreground">
-                    Include details like color, brand, size, or condition for best results
+                    Mention as many items as you want — separated by commas, "and", or new lines. AI will add each one.
                   </p>
                 </div>
               </TabsContent>
