@@ -1,7 +1,7 @@
 import { Link, useLocation, useSearchParams } from "react-router-dom";
 import { 
   Home, Package, MapPin, FileText, Info, Shield, Users, MessageSquare, 
-  BarChart3, FolderTree, ChevronDown, Compass, Bell, Inbox, Activity, LayoutDashboard
+  BarChart3, FolderTree, ChevronDown, Compass, Bell, Inbox, Activity, LayoutDashboard, Search
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -31,6 +31,7 @@ const DashboardNav = () => {
   const mySpaceItems: NavItem[] = [
     { path: "/dashboard", label: t('dashboard.analytics'), icon: BarChart3, tab: "analytics" },
     { path: "/dashboard", label: t('dashboard.myInventory'), icon: Package, tab: "inventory" },
+    { path: "/dashboard/before-you-buy", label: "Before you buy", icon: Search },
   ];
 
   const notificationItems: NavItem[] = [
