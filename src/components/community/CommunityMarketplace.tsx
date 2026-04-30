@@ -52,6 +52,16 @@ export function CommunityMarketplace() {
     supabase.auth.getSession().then(({ data: { session } }) => setAuthed(!!session));
   }, []);
 
+  // Listen for hero search events
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent<string>).detail;
+      if (typeof detail === "string") setSearch(detail);
+    };
+    window.addEventListener("marketplace:search", handler);
+    return () => window.removeEventListener("marketplace:search", handler);
+  }, []);
+
   useEffect(() => {
     let cancelled = false;
     const fetchItems = async () => {
@@ -313,7 +323,7 @@ export function CommunityMarketplace() {
   };
 
   return (
-    <section className="border-b border-border/60 bg-secondary/20">
+    <section id="marketplace" className="border-b border-border/60 bg-secondary/20 scroll-mt-20">
       <div className="container mx-auto px-6 py-20 md:py-28">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10">
           <div>
