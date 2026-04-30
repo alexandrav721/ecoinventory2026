@@ -49,10 +49,41 @@ export const QuizPrompt = () => {
 
   if (count === null) return null;
 
-  // Empty inventory → big editorial CTA
+  // Empty inventory → big editorial CTA (collapsible)
   if (count === 0) {
+    if (collapsed) {
+      return (
+        <button
+          type="button"
+          onClick={toggleCollapsed}
+          className="w-full flex items-center justify-between gap-3 px-4 py-2.5 rounded-lg border border-primary/30 bg-primary/5 hover:bg-primary/10 transition-colors text-left"
+          aria-expanded="false"
+        >
+          <div className="flex items-center gap-2 text-sm">
+            <Sparkles className="w-4 h-4 text-primary shrink-0" />
+            <span className="text-xs uppercase tracking-[0.2em] text-primary font-medium">
+              Recommended start
+            </span>
+            <span className="text-muted-foreground hidden sm:inline">
+              — Start with your big-ticket items
+            </span>
+          </div>
+          <ChevronDown className="w-4 h-4 text-muted-foreground shrink-0" />
+        </button>
+      );
+    }
+
     return (
       <Card className="relative overflow-hidden border-primary/30 bg-gradient-to-br from-primary/5 via-background to-accent/5 p-10">
+        <button
+          type="button"
+          onClick={toggleCollapsed}
+          className="absolute top-3 right-3 p-1.5 rounded-md hover:bg-muted/60 transition-colors"
+          aria-label="Collapse recommended start"
+          aria-expanded="true"
+        >
+          <ChevronUp className="w-4 h-4 text-muted-foreground" />
+        </button>
         <div className="flex flex-col md:flex-row items-start md:items-center gap-8">
           <div className="flex-1 space-y-3">
             <div className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-primary">
