@@ -41,6 +41,7 @@ const DashboardNav = () => {
   ];
 
   const socialItems: NavItem[] = [
+    { path: "/people", label: "People", icon: Compass },
     { path: "/friends", label: t('nav.friends'), icon: Users },
     { path: "/messages", label: t('nav.messages'), icon: MessageSquare },
     { path: "/community", label: t('nav.community'), icon: MapPin },
