@@ -227,6 +227,11 @@ const InventoryPickleView = () => {
     setExcessOnly(false);
   };
 
+  const excessCount = useMemo(
+    () => items.filter((i) => (i.quantity ?? 1) > 1).length,
+    [items]
+  );
+
   const hasFilters =
     activeGroups.size > 0 ||
     activeLocations.size > 0 ||
@@ -256,11 +261,6 @@ const InventoryPickleView = () => {
       />
     );
   }
-
-  const excessCount = useMemo(
-    () => items.filter((i) => (i.quantity ?? 1) > 1).length,
-    [items]
-  );
 
   // Quick chips at top of sidebar
   const chips: { label: string; active: boolean; onClick: () => void }[] = [
