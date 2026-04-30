@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Sparkles, ArrowRight, Plus } from "lucide-react";
+import { Sparkles, ArrowRight, Plus, ChevronDown, ChevronUp } from "lucide-react";
 import { useDemo } from "@/contexts/DemoContext";
 
 /**
