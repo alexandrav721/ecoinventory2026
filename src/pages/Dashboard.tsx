@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import InventorySpreadsheet from "@/components/dashboard/InventorySpreadsheet";
 import InventoryPickleView from "@/components/dashboard/InventoryPickleView";
 import { OpportunitiesPanel } from "@/components/dashboard/OpportunitiesPanel";
+import BeforeYouBuyPanel from "@/components/dashboard/BeforeYouBuyPanel";
 
 
 import InventoryAnalytics from "@/components/dashboard/InventoryAnalytics";
@@ -189,15 +190,6 @@ const Dashboard = () => {
             <div className="flex items-center justify-end gap-2 flex-wrap">
               <Button
                 variant="outline"
-                onClick={() => navigate("/dashboard/before-you-buy")}
-                className="gap-2"
-              >
-                <Search className="w-4 h-4" />
-                <span className="hidden sm:inline">Before you buy</span>
-                <span className="sm:hidden">Check first</span>
-              </Button>
-              <Button
-                variant="outline"
                 onClick={() => navigate("/dashboard/declutter")}
                 className="gap-2"
               >
@@ -213,7 +205,7 @@ const Dashboard = () => {
             
             {/* View Toggle */}
             <Tabs defaultValue="gallery" className="w-full">
-              <TabsList className="h-10 p-1 bg-muted/50 rounded-lg gap-1 w-fit">
+              <TabsList className="h-10 p-1 bg-muted/50 rounded-lg gap-1 w-fit flex-wrap">
                 <TabsTrigger value="gallery" className="h-8 px-4 gap-2 rounded-md text-sm data-[state=active]:bg-background data-[state=active]:shadow-sm">
                   <LayoutGrid className="w-4 h-4" />
                   <span className="hidden sm:inline">Gallery</span>
@@ -226,6 +218,11 @@ const Dashboard = () => {
                   <Lightbulb className="w-4 h-4" />
                   <span className="hidden sm:inline">Opportunities</span>
                 </TabsTrigger>
+                <TabsTrigger value="before-you-buy" className="h-8 px-4 gap-2 rounded-md text-sm data-[state=active]:bg-background data-[state=active]:shadow-sm">
+                  <Search className="w-4 h-4" />
+                  <span className="hidden sm:inline">Before you buy</span>
+                  <span className="sm:hidden">Pre-buy</span>
+                </TabsTrigger>
               </TabsList>
               <TabsContent value="gallery" className="mt-6">
                 <InventoryPickleView />
@@ -235,6 +232,9 @@ const Dashboard = () => {
               </TabsContent>
               <TabsContent value="opportunities" className="mt-6">
                 <OpportunitiesPanel />
+              </TabsContent>
+              <TabsContent value="before-you-buy" className="mt-6">
+                <BeforeYouBuyPanel />
               </TabsContent>
             </Tabs>
 
