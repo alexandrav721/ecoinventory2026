@@ -170,12 +170,7 @@ const Dashboard = () => {
           <section className="space-y-5 min-w-0">
             <QuizPrompt />
 
-            <div className="flex items-center justify-end gap-3">
-              <Button onClick={() => navigate("/dashboard/add-item")} size="sm" className="gap-2">
-                <Plus className="w-4 h-4" />
-                {t('dashboard.addItem')}
-              </Button>
-            </div>
+
 
             {/* View Toggle */}
             <Tabs defaultValue="gallery" className="w-full">
