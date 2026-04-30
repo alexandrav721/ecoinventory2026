@@ -152,7 +152,7 @@ serve(async (req) => {
 
     // Extract the tool call result
     const toolCall = aiData.choices?.[0]?.message?.tool_calls?.[0];
-    if (!toolCall || toolCall.function.name !== 'extract_product_details') {
+    if (!toolCall || toolCall.function.name !== toolName) {
       console.error('Unexpected AI response format:', JSON.stringify(aiData));
       return new Response(
         JSON.stringify({ error: 'Failed to extract product details' }),
@@ -160,11 +160,18 @@ serve(async (req) => {
       );
     }
 
-    const productDetails = JSON.parse(toolCall.function.arguments);
-    console.log('Extracted product details:', productDetails);
+    const parsed = JSON.parse(toolCall.function.arguments);
+    console.log('Extracted:', parsed);
+
+    if (multi) {
+      return new Response(
+        JSON.stringify({ success: true, items: parsed.items || [] }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
 
     return new Response(
-      JSON.stringify({ success: true, data: productDetails }),
+      JSON.stringify({ success: true, data: parsed }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
 
