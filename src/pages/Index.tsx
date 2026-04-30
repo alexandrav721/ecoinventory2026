@@ -128,7 +128,7 @@ const Index = () => {
               Own less. <span className="italic font-display-wonk">Access more.</span>
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-3 mt-10">
+            <div className="flex flex-col sm:flex-row flex-wrap gap-3 mt-10">
               {isLoggedIn ? (
                 <Button asChild size="lg" className="rounded-full bg-foreground text-background hover:bg-foreground/90 gap-2">
                   <Link to="/dashboard">
@@ -138,15 +138,21 @@ const Index = () => {
                 </Button>
               ) : (
                 <>
+                  <Button asChild size="lg" variant="outline" className="rounded-full border-foreground/30 hover:bg-foreground hover:text-background gap-2">
+                    <Link to="/community">
+                      <Search className="w-4 h-4" />
+                      Browse public inventory
+                    </Link>
+                  </Button>
                   <Button asChild size="lg" className="rounded-full bg-foreground text-background hover:bg-foreground/90 gap-2">
                     <Link to="/auth">
-                      {t('home.hero.getStarted')}
+                      Sign up for free
                       <ArrowRight className="w-4 h-4" />
                     </Link>
                   </Button>
                   <Button size="lg" variant="ghost" onClick={handleTryDemo} className="rounded-full gap-2 hover:bg-secondary/60">
                     <Eye className="w-4 h-4" />
-                    {t('home.hero.tryDemo', 'Try demo')}
+                    Try demo
                   </Button>
                 </>
               )}
