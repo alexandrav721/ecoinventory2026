@@ -323,7 +323,7 @@ export function CommunityMarketplace() {
   };
 
   return (
-    <section className="border-b border-border/60 bg-secondary/20">
+    <section id="marketplace" className="border-b border-border/60 bg-secondary/20 scroll-mt-20">
       <div className="container mx-auto px-6 py-20 md:py-28">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10">
           <div>
