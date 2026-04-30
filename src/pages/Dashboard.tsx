@@ -161,97 +161,73 @@ const Dashboard = () => {
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-6 md:py-10">
-        {/* Tab Switcher - Clean pill style */}
-        <Tabs value={activeTab} onValueChange={(value) => setSearchParams({ tab: value })} className="w-full">
-          <TabsList className="h-11 p-1 bg-muted/50 rounded-xl gap-1 w-fit mb-6">
-            <TabsTrigger
-              value="inventory"
-              className="gap-2 rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm px-4"
-            >
-              <Package className="w-4 h-4" />
-              <span className="hidden sm:inline">{t('dashboard.myInventory')}</span>
-            </TabsTrigger>
-            <TabsTrigger
-              value="analytics"
-              className="gap-2 rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm px-4"
-            >
-              <BarChart3 className="w-4 h-4" />
-              <span className="hidden sm:inline">{t('dashboard.analytics')}</span>
-            </TabsTrigger>
-          </TabsList>
+        <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-6">
+          {/* LEFT column — greeting + at-a-glance */}
+          <div className="space-y-4">
+            <WelcomeHeader user={user} />
+          </div>
 
-          <TabsContent value="analytics" className="mt-0">
-            <InventoryAnalytics />
-          </TabsContent>
+          {/* RIGHT column — My stuff + Impact dropdown */}
+          <section className="space-y-5 min-w-0">
+            <QuizPrompt />
 
-          {/* Inventory Tab — two columns: greeting + at-a-glance on the left, "My stuff" on the right */}
-          <TabsContent value="inventory" className="mt-0">
-            <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-6">
-              {/* LEFT column */}
-              <div className="space-y-4">
-                <WelcomeHeader user={user} />
-              </div>
-
-              {/* RIGHT column — My stuff */}
-              <section className="space-y-5 min-w-0">
-                <QuizPrompt />
-
-                <div className="flex items-center justify-end gap-3">
-                  <Button onClick={() => navigate("/dashboard/add-item")} size="sm" className="gap-2">
-                    <Plus className="w-4 h-4" />
-                    {t('dashboard.addItem')}
-                  </Button>
-                </div>
-
-                {/* View Toggle */}
-                <Tabs defaultValue="gallery" className="w-full">
-                  <TabsList className="h-10 p-1 bg-muted/50 rounded-lg gap-1 w-fit flex-wrap">
-                    <TabsTrigger value="gallery" className="h-8 px-4 gap-2 rounded-md text-sm data-[state=active]:bg-background data-[state=active]:shadow-sm">
-                      <LayoutGrid className="w-4 h-4" />
-                      <span className="hidden sm:inline">Gallery</span>
-                    </TabsTrigger>
-                    <TabsTrigger value="spreadsheet" className="h-8 px-4 gap-2 rounded-md text-sm data-[state=active]:bg-background data-[state=active]:shadow-sm">
-                      <Sheet className="w-4 h-4" />
-                      <span className="hidden sm:inline">Spreadsheet</span>
-                    </TabsTrigger>
-                    <TabsTrigger value="opportunities" className="h-8 px-4 gap-2 rounded-md text-sm data-[state=active]:bg-background data-[state=active]:shadow-sm">
-                      <Lightbulb className="w-4 h-4" />
-                      <span className="hidden sm:inline">Opportunities</span>
-                    </TabsTrigger>
-                    <TabsTrigger value="before-you-buy" className="h-8 px-4 gap-2 rounded-md text-sm data-[state=active]:bg-background data-[state=active]:shadow-sm">
-                      <Search className="w-4 h-4" />
-                      <span className="hidden sm:inline">Before you buy</span>
-                      <span className="sm:hidden">Pre-buy</span>
-                    </TabsTrigger>
-                  </TabsList>
-                  <TabsContent value="gallery" className="mt-6">
-                    <InventoryPickleView />
-                  </TabsContent>
-                  <TabsContent value="spreadsheet" className="mt-6">
-                    <InventorySpreadsheet />
-                  </TabsContent>
-                  <TabsContent value="opportunities" className="mt-6">
-                    <OpportunitiesPanel />
-                  </TabsContent>
-                  <TabsContent value="before-you-buy" className="mt-6">
-                    <BeforeYouBuyPanel />
-                  </TabsContent>
-                </Tabs>
-
-                <Collapsible className="pt-2">
-                  <CollapsibleTrigger className="group flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
-                    <FileUp className="w-4 h-4" />
-                    <span>Bulk import from CSV</span>
-                    <ChevronDown className="w-4 h-4 transition-transform group-data-[state=open]:rotate-180" />
-                  </CollapsibleTrigger>
-                  <CollapsibleContent className="pt-4">
-                    <CsvUpload />
-                  </CollapsibleContent>
-                </Collapsible>
-              </section>
+            <div className="flex items-center justify-end gap-3">
+              <Button onClick={() => navigate("/dashboard/add-item")} size="sm" className="gap-2">
+                <Plus className="w-4 h-4" />
+                {t('dashboard.addItem')}
+              </Button>
             </div>
-          </TabsContent>
-        </Tabs>
+
+            {/* View Toggle */}
+            <Tabs defaultValue="gallery" className="w-full">
+              <TabsList className="h-10 p-1 bg-muted/50 rounded-lg gap-1 w-fit flex-wrap">
+                <TabsTrigger value="gallery" className="h-8 px-4 gap-2 rounded-md text-sm data-[state=active]:bg-background data-[state=active]:shadow-sm">
+                  <LayoutGrid className="w-4 h-4" />
+                  <span className="hidden sm:inline">Gallery</span>
+                </TabsTrigger>
+                <TabsTrigger value="spreadsheet" className="h-8 px-4 gap-2 rounded-md text-sm data-[state=active]:bg-background data-[state=active]:shadow-sm">
+                  <Sheet className="w-4 h-4" />
+                  <span className="hidden sm:inline">Spreadsheet</span>
+                </TabsTrigger>
+                <TabsTrigger value="opportunities" className="h-8 px-4 gap-2 rounded-md text-sm data-[state=active]:bg-background data-[state=active]:shadow-sm">
+                  <Lightbulb className="w-4 h-4" />
+                  <span className="hidden sm:inline">Opportunities</span>
+                </TabsTrigger>
+                <TabsTrigger value="before-you-buy" className="h-8 px-4 gap-2 rounded-md text-sm data-[state=active]:bg-background data-[state=active]:shadow-sm">
+                  <Search className="w-4 h-4" />
+                  <span className="hidden sm:inline">Before you buy</span>
+                  <span className="sm:hidden">Pre-buy</span>
+                </TabsTrigger>
+              </TabsList>
+              <TabsContent value="gallery" className="mt-6">
+                <InventoryPickleView />
+              </TabsContent>
+              <TabsContent value="spreadsheet" className="mt-6">
+                <InventorySpreadsheet />
+              </TabsContent>
+              <TabsContent value="opportunities" className="mt-6">
+                <OpportunitiesPanel />
+              </TabsContent>
+              <TabsContent value="before-you-buy" className="mt-6">
+                <BeforeYouBuyPanel />
+              </TabsContent>
+            </Tabs>
+
+            {/* Impact & Achievements (collapsible) */}
+            <InventoryAnalytics />
+
+            <Collapsible className="pt-2">
+              <CollapsibleTrigger className="group flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <FileUp className="w-4 h-4" />
+                <span>Bulk import from CSV</span>
+                <ChevronDown className="w-4 h-4 transition-transform group-data-[state=open]:rotate-180" />
+              </CollapsibleTrigger>
+              <CollapsibleContent className="pt-4">
+                <CsvUpload />
+              </CollapsibleContent>
+            </Collapsible>
+          </section>
+        </div>
       </main>
 
       {/* Onboarding Tour */}
