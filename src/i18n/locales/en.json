@@ -1,0 +1,251 @@
+{
+  "demo": {
+    "banner": {
+      "exploring": "You're exploring demo mode with sample data",
+      "signUp": "Sign up to save your own inventory"
+    }
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "articles": "Articles",
+    "promo": "Promo",
+    "dashboard": "My Stuff",
+    "friends": "Friends",
+    "messages": "Messages",
+    "community": "Community",
+    "admin": "Admin",
+    "profileSettings": "Profile Settings",
+    "signOut": "Sign Out",
+    "mySpace": "My Estate",
+    "notifications": "Notifications",
+    "social": "Social",
+    "explore": "Explore"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "all": "All",
+    "requests": "Requests",
+    "activity": "Activity",
+    "allNotifications": "All Notifications",
+    "borrowRequests": "Borrow Requests",
+    "activityUpdates": "Activity Updates",
+    "items": "notifications",
+    "unreadCount": "{{count}} unread",
+    "allCaughtUp": "You're all caught up!",
+    "markAllRead": "Mark all read",
+    "markRead": "Mark read",
+    "noNotifications": "No notifications yet"
+  },
+  "welcome": {
+    "morning": "Good morning",
+    "afternoon": "Good afternoon", 
+    "evening": "Good evening",
+    "hey": "Hey, {{name}}!",
+    "subtitle": "Here's what's happening with your stuff",
+    "items": "items",
+    "value": "total value",
+    "sharing": "sharing"
+  },
+  "home": {
+    "hero": {
+      "title1": "Never buy",
+      "title2": "anything again.",
+      "subtitle": "The average household is sitting on seven thousand dollars of stuff that barely gets used. Lend it out. Borrow what you need. Stop spending on things your neighbor already owns.",
+      "getStarted": "Start saving",
+      "signIn": "Sign in",
+      "goToDashboard": "Go to dashboard"
+    },
+    "demo": {
+      "title": "See it in motion",
+      "subtitle": "A short look at how people are turning closets into income and cutting their spending in half.",
+      "placeholder": "Demo video coming soon",
+      "quickWatch": "Two-minute tour",
+      "smartFeatures": "Quietly intelligent",
+      "getStarted": "Free to start"
+    },
+    "math": {
+      "title": "The quiet economics of the things you own.",
+      "subtitle": "Most people have no idea how much money is parked in their hallway closet. Here is what the math actually looks like.",
+      "stat1": {
+        "value": "$7,000",
+        "label": "in unused belongings",
+        "desc": "The average household has this much sitting in closets, the garage, the basement — barely touched."
+      },
+      "stat2": {
+        "value": "$1,200",
+        "label": "saved each year",
+        "desc": "By borrowing tools and gear from people nearby instead of buying new ones you'll use twice."
+      },
+      "stat3": {
+        "value": "$50+",
+        "label": "earned each month",
+        "desc": "Modest passive income from items that would otherwise gather dust between weekends."
+      },
+      "footnote": "Why buy a drill you'll use twice when your neighbor already owns one?"
+    },
+    "stats": {
+      "title": "A small, growing community.",
+      "subtitle": "Real people, real things, real savings.",
+      "totalItems": "Items catalogued",
+      "activeMembers": "Members",
+      "itemsShared": "Items shared"
+    },
+    "features": {
+      "title": "A different relationship with the things you own.",
+      "subtitle": "Know what you have. Lend what you don't need. Borrow what you do. Spend less, waste less, live a little lighter.",
+      "valueTracking": {
+        "title": "See what you're sitting on",
+        "desc": "A quiet inventory of everything you own and what it's actually worth. Most people are surprised by the number."
+      },
+      "smartSearch": {
+        "title": "Stop buying duplicates",
+        "desc": "Already own three of those? We'll let you know before you click buy. Useful, not nagging."
+      },
+      "communitySharing": {
+        "title": "Borrow from people nearby",
+        "desc": "Drills, ladders, camping gear, baby things. Someone on your street has it. Borrow it freely or rent it cheap."
+      },
+      "ecoFriendly": {
+        "title": "Earn while owning less",
+        "desc": "Every item shared is one less manufactured. Make a little money. Keep things out of landfills. Quietly do some good."
+      }
+    },
+    "howItWorks": {
+      "title": "How it works.",
+      "subtitle": "Three small steps. No friction.",
+      "step1": {
+        "title": "List your things",
+        "desc": "Snap a photo, add a price. We'll quietly tally up the value of everything you own."
+      },
+      "step2": {
+        "title": "Lend or borrow",
+        "desc": "Earn passive income from items collecting dust. Or borrow what you need instead of buying."
+      },
+      "step3": {
+        "title": "Watch it add up",
+        "desc": "Track what you've earned and saved. Most members clear their first hundred in under a month."
+      }
+    },
+    "cta": {
+      "title": "Own less. Use more. Spend nothing.",
+      "subtitle": "Find out what your things are worth. Start lending. Stop buying what you don't need.",
+      "button": "Start for free"
+    },
+    "footer": "© 2025 EcoInventory. A quieter way to own things."
+  },
+  "dashboard": {
+    "title": "EcoInventory",
+    "analytics": "Stats & Insights",
+    "myInventory": "My Stuff",
+    "categories": "Categories",
+    "myItems": "My Items",
+    "addItem": "Add Something",
+    "listView": "List View",
+    "galleryView": "Gallery View",
+    "bulkImport": "Upload a Bunch at Once",
+    "bulkImportDesc": "Got a spreadsheet? Upload it and we'll add everything for you",
+    "downloadTemplate": "Get the Template",
+    "uploadCsv": "Upload CSV",
+    "uploading": "Uploading..."
+  },
+  "csv": {
+    "templateDownloaded": "Got It! ✨",
+    "templateDesc": "Use this template to format your stuff.",
+    "uploadComplete": "All Done! 🎉",
+    "uploadSuccess": "Added {{count}} items to your collection",
+    "uploadFailed": "{{count}} didn't work",
+    "uploadError": "Oops, Something Went Wrong",
+    "noItemsImported": "Hmm, nothing got imported. Double-check your CSV format?",
+    "error": "Uh Oh",
+    "mustBeLoggedIn": "You gotta sign in first!",
+    "parseError": "Couldn't read that file. Make sure it's a proper CSV?",
+    "uploadErrorGeneric": "Something broke during upload. Try again?",
+    "itemsSuccess": "Successfully added {{count}} items",
+    "itemsFailed": "Couldn't add {{count}} items",
+    "formatRequirements": "What Your CSV Needs:",
+    "requiredColumn": "Must have:",
+    "optionalColumns": "Nice to have: brand, description, category, original_price, purchase_date, quantity, condition, color, size, dimensions, usage_frequency",
+    "categoryMatch": "Category names need to match what you already have",
+    "dateFormat": "Dates should look like: YYYY-MM-DD"
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "email": "Email",
+    "password": "Password",
+    "fullName": "Full Name",
+    "welcomeBack": "Hey, Welcome Back! 👋",
+    "joinEco": "Join EcoInventory",
+    "signInDesc": "Sign in to see your stuff",
+    "createAccountDesc": "Let's get you set up",
+    "pleaseWait": "One sec...",
+    "noAccount": "New here? Sign up",
+    "haveAccount": "Already have an account? Sign in",
+    "signInSuccess": "You're in! Welcome back 🎉",
+    "signUpSuccess": "Account created! Let's go ✨",
+    "authError": "Something went wrong"
+  },
+  "common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "confirm": "Confirm",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort"
+  },
+  "messages": {
+    "itemAdded": "Item added successfully!",
+    "itemUpdated": "Item updated successfully!",
+    "itemDeleted": "Item deleted successfully!",
+    "error": "An error occurred. Please try again."
+  },
+  "loading": {
+    "messages": [
+      "Finding your stuff...",
+      "Counting all the things...",
+      "Organizing the chaos...",
+      "Looking under the couch cushions...",
+      "Checking if you really need that...",
+      "Dusting off your collection...",
+      "Summoning your inventory...",
+      "Almost there, promise!"
+    ]
+  },
+  "empty": {
+    "inventory": {
+      "title": "Your inventory is looking pretty empty... 🤔",
+      "description": "Let's fix that! Add your first item and start tracking what you own.",
+      "action": "Add Your First Thing"
+    },
+    "search": {
+      "title": "Nope, couldn't find that 🔍",
+      "description": "Try searching for something else, or maybe it's time to add that item!"
+    },
+    "category": {
+      "title": "No items in this category yet",
+      "description": "Looks like this category is feeling lonely. Add some items to keep it company!"
+    }
+  },
+  "errors": {
+    "generic": "Oops! Something went sideways 😅",
+    "network": "Can't reach the internet right now... Are you in a cave?",
+    "notFound": "We looked everywhere and couldn't find that 🤷",
+    "unauthorized": "Whoa there! You need to log in first.",
+    "deleteConfirm": "Are you sure? This item will be gone forever (like, really forever)."
+  },
+  "funFacts": [
+    "💡 The average person owns over 10,000 items!",
+    "🌱 Sharing just one item can reduce waste significantly.",
+    "📦 Most people use only 20% of what they own regularly.",
+    "♻️ Every item you share keeps something out of a landfill.",
+    "🎯 Organized spaces = organized mind. Science says so!",
+    "🤝 People who share their stuff are generally happier.",
+    "💰 The average household has $7,000 worth of unused items.",
+    "🌍 If everyone shared one item, we'd save millions of resources."
+  ]
+}

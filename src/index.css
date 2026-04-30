@@ -1,0 +1,193 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Brand palette — Blue / Cyan on white, editorial layout */
+    --background: 0 0% 100%;
+    --foreground: 215 25% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 215 25% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 25% 15%;
+
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 214 32% 96%;
+    --secondary-foreground: 215 25% 15%;
+
+    --muted: 0 0% 96%;
+    --muted-foreground: 215 15% 40%;
+
+    --accent: 199 89% 48%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 217 91% 60%;
+
+    --radius: 0.5rem;
+
+    --chart-1: 217 91% 60%;
+    --chart-2: 199 89% 48%;
+    --chart-3: 38 92% 50%;
+
+    --gradient-eco: linear-gradient(135deg, hsl(217 91% 60%), hsl(199 89% 48%));
+    --gradient-fun: linear-gradient(135deg, hsl(280 80% 65%), hsl(217 91% 60%), hsl(199 89% 48%));
+    --gradient-subtle: linear-gradient(180deg, hsl(0 0% 100%), hsl(217 91% 98%));
+
+    --shadow-soft: 0 4px 20px -4px hsl(217 91% 60% / 0.15);
+    --shadow-card: 0 2px 8px -2px hsl(217 50% 30% / 0.08);
+    --shadow-glow: 0 0 30px hsl(217 91% 60% / 0.2);
+
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+
+  .dark {
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
+
+    --card: 222 47% 15%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222 47% 15%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 217 91% 60%;
+    --primary-foreground: 222 47% 11%;
+
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 199 89% 48%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 217 33% 24%;
+    --input: 217 33% 24%;
+    --ring: 217 91% 60%;
+
+    --chart-1: 217 91% 60%;
+    --chart-2: 142 76% 46%;
+    --chart-3: 38 92% 60%;
+    
+    --shadow-soft: 0 4px 20px -4px hsl(217 91% 60% / 0.25);
+    --shadow-card: 0 2px 8px -2px hsl(0 0% 0% / 0.3);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+    font-feature-settings: 'kern' 1, 'liga' 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer utilities {
+  /* Hide scrollbar for clean horizontal scroll */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Fun hover effects for buttons and cards */
+  .font-display {
+    font-family: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+    font-optical-sizing: auto;
+    font-variation-settings: "SOFT" 50, "WONK" 0;
+    letter-spacing: -0.02em;
+  }
+  .font-display-wonk {
+    font-family: 'Fraunces', Georgia, serif;
+    font-variation-settings: "SOFT" 100, "WONK" 1;
+  }
+  .editorial-rule {
+    @apply h-px w-12 bg-foreground/40;
+  }
+  .hover-lift {
+    @apply transition-all duration-300 ease-out;
+  }
+  
+  .hover-lift:hover {
+    @apply -translate-y-1 shadow-lg;
+  }
+  
+  .hover-glow:hover {
+    box-shadow: var(--shadow-glow);
+  }
+  
+  /* Playful animations */
+  .animate-bounce-subtle {
+    animation: bounce-subtle 2s ease-in-out infinite;
+  }
+  
+  @keyframes bounce-subtle {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-5px);
+    }
+  }
+  
+  .animate-wiggle {
+    animation: wiggle 1s ease-in-out;
+  }
+  
+  @keyframes wiggle {
+    0%, 100% {
+      transform: rotate(0deg);
+    }
+    25% {
+      transform: rotate(-3deg);
+    }
+    75% {
+      transform: rotate(3deg);
+    }
+  }
+  
+  /* Fun gradient text */
+  .gradient-text {
+    @apply bg-clip-text text-transparent;
+    background-image: var(--gradient-fun);
+  }
+  
+  /* Interactive elements */
+  .fun-button {
+    @apply transition-all duration-300;
+  }
+  
+  .fun-button:hover {
+    transform: scale(1.05);
+  }
+  
+  .fun-button:active {
+    transform: scale(0.95);
+  }
+}

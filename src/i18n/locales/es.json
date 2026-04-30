@@ -1,0 +1,175 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "about": "Acerca de",
+    "articles": "Artículos",
+    "promo": "Promoción",
+    "dashboard": "Panel",
+    "friends": "Amigos",
+    "messages": "Mensajes",
+    "community": "Comunidad",
+    "admin": "Administrador",
+    "profileSettings": "Configuración de Perfil",
+    "signOut": "Cerrar Sesión",
+    "mySpace": "Mi Patrimonio",
+    "notifications": "Notificaciones",
+    "social": "Social",
+    "explore": "Explorar"
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "all": "Todas",
+    "requests": "Solicitudes",
+    "activity": "Actividad",
+    "allNotifications": "Todas las Notificaciones",
+    "borrowRequests": "Solicitudes de Préstamo",
+    "activityUpdates": "Actualizaciones de Actividad",
+    "items": "notificaciones",
+    "unreadCount": "{{count}} sin leer",
+    "allCaughtUp": "¡Estás al día!",
+    "markAllRead": "Marcar todo como leído",
+    "markRead": "Marcar como leído",
+    "noNotifications": "No hay notificaciones aún"
+  },
+  "welcome": {
+    "morning": "Buenos días",
+    "afternoon": "Buenas tardes", 
+    "evening": "Buenas noches",
+    "hey": "¡Hola, {{name}}!",
+    "subtitle": "Esto es lo que pasa con tus cosas",
+    "items": "artículos",
+    "value": "valor total",
+    "sharing": "compartiendo"
+  },
+  "home": {
+    "hero": {
+      "title1": "Organiza Tu Hogar,",
+      "title2": "Impulsa una Economía Circular",
+      "subtitle": "Rastrea tus pertenencias, comprende su valor y comparte artículos sin usar con tu comunidad. Transforma el desorden en oportunidad.",
+      "getStarted": "Comenzar Gratis",
+      "signIn": "Iniciar Sesión",
+      "goToDashboard": "Ir al Panel"
+    },
+    "demo": {
+      "title": "Míralo en Acción",
+      "subtitle": "Descubre cómo EcoInventario te ayuda a organizar tus pertenencias y conectar con tu comunidad",
+      "placeholder": "Video demo próximamente",
+      "quickWatch": "Vista rápida",
+      "smartFeatures": "Reconocimiento inteligente",
+      "getStarted": "Para comenzar"
+    },
+    "stats": {
+      "title": "Estadísticas de la Plataforma",
+      "subtitle": "Únete a nuestra creciente comunidad de consumidores conscientes",
+      "totalItems": "Total de Artículos Rastreados",
+      "activeMembers": "Miembros Activos",
+      "itemsShared": "Artículos Compartidos"
+    },
+    "features": {
+      "title": "Todo lo que Necesitas para Gestionar tu Inventario",
+      "subtitle": "Desde rastrear lo que posees hasta compartir con tu comunidad, EcoInventario te ayuda a aprovechar al máximo tus pertenencias.",
+      "valueTracking": {
+        "title": "Seguimiento de Valor",
+        "desc": "Conoce exactamente lo que posees y su costo original. Rastrea la depreciación con el tiempo."
+      },
+      "smartSearch": {
+        "title": "Búsqueda Inteligente",
+        "desc": "Encuentra artículos en tu inventario al instante. Busca en la comunidad los artículos que necesitas."
+      },
+      "communitySharing": {
+        "title": "Compartir en Comunidad",
+        "desc": "Conéctate con otros que tienen artículos que necesitas. Haz que tus artículos sin usar estén disponibles para ayudar a otros."
+      },
+      "ecoFriendly": {
+        "title": "Ecológico",
+        "desc": "Reduce el desperdicio compartiendo y reutilizando. Construye una comunidad más sostenible juntos."
+      }
+    },
+    "howItWorks": {
+      "title": "Cómo Funciona",
+      "subtitle": "Comienza en minutos con nuestro simple proceso de tres pasos",
+      "step1": {
+        "title": "Crea Tu Inventario",
+        "desc": "Agrega artículos con fotos, precios y detalles. Rastrea todo lo que posees en un solo lugar."
+      },
+      "step2": {
+        "title": "Obtén Información",
+        "desc": "Ve el valor total de tu inventario, identifica duplicados y rastrea la edad de los artículos automáticamente."
+      },
+      "step3": {
+        "title": "Comparte y Conéctate",
+        "desc": "Haz que los artículos estén disponibles para compartir y busca lo que otros tienen en tu comunidad."
+      }
+    },
+    "cta": {
+      "title": "¿Listo para Organizarte?",
+      "subtitle": "Únete a EcoInventario hoy y comienza a construir una mejor relación con tus pertenencias.",
+      "button": "Inicia Tu Inventario Gratis"
+    },
+    "footer": "© 2025 EcoInventario. Construido para un futuro sostenible."
+  },
+  "dashboard": {
+    "title": "EcoInventario",
+    "analytics": "Analíticas",
+    "myInventory": "Mi Inventario",
+    "categories": "Categorías",
+    "myItems": "Mis Artículos",
+    "addItem": "Agregar Artículo",
+    "listView": "Vista de Lista",
+    "galleryView": "Vista de Galería",
+    "bulkImport": "Importación Masiva vía CSV",
+    "bulkImportDesc": "Cargue un archivo CSV para agregar varios artículos a su inventario a la vez",
+    "downloadTemplate": "Descargar Plantilla",
+    "uploadCsv": "Cargar CSV",
+    "uploading": "Cargando..."
+  },
+  "csv": {
+    "templateDownloaded": "Plantilla Descargada",
+    "templateDesc": "Use esta plantilla para formatear los datos de su inventario.",
+    "uploadComplete": "Carga Completa",
+    "uploadSuccess": "{{count}} artículos importados exitosamente",
+    "uploadFailed": "{{count}} fallidos",
+    "uploadError": "Carga Fallida",
+    "noItemsImported": "No se importaron artículos. Por favor, verifique el formato CSV.",
+    "error": "Error",
+    "mustBeLoggedIn": "Debe iniciar sesión para cargar artículos.",
+    "parseError": "Error al analizar el archivo CSV. Por favor, verifique el formato.",
+    "uploadErrorGeneric": "Ocurrió un error durante la carga.",
+    "itemsSuccess": "{{count}} artículos importados exitosamente",
+    "itemsFailed": "{{count}} artículos fallaron al importar",
+    "formatRequirements": "Requisitos de Formato CSV:",
+    "requiredColumn": "Columna requerida:",
+    "optionalColumns": "Columnas opcionales: brand, description, category, original_price, purchase_date, quantity, condition, color, size, dimensions, usage_frequency",
+    "categoryMatch": "Los nombres de categorías deben coincidir exactamente con las categorías existentes",
+    "dateFormat": "Las fechas deben estar en formato AAAA-MM-DD"
+  },
+  "auth": {
+    "signIn": "Iniciar Sesión",
+    "signUp": "Registrarse",
+    "email": "Correo Electrónico",
+    "password": "Contraseña",
+    "fullName": "Nombre Completo",
+    "welcomeBack": "Bienvenido de Nuevo",
+    "joinEco": "Únete a EcoInventario",
+    "signInDesc": "Inicia sesión para gestionar tu inventario",
+    "createAccountDesc": "Crea una cuenta para comenzar a organizar",
+    "pleaseWait": "Por favor espera...",
+    "noAccount": "¿No tienes una cuenta? Regístrate",
+    "haveAccount": "¿Ya tienes una cuenta? Inicia sesión",
+    "signInSuccess": "¡Bienvenido de nuevo!",
+    "signUpSuccess": "¡Cuenta creada exitosamente!",
+    "authError": "Ocurrió un error"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "close": "Cerrar",
+    "confirm": "Confirmar",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "sort": "Ordenar"
+  }
+}
