@@ -5,11 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { 
-  DollarSign, TrendingUp, AlertTriangle, Sparkles, 
+import {
+  DollarSign, TrendingUp, AlertTriangle, Sparkles,
   Package, Gift, ShoppingBag,
-  Lightbulb, RefreshCw, Copy, Info, ChevronRight
+  Lightbulb, RefreshCw, Copy, Info, ChevronRight, ChevronDown
 } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useInventoryStats } from "@/hooks/useInventoryStats";
 import { useDemo } from "@/contexts/DemoContext";
 import { formatCurrency } from "@/lib/utils";
