@@ -15,6 +15,7 @@ import Admin from "./pages/Admin";
 import Promo from "./pages/Promo";
 import Founders from "./pages/Founders";
 import Community from "./pages/Community";
+import Events from "./pages/Events";
 import Articles from "./pages/Articles";
 import Article from "./pages/Article";
 import About from "./pages/About";
@@ -59,6 +60,7 @@ const App = () => (
             <Route path="/promo" element={<Promo />} />
             <Route path="/founders" element={<Founders />} />
             <Route path="/community" element={<Community />} />
+            <Route path="/events" element={<Events />} />
             <Route path="/articles" element={<Articles />} />
             <Route path="/articles/:slug" element={<Article />} />
             <Route path="/articles/circular-economy" element={<CircularEconomyGuide />} />

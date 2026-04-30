@@ -1,7 +1,7 @@
 import { Link, useLocation, useSearchParams } from "react-router-dom";
 import { 
   Home, Package, MapPin, FileText, Info, Shield, Users, MessageSquare, 
-  BarChart3, FolderTree, ChevronDown, Compass, Bell, Inbox, Activity, LayoutDashboard, Search
+  BarChart3, FolderTree, ChevronDown, Compass, Bell, Inbox, Activity, LayoutDashboard, Search, Calendar
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -44,6 +44,7 @@ const DashboardNav = () => {
     { path: "/friends", label: t('nav.friends'), icon: Users },
     { path: "/messages", label: t('nav.messages'), icon: MessageSquare },
     { path: "/community", label: t('nav.community'), icon: MapPin },
+    { path: "/events", label: "Events", icon: Calendar },
   ];
 
   const exploreItems: NavItem[] = [
