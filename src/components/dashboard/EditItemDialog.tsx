@@ -169,7 +169,7 @@ const EditItemDialog = ({ item, open, onOpenChange, onItemUpdated }: EditItemDia
           color: item.color || "",
           dimensions: item.dimensions || "",
           size: item.size || "",
-          location: (item as any).location || "",
+          
           quantity: item.quantity || 1,
           original_price: item.original_price?.toString() || "",
           purchase_date: item.purchase_date || "",
