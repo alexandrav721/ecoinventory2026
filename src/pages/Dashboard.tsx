@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { Button } from "@/components/ui/button";
-import { Leaf, Plus, GraduationCap, BarChart3, Package, Sheet, ChevronDown, FileUp, Sparkles, Lightbulb, LayoutGrid, Search } from "lucide-react";
+import { Leaf, Plus, GraduationCap, BarChart3, Package, Sheet, ChevronDown, FileUp, Lightbulb, LayoutGrid, Search } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -191,22 +191,13 @@ const Dashboard = () => {
           <TabsContent value="inventory" className="mt-0 space-y-6">
             <QuizPrompt />
 
-            <div className="flex items-center justify-end gap-2 flex-wrap">
-              <Button
-                variant="outline"
-                onClick={() => navigate("/dashboard/declutter")}
-                className="gap-2"
-              >
-                <Sparkles className="w-4 h-4" />
-                <span className="hidden sm:inline">Declutter mode</span>
-                <span className="sm:hidden">Declutter</span>
-              </Button>
-              <Button onClick={() => navigate("/dashboard/add-item")} className="gap-2 shadow-md hover:shadow-lg transition-shadow">
+            <div className="flex items-center justify-end">
+              <Button onClick={() => navigate("/dashboard/add-item")} size="sm" className="gap-2">
                 <Plus className="w-4 h-4" />
                 {t('dashboard.addItem')}
               </Button>
             </div>
-            
+
             {/* View Toggle */}
             <Tabs defaultValue="gallery" className="w-full">
               <TabsList className="h-10 p-1 bg-muted/50 rounded-lg gap-1 w-fit flex-wrap">
