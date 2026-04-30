@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { Leaf, Apple, Facebook, Phone, ArrowLeft } from "lucide-react";
 import { z } from "zod";
 import { useTranslation } from "react-i18next";
+import authHero from "@/assets/auth-hero.jpg";
 
 const authSchema = z.object({
   email: z.string().trim().email("Please enter a valid email address").max(255, "Email must be less than 255 characters"),
