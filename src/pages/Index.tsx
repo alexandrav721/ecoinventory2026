@@ -119,7 +119,7 @@ const Index = () => {
           {/* Bottom-left: massive headline */}
           <div className="mt-auto pt-20 md:pt-32 max-w-4xl">
             <h1 className="font-display text-[clamp(3rem,9vw,7.5rem)] leading-[0.92] font-light text-foreground">
-              Own less.
+              Buy less.
               <br />
               <span className="italic font-display-wonk text-primary">Access more.</span>
             </h1>
