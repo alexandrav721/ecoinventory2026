@@ -162,12 +162,6 @@ const InventoryGalleryView = ({
                     </span>
                   )}
                 </div>
-                {item.location && (
-                  <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                    <MapPin className="w-3 h-3" />
-                    <span className="truncate">{item.location}</span>
-                  </div>
-                )}
               </div>
             </Card>
           );
