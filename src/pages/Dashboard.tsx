@@ -181,10 +181,6 @@ const Dashboard = () => {
           </TabsList>
 
           <TabsContent value="analytics" className="mt-0">
-            {/* Welcome Header with Quick Stats */}
-            <div className="mb-6">
-              <WelcomeHeader user={user} />
-            </div>
             <InventoryAnalytics />
           </TabsContent>
 
