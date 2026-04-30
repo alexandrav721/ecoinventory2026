@@ -16,6 +16,8 @@ import BeforeYouBuyPanel from "@/components/dashboard/BeforeYouBuyPanel";
 import InventoryAnalytics from "@/components/dashboard/InventoryAnalytics";
 import DashboardNav from "@/components/DashboardNav";
 import { CsvUpload } from "@/components/dashboard/CsvUpload";
+import { CsvExport } from "@/components/dashboard/CsvExport";
+import { InventoryAssistant } from "@/components/dashboard/InventoryAssistant";
 import { OnboardingTour } from "@/components/dashboard/OnboardingTour";
 import AnalyticsOnboarding, { useAnalyticsOnboarding } from "@/components/dashboard/AnalyticsOnboarding";
 import { useTranslation } from "react-i18next";
@@ -203,16 +205,19 @@ const Dashboard = () => {
             {/* Impact & Achievements (collapsible) */}
             <InventoryAnalytics />
 
-            <Collapsible className="pt-2">
-              <CollapsibleTrigger className="group flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
-                <FileUp className="w-4 h-4" />
-                <span>Bulk import from CSV</span>
-                <ChevronDown className="w-4 h-4 transition-transform group-data-[state=open]:rotate-180" />
-              </CollapsibleTrigger>
-              <CollapsibleContent className="pt-4">
-                <CsvUpload />
-              </CollapsibleContent>
-            </Collapsible>
+            <div className="flex flex-wrap items-center gap-3 pt-2">
+              <CsvExport />
+              <Collapsible className="flex-1 min-w-0">
+                <CollapsibleTrigger className="group flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  <FileUp className="w-4 h-4" />
+                  <span>Bulk import from CSV</span>
+                  <ChevronDown className="w-4 h-4 transition-transform group-data-[state=open]:rotate-180" />
+                </CollapsibleTrigger>
+                <CollapsibleContent className="pt-4">
+                  <CsvUpload />
+                </CollapsibleContent>
+              </Collapsible>
+            </div>
           </section>
         </div>
       </main>
@@ -228,6 +233,9 @@ const Dashboard = () => {
       
       {/* Floating Add Button for Mobile */}
       <FloatingAddButton />
+
+      {/* Floating AI Inventory Assistant */}
+      <InventoryAssistant />
     </div>
   );
 };
