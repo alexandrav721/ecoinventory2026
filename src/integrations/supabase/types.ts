@@ -450,7 +450,6 @@ export type Database = {
           is_donated: boolean | null
           is_eliminated: boolean | null
           is_sold: boolean | null
-          location: string | null
           name: string
           original_price: number | null
           purchase_date: string | null
@@ -482,7 +481,6 @@ export type Database = {
           is_donated?: boolean | null
           is_eliminated?: boolean | null
           is_sold?: boolean | null
-          location?: string | null
           name: string
           original_price?: number | null
           purchase_date?: string | null
@@ -514,7 +512,6 @@ export type Database = {
           is_donated?: boolean | null
           is_eliminated?: boolean | null
           is_sold?: boolean | null
-          location?: string | null
           name?: string
           original_price?: number | null
           purchase_date?: string | null
@@ -913,41 +910,6 @@ export type Database = {
           },
           {
             foreignKeyName: "suggested_brands_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      suggested_locations: {
-        Row: {
-          created_at: string | null
-          created_by: string | null
-          id: string
-          location_name: string
-          updated_at: string | null
-          usage_count: number | null
-        }
-        Insert: {
-          created_at?: string | null
-          created_by?: string | null
-          id?: string
-          location_name: string
-          updated_at?: string | null
-          usage_count?: number | null
-        }
-        Update: {
-          created_at?: string | null
-          created_by?: string | null
-          id?: string
-          location_name?: string
-          updated_at?: string | null
-          usage_count?: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "suggested_locations_created_by_fkey"
             columns: ["created_by"]
             isOneToOne: false
             referencedRelation: "profiles"
