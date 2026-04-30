@@ -7,6 +7,7 @@ import DashboardNav from "@/components/DashboardNav";
 import { useTranslation } from "react-i18next";
 import { Logo } from "@/components/Logo";
 import { useDemo } from "@/contexts/DemoContext";
+import { CommunityMarketplace } from "@/components/community/CommunityMarketplace";
 
 const Index = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -117,6 +118,9 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* COMMUNITY MARKETPLACE — Show value immediately */}
+      <CommunityMarketplace />
 
       {/* THE MATH — Big editorial numbers */}
       <section className="border-b border-border/60">
