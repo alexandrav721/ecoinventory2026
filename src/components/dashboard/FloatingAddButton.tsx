@@ -150,7 +150,7 @@ export const FloatingAddButton = () => {
       )}
 
       {/* FAB Container */}
-      <div className="fixed bottom-20 right-4 z-50 flex flex-col items-end gap-3">
+      <div className="fixed bottom-20 right-4 z-50 flex flex-col items-end gap-3" data-tour="add-item">
         {/* Expanded options */}
         {isExpanded && (
           <div className="flex flex-col gap-2 animate-in slide-in-from-bottom-2 fade-in duration-200">

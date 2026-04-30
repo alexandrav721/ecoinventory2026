@@ -176,7 +176,7 @@ const Dashboard = () => {
 
 
             {/* View Toggle */}
-            <Tabs defaultValue="gallery" className="w-full">
+            <Tabs defaultValue="gallery" className="w-full" data-tour="inventory-views">
               <TabsList className="h-10 p-1 bg-muted/50 rounded-lg gap-1 w-fit flex-wrap">
                 <TabsTrigger value="gallery" className="h-8 px-4 gap-2 rounded-md text-sm data-[state=active]:bg-background data-[state=active]:shadow-sm">
                   <LayoutGrid className="w-4 h-4" />
@@ -204,12 +204,14 @@ const Dashboard = () => {
             </Tabs>
 
             {/* Upcoming community events */}
-            <UpcomingEventsCard />
+            <div data-tour="events-widget">
+              <UpcomingEventsCard />
+            </div>
 
             {/* Impact & Achievements (collapsible) */}
             <InventoryAnalytics />
 
-            <div className="flex flex-wrap items-center gap-3 pt-2">
+            <div className="flex flex-wrap items-center gap-3 pt-2" data-tour="export-import">
               <CsvExport />
               <Collapsible className="flex-1 min-w-0">
                 <CollapsibleTrigger className="group flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">

@@ -1,183 +1,109 @@
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Progress } from "@/components/ui/progress";
-import { ChevronLeft, ChevronRight, Lightbulb, Package, Sparkles, TrendingUp, Users } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-
-interface OnboardingStep {
-  title: string;
-  description: string;
-  icon: any;
-  tips: string[];
-  highlight?: string;
-}
-
-const steps: OnboardingStep[] = [
-  {
-    title: "Welcome to EcoInventory 🌱",
-    description: "Your personal inventory tracker — organize what you own, avoid duplicate buys, and make smarter decisions about your stuff.",
-    icon: Package,
-    tips: [
-      "Add items with photos, categories, and condition",
-      "Access your inventory from any device",
-      "Snap a photo and let AI fill in the details",
-    ],
-  },
-  {
-    title: "Add Items Your Way ✨",
-    description: "Add items quickly with the camera, bulk upload, CSV import, or just chat with the AI assistant.",
-    icon: Sparkles,
-    tips: [
-      "Tap the floating chat to add items conversationally",
-      "Use Smart Add to scan multiple items at once",
-      "Export your inventory to CSV anytime",
-    ],
-  },
-  {
-    title: "Insights & Market Value 📊",
-    description: "See what your stuff is worth, spot duplicates and unused items, and find earning or donation opportunities.",
-    icon: TrendingUp,
-    tips: [
-      "Track total market value of your inventory",
-      "Get suggestions on what to sell or donate",
-      "Identify items you haven't used in a while",
-    ],
-    highlight: "market-value",
-  },
-  {
-    title: "Share with Your Community 🤝",
-    description: "Lend, borrow, sell, or donate with people nearby — save money and reduce waste together.",
-    icon: Users,
-    tips: [
-      "Lend items and track who has what",
-      "Browse the community feed to borrow or buy",
-      "Mark items donated to track your impact",
-    ],
-  },
-];
+import { useEffect, useState } from "react";
+import { Joyride, EVENTS, type EventData, type Step } from "react-joyride";
 
 interface OnboardingTourProps {
   open: boolean;
   onComplete: () => void;
 }
 
+const steps: Step[] = [
+  {
+    target: "body",
+    placement: "center",
+    title: "Welcome to EcoInventory 🌱",
+    content:
+      "A 60-second tour of the things that matter most. Track what you own, share with neighbors, and avoid duplicate buys.",
+  },
+  {
+    target: '[data-tour="add-item"]',
+    title: "Add items, your way ✨",
+    content:
+      'Tap the + button to add items by camera, photo, or manual entry. Smart Add uses AI to fill in the details for you.',
+    placement: "left",
+  },
+  {
+    target: '[data-tour="ai-assistant"]',
+    title: "Chat with the AI Assistant",
+    content:
+      'Just say what you have — "5 Nike sneakers, size 8.5" — and the assistant adds, edits, or answers questions about your stuff.',
+    placement: "left",
+  },
+  {
+    target: '[data-tour="inventory-views"]',
+    title: "Gallery, Opportunities & Before You Buy",
+    content:
+      "Switch views to browse your stuff visually, spot duplicates and earning opportunities, or check before you buy something new.",
+    placement: "bottom",
+  },
+  {
+    target: '[data-tour="events-widget"]',
+    title: "Community events near you",
+    content:
+      "Swap parties, repair cafés, stoop sales — meet your neighbors and share what you have. NYC-first for now.",
+    placement: "top",
+  },
+  {
+    target: '[data-tour="export-import"]',
+    title: "Export & bulk import",
+    content:
+      "Export your inventory as CSV any time, or bulk-import a spreadsheet to get started fast.",
+    placement: "top",
+  },
+];
+
 export function OnboardingTour({ open, onComplete }: OnboardingTourProps) {
-  const [currentStep, setCurrentStep] = useState(0);
-  const progress = ((currentStep + 1) / steps.length) * 100;
-  const step = steps[currentStep];
-  const StepIcon = step.icon;
+  const [run, setRun] = useState(false);
 
   useEffect(() => {
-    if (open && step.highlight) {
-      // Add highlight effect to the metric card
-      const element = document.querySelector(`[data-metric="${step.highlight}"]`);
-      if (element) {
-        element.classList.add("ring-4", "ring-primary", "ring-offset-2", "animate-pulse");
-      }
+    if (open) {
+      const t = setTimeout(() => setRun(true), 200);
+      return () => clearTimeout(t);
     }
+    setRun(false);
+  }, [open]);
 
-    return () => {
-      // Remove all highlights
-      const elements = document.querySelectorAll("[data-metric]");
-      elements.forEach((el) => {
-        el.classList.remove("ring-4", "ring-primary", "ring-offset-2", "animate-pulse");
-      });
-    };
-  }, [currentStep, open, step.highlight]);
-
-  const handleNext = () => {
-    if (currentStep < steps.length - 1) {
-      setCurrentStep(currentStep + 1);
-    } else {
+  const handleEvent = (data: EventData) => {
+    if (data.type === EVENTS.TOUR_END) {
+      setRun(false);
       onComplete();
     }
   };
 
-  const handlePrevious = () => {
-    if (currentStep > 0) {
-      setCurrentStep(currentStep - 1);
-    }
-  };
-
-  const handleSkip = () => {
-    onComplete();
-  };
+  if (!open) return null;
 
   return (
-    <Dialog open={open} onOpenChange={(isOpen) => !isOpen && handleSkip()}>
-      <DialogContent className="sm:max-w-[600px]">
-        <DialogHeader>
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-primary/10">
-              <StepIcon className="w-6 h-6 text-primary" />
-            </div>
-            <DialogTitle className="text-xl">{step.title}</DialogTitle>
-          </div>
-          <div className="space-y-2 pt-2">
-            <Progress value={progress} className="h-2" />
-            <p className="text-xs text-muted-foreground text-right">
-              Step {currentStep + 1} of {steps.length}
-            </p>
-          </div>
-        </DialogHeader>
-
-        <DialogDescription className="text-base text-foreground pt-4">
-          {step.description}
-        </DialogDescription>
-
-        <Card className="border-primary/20 bg-primary/5">
-          <CardContent className="pt-6">
-            <div className="space-y-3">
-              <p className="font-semibold text-sm flex items-center gap-2">
-                <Lightbulb className="w-4 h-4 text-primary" />
-                Key Tips:
-              </p>
-              <ul className="space-y-2">
-                {step.tips.map((tip, index) => (
-                  <li key={index} className="flex items-start gap-2 text-sm">
-                    <span className="text-primary font-bold mt-0.5">•</span>
-                    <span>{tip}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </CardContent>
-        </Card>
-
-        <DialogFooter className="flex-row gap-2 sm:gap-2">
-          {currentStep > 0 && (
-            <Button
-              variant="outline"
-              onClick={handlePrevious}
-              className="flex-1"
-            >
-              <ChevronLeft className="w-4 h-4 mr-1" />
-              Previous
-            </Button>
-          )}
-          <Button
-            onClick={handleNext}
-            className="flex-1"
-          >
-            {currentStep === steps.length - 1 ? (
-              "Get Started!"
-            ) : (
-              <>
-                Next
-                <ChevronRight className="w-4 h-4 ml-1" />
-              </>
-            )}
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+    <Joyride
+      steps={steps}
+      run={run}
+      continuous
+      scrollToFirstStep
+      onEvent={handleEvent}
+      options={{
+        primaryColor: "hsl(217, 91%, 60%)",
+        textColor: "hsl(222, 47%, 11%)",
+        backgroundColor: "#ffffff",
+        arrowColor: "#ffffff",
+        overlayColor: "rgba(0, 0, 0, 0.55)",
+        zIndex: 10000,
+        skipBeacon: true,
+        showProgress: true,
+        buttons: ["back", "skip", "primary"],
+      }}
+      locale={{
+        back: "Back",
+        close: "Close",
+        last: "Got it!",
+        next: "Next",
+        skip: "Skip tour",
+      }}
+      styles={{
+        tooltip: { borderRadius: 12, padding: 18 },
+        tooltipTitle: { fontSize: 16, fontWeight: 600, marginBottom: 8 },
+        tooltipContent: { fontSize: 14, padding: 0, lineHeight: 1.5 },
+        buttonPrimary: { borderRadius: 8, fontSize: 13 },
+        buttonBack: { fontSize: 13, marginRight: 8 },
+        buttonSkip: { fontSize: 13 },
+      }}
+    />
   );
 }
