@@ -370,16 +370,6 @@ const Auth = () => {
                   <Apple className="w-5 h-5 mr-2" />
                   {isLogin ? 'Sign in' : 'Sign up'} with Apple
                 </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => handleSocialAuth('facebook')}
-                  disabled={loading}
-                  className="w-full"
-                >
-                  <Facebook className="w-5 h-5 mr-2" />
-                  {isLogin ? 'Sign in' : 'Sign up'} with Facebook
-                </Button>
               </div>
 
               <div className="mt-4 text-center text-sm">
