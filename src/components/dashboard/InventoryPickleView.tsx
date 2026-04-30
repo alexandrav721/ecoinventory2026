@@ -233,7 +233,8 @@ const InventoryPickleView = () => {
     activeBrands.size > 0 ||
     activeConditions.size > 0 ||
     activePrice !== null ||
-    withImagesOnly;
+    withImagesOnly ||
+    excessOnly;
 
   if (loading) {
     return (
