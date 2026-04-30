@@ -11,7 +11,7 @@ serve(async (req) => {
   }
 
   try {
-    const { image, description } = await req.json();
+    const { image, description, multi } = await req.json();
     
     if (!image && !description) {
       return new Response(
@@ -35,7 +35,9 @@ serve(async (req) => {
     if (description) {
       content.push({
         type: "text",
-        text: `Analyze this product description and extract details: "${description}"`
+        text: multi
+          ? `The user is describing one OR MORE household items in a single message. Parse the text and extract EVERY distinct item mentioned, even if listed casually (commas, "and", new lines, bullets). For each item, fill in all known details and reasonable estimates. Text: "${description}"`
+          : `Analyze this product description and extract details: "${description}"`
       });
     }
     
@@ -53,6 +55,49 @@ serve(async (req) => {
     }
 
     console.log('Calling Lovable AI for item analysis...');
+
+    const itemSchema = {
+      type: "object",
+      properties: {
+        name: { type: "string", description: "The product name or title" },
+        description: { type: "string", description: "A detailed description of the product" },
+        category: { type: "string", description: "Product category (e.g., 'Electronics', 'Clothing', 'Furniture', 'Kitchen', 'Sports', 'Books', etc.)" },
+        brand: { type: "string", description: "Brand name if visible or identifiable" },
+        color: { type: "string", description: "Primary color(s) of the item" },
+        condition: { type: "string", enum: ["new", "like_new", "good", "fair", "poor"], description: "Estimated condition of the item" },
+        size: { type: "string", description: "Size if applicable (e.g., 'XL', '42', 'Large')" },
+        estimatedPrice: { type: "number", description: "Estimated typical retail price in USD" },
+        quantity: { type: "number", description: "How many of this item the user mentioned (default 1)" },
+        location: { type: "string", description: "Suggested storage location in a home (e.g., 'Bedroom > Closet', 'Kitchen', 'Bathroom', 'Living Room', 'Garage', 'Office')" }
+      },
+      required: ["name", "description", "category", "location"],
+      additionalProperties: false
+    };
+
+    const tools = multi
+      ? [{
+          type: "function",
+          function: {
+            name: "extract_multiple_products",
+            description: "Extract a list of distinct household items the user described.",
+            parameters: {
+              type: "object",
+              properties: { items: { type: "array", items: itemSchema } },
+              required: ["items"],
+              additionalProperties: false
+            }
+          }
+        }]
+      : [{
+          type: "function",
+          function: {
+            name: "extract_product_details",
+            description: "Extract structured product information from an image or description",
+            parameters: itemSchema
+          }
+        }];
+
+    const toolName = multi ? "extract_multiple_products" : "extract_product_details";
 
     // Call Lovable AI with structured output using tool calling
     const aiResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
@@ -73,60 +118,8 @@ serve(async (req) => {
             content: content
           }
         ],
-        tools: [
-          {
-            type: "function",
-            function: {
-              name: "extract_product_details",
-              description: "Extract structured product information from an image or description",
-              parameters: {
-                type: "object",
-                properties: {
-                  name: {
-                    type: "string",
-                    description: "The product name or title"
-                  },
-                  description: {
-                    type: "string",
-                    description: "A detailed description of the product"
-                  },
-                  category: {
-                    type: "string",
-                    description: "Product category (e.g., 'Electronics', 'Clothing', 'Furniture', 'Kitchen', 'Sports', 'Books', etc.)"
-                  },
-                  brand: {
-                    type: "string",
-                    description: "Brand name if visible or identifiable"
-                  },
-                  color: {
-                    type: "string",
-                    description: "Primary color(s) of the item"
-                  },
-                  condition: {
-                    type: "string",
-                    enum: ["new", "like_new", "good", "fair", "poor"],
-                    description: "Estimated condition of the item"
-                  },
-                  size: {
-                    type: "string",
-                    description: "Size if applicable (e.g., 'XL', '42', 'Large')"
-                  },
-                  estimatedPrice: {
-                    type: "number",
-                    description: "Estimated typical retail price in USD"
-                  },
-                  location: {
-                    type: "string",
-                    description: "Suggested storage location in a home where this item is typically kept (e.g., 'Bedroom > Closet', 'Kitchen', 'Bathroom', 'Living Room', 'Garage', 'Office')"
-                  }
-                },
-                required: ["name", "description", "category", "location"],
-                additionalProperties: false
-              }
-            }
-          }
-        ],
-        tool_choice: { type: "function", function: { name: "extract_product_details" } }
+        tools,
+        tool_choice: { type: "function", function: { name: toolName } }
       }),
     });
 
@@ -159,7 +152,7 @@ serve(async (req) => {
 
     // Extract the tool call result
     const toolCall = aiData.choices?.[0]?.message?.tool_calls?.[0];
-    if (!toolCall || toolCall.function.name !== 'extract_product_details') {
+    if (!toolCall || toolCall.function.name !== toolName) {
       console.error('Unexpected AI response format:', JSON.stringify(aiData));
       return new Response(
         JSON.stringify({ error: 'Failed to extract product details' }),
@@ -167,11 +160,18 @@ serve(async (req) => {
       );
     }
 
-    const productDetails = JSON.parse(toolCall.function.arguments);
-    console.log('Extracted product details:', productDetails);
+    const parsed = JSON.parse(toolCall.function.arguments);
+    console.log('Extracted:', parsed);
+
+    if (multi) {
+      return new Response(
+        JSON.stringify({ success: true, items: parsed.items || [] }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
 
     return new Response(
-      JSON.stringify({ success: true, data: productDetails }),
+      JSON.stringify({ success: true, data: parsed }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
 

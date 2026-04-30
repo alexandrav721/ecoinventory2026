@@ -231,10 +231,14 @@ const AddItem = () => {
 
     setAnalyzingItem(true);
     try {
+      // Text-only path → multi-item extraction + bulk insert
+      const isMulti = !!smartInput && !smartImage;
+
       const { data, error } = await supabase.functions.invoke('analyze-item', {
-        body: { 
+        body: {
           image: smartImage,
-          description: smartInput 
+          description: smartInput,
+          multi: isMulti,
         }
       });
 
@@ -249,33 +253,95 @@ const AddItem = () => {
         return;
       }
 
-      if (data?.success && data.data) {
-        const aiData = data.data;
-        
-        const conditionMap: Record<string, string> = {
-          'new': 'new',
-          'like_new': 'like_new',
-          'good': 'good',
-          'fair': 'fair',
-          'poor': 'poor'
-        };
+      const conditionMap: Record<string, string> = {
+        new: 'new', like_new: 'like_new', good: 'good', fair: 'fair', poor: 'poor'
+      };
 
-        let categoryId = "";
-        if (aiData.category) {
-          const matchingCategory = categories.find(c => 
-            c.name.toLowerCase().includes(aiData.category.toLowerCase()) ||
-            aiData.category.toLowerCase().includes(c.name.toLowerCase())
-          );
-          if (matchingCategory) {
-            categoryId = matchingCategory.id;
-          }
+      const matchCategoryId = (catName?: string) => {
+        if (!catName) return "";
+        const m = categories.find(c =>
+          c.name.toLowerCase().includes(catName.toLowerCase()) ||
+          catName.toLowerCase().includes(c.name.toLowerCase())
+        );
+        return m?.id || "";
+      };
+
+      // ── Multi-item bulk insert path ──
+      if (isMulti && data?.success && Array.isArray(data.items)) {
+        const items = data.items;
+        if (items.length === 0) {
+          toast.error("Couldn't find any items in your description.");
+          return;
         }
 
+        // Single item → fall through to review form
+        if (items.length === 1) {
+          const aiData = items[0];
+          setFormData({
+            ...formData,
+            name: aiData.name || "",
+            description: aiData.description || "",
+            category_id: matchCategoryId(aiData.category),
+            brand: aiData.brand || "",
+            color: aiData.color || "",
+            size: aiData.size || "",
+            condition: conditionMap[aiData.condition] || "good",
+            original_price: aiData.estimatedPrice ? aiData.estimatedPrice.toString() : "",
+            location: aiData.location || "",
+            quantity: aiData.quantity || 1,
+          });
+          toast.success("✨ AI found 1 item — review and save.");
+          setMode("manual");
+          setSmartInput("");
+          return;
+        }
+
+        // Multiple → insert all directly
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+          toast.error("Please log in to add items");
+          return;
+        }
+
+        const itemsToInsert = items.map((aiData: any) => ({
+          user_id: user.id,
+          name: aiData.name,
+          description: aiData.description || null,
+          category_id: matchCategoryId(aiData.category) || null,
+          brand: aiData.brand || null,
+          color: aiData.color || null,
+          condition: conditionMap[aiData.condition] || 'good',
+          size: aiData.size || null,
+          original_price: aiData.estimatedPrice || null,
+          location: aiData.location || null,
+          quantity: aiData.quantity || 1,
+          image_urls: [],
+        }));
+
+        const { data: inserted, error: insertError } = await supabase
+          .from('inventory_items')
+          .insert(itemsToInsert)
+          .select("id, name");
+
+        if (insertError) throw insertError;
+
+        if (inserted && inserted.length > 0) {
+          autoCategorizeItems(inserted).catch(e => console.warn("Auto-categorize failed:", e));
+        }
+
+        toast.success(`✨ Added ${items.length} items!`);
+        navigate("/dashboard");
+        return;
+      }
+
+      // ── Single-item path (image, or fallback) ──
+      if (data?.success && data.data) {
+        const aiData = data.data;
         setFormData({
           ...formData,
           name: aiData.name || "",
           description: aiData.description || "",
-          category_id: categoryId,
+          category_id: matchCategoryId(aiData.category),
           brand: aiData.brand || "",
           color: aiData.color || "",
           size: aiData.size || "",
@@ -600,18 +666,7 @@ const AddItem = () => {
               </div>
             </Card>
 
-            <Card 
-              className="p-6 cursor-pointer hover:bg-accent transition-colors"
-              onClick={() => setMode("catalog-multi")}
-            >
-              <div className="flex flex-col items-center text-center space-y-3">
-                <Package className="h-12 w-12 text-primary" />
-                <h3 className="font-semibold">EcoInventory Catalog</h3>
-                <p className="text-sm text-muted-foreground">
-                  Browse personalized recommendations
-                </p>
-              </div>
-            </Card>
+            {/* EcoInventory Catalog removed */}
 
             <Card 
               className="p-6 cursor-pointer hover:bg-accent transition-colors"
@@ -787,7 +842,7 @@ const AddItem = () => {
           <div className="mb-8">
             <h1 className="text-3xl font-bold mb-2">✨ Smart Add with AI</h1>
             <p className="text-muted-foreground">
-              Snap a photo or describe your item - AI will fill in the details
+              Snap a photo, or describe one item — or many at once — and AI does the rest
             </p>
           </div>
 
@@ -843,16 +898,16 @@ const AddItem = () => {
               
               <TabsContent value="text" className="space-y-4 mt-4">
                 <div className="space-y-2">
-                  <Label>Describe your item</Label>
+                  <Label>Describe your item(s)</Label>
                   <Textarea
-                    placeholder="e.g., 'Black Nike running shoes, size 42' or 'Red leather couch from IKEA'"
+                    placeholder={"List one or many — AI will sort them out.\n\ne.g.\n• Black Nike running shoes, size 42\n• Red leather IKEA couch\n• 6 white dinner plates\n• KitchenAid stand mixer, barely used"}
                     value={smartInput}
                     onChange={(e) => setSmartInput(e.target.value)}
-                    rows={4}
+                    rows={6}
                     className="resize-none"
                   />
                   <p className="text-xs text-muted-foreground">
-                    Include details like color, brand, size, or condition for best results
+                    Mention as many items as you want — separated by commas, "and", or new lines. AI will add each one.
                   </p>
                 </div>
               </TabsContent>
