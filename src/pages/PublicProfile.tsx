@@ -49,9 +49,20 @@ export default function PublicProfile({ selfMode = false }: Props) {
         .from("profiles")
         .select("id, public_display_name, friends_display_name, full_name, public_avatar_url, friends_avatar_url, avatar_url, city, state")
         .eq("id", targetId)
-        .single();
+        .maybeSingle();
 
       if (!prof) {
+        // Fallback so the page never hangs on "Loading…"
+        const { data: { user } } = await supabase.auth.getUser();
+        const isSelf = meId === targetId;
+        setProfile({
+          id: targetId,
+          display_name: isSelf ? (user?.user_metadata?.full_name || user?.email || "You") : "Member",
+          avatar_url: isSelf ? user?.user_metadata?.avatar_url : null,
+          city: null,
+          state: null,
+        });
+        setItems([]);
         setLoading(false);
         return;
       }
