@@ -59,16 +59,28 @@ const Index = () => {
         <DashboardNav />
       ) : (
         <nav className="border-b border-border/60 bg-background/80 backdrop-blur sticky top-0 z-50">
-          <div className="container mx-auto px-6 h-20 flex items-center justify-between">
+          <div className="container mx-auto px-6 h-20 flex items-center gap-6">
             <Logo size="sm" />
-            <div className="flex items-center gap-8">
-              <Link to="/about" className="text-sm font-medium tracking-wide hover:text-primary transition-colors">
+
+            {/* Search — sits next to logo, like Pickle */}
+            <form onSubmit={handleHeroSearch} className="relative flex-1 max-w-xl hidden md:block">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+              <Input
+                value={heroSearch}
+                onChange={(e) => setHeroSearch(e.target.value)}
+                placeholder="Search drills, cameras, bikes near you…"
+                className="h-11 pl-11 pr-4 rounded-full bg-secondary/60 border-transparent focus-visible:bg-background focus-visible:border-foreground/20 text-sm"
+              />
+            </form>
+
+            <div className="flex items-center gap-6 ml-auto">
+              <Link to="/about" className="text-sm font-medium tracking-wide hover:text-primary transition-colors hidden sm:inline">
                 About
               </Link>
-              <Link to="/articles" className="text-sm font-medium tracking-wide hover:text-primary transition-colors">
+              <Link to="/articles" className="text-sm font-medium tracking-wide hover:text-primary transition-colors hidden sm:inline">
                 Articles
               </Link>
-              <Link to="/founders" className="text-sm font-medium tracking-wide hover:text-primary transition-colors flex items-center gap-1.5">
+              <Link to="/founders" className="text-sm font-medium tracking-wide hover:text-primary transition-colors hidden md:flex items-center gap-1.5">
                 <Heart className="w-3.5 h-3.5" />
                 Founders
               </Link>
@@ -96,34 +108,12 @@ const Index = () => {
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/40" />
         </div>
 
-        <div className="relative container mx-auto px-6 pt-8 pb-24 md:pt-12 md:pb-40 min-h-[640px] md:min-h-[720px] flex flex-col">
-          {/* Top-left: search */}
+        <div className="relative container mx-auto px-6 pt-12 pb-24 md:pt-16 md:pb-40 min-h-[560px] md:min-h-[640px] flex flex-col">
           <div className="max-w-xl">
-            <div className="flex items-center gap-3 mb-6 text-xs uppercase tracking-[0.2em] text-muted-foreground">
+            <div className="flex items-center gap-3 text-xs uppercase tracking-[0.2em] text-muted-foreground">
               <span className="editorial-rule" />
               <span>Vol. 01 · A different way to own things</span>
             </div>
-
-            <form onSubmit={handleHeroSearch} className="relative">
-              <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" />
-              <Input
-                value={heroSearch}
-                onChange={(e) => setHeroSearch(e.target.value)}
-                placeholder="Search drills, cameras, bikes near you…"
-                className="h-14 pl-14 pr-32 rounded-full bg-background border-foreground/20 shadow-lg text-base focus-visible:ring-primary"
-              />
-              <Button
-                type="submit"
-                size="sm"
-                className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-foreground text-background hover:bg-foreground/90 h-10 px-5"
-              >
-                Search
-              </Button>
-            </form>
-
-            <p className="text-xs text-muted-foreground mt-3 ml-1">
-              Try “drill”, “tent”, “stand mixer”, “projector”
-            </p>
           </div>
 
           {/* Bottom-left: massive headline */}
