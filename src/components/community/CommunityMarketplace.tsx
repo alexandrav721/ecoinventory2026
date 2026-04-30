@@ -8,7 +8,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { MapPin, HandHeart, ShoppingCart, MessageCircle, Search, Navigation, Lock } from "lucide-react";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { MapPin, HandHeart, ShoppingCart, MessageCircle, Search, Navigation, Lock, Users, Globe } from "lucide-react";
 import { toast } from "sonner";
 import { BorrowRequestDialog } from "@/components/friends/BorrowRequestDialog";
 import { useViewerLocation, distanceMiles } from "@/hooks/useViewerLocation";
@@ -44,12 +45,31 @@ export function CommunityMarketplace() {
   const [items, setItems] = useState<MarketItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [authed, setAuthed] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const [friendIds, setFriendIds] = useState<Set<string>>(new Set());
+  const [audience, setAudience] = useState<"all" | "friends" | "community">("all");
   const [search, setSearch] = useState("");
   const [distanceFilter, setDistanceFilter] = useState<string>("all");
   const [borrowItem, setBorrowItem] = useState<MarketItem | null>(null);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => setAuthed(!!session));
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      const uid = session?.user?.id ?? null;
+      setAuthed(!!session);
+      setCurrentUserId(uid);
+      if (uid) {
+        const { data: fr } = await supabase
+          .from("friendships")
+          .select("user_id, friend_id, status")
+          .eq("status", "accepted")
+          .or(`user_id.eq.${uid},friend_id.eq.${uid}`);
+        const ids = new Set<string>();
+        (fr || []).forEach((f: any) => {
+          ids.add(f.user_id === uid ? f.friend_id : f.user_id);
+        });
+        setFriendIds(ids);
+      }
+    });
   }, []);
 
   // Read ?q= URL param on mount, and listen for hero search events
@@ -135,6 +155,12 @@ export function CommunityMarketplace() {
 
   const filtered = useMemo(() => {
     return items.filter((it) => {
+      // Audience filter
+      if (audience === "friends") {
+        if (!currentUserId || !friendIds.has(it.user_id)) return false;
+      } else if (audience === "community") {
+        if (currentUserId && friendIds.has(it.user_id)) return false;
+      }
       if (search) {
         const q = search.toLowerCase();
         const hay = `${it.name} ${it.description ?? ""}`.toLowerCase();
@@ -149,7 +175,7 @@ export function CommunityMarketplace() {
       }
       return true;
     });
-  }, [items, search, distanceFilter, location]);
+  }, [items, search, distanceFilter, location, audience, friendIds, currentUserId]);
 
   const borrowItems = filtered.filter((it) => !it.sharing_price || it.sharing_price === 0 || (it.sharing_price && it.sharing_price > 0 && it.sharing_price <= 0));
   // Treat sharing_price null/0 → free borrow; >0 → both borrow (paid) and buy unclear.
@@ -356,6 +382,33 @@ export function CommunityMarketplace() {
             </div>
           )}
         </div>
+
+        {/* Audience toggle */}
+        {authed && (
+          <div className="mb-4">
+            <ToggleGroup
+              type="single"
+              value={audience}
+              onValueChange={(v) => v && setAudience(v as typeof audience)}
+              className="inline-flex rounded-full border border-border bg-background p-1"
+            >
+              <ToggleGroupItem value="all" className="rounded-full px-4 text-xs uppercase tracking-[0.15em] data-[state=on]:bg-foreground data-[state=on]:text-background">
+                Both
+              </ToggleGroupItem>
+              <ToggleGroupItem value="friends" className="rounded-full px-4 text-xs uppercase tracking-[0.15em] gap-1.5 data-[state=on]:bg-foreground data-[state=on]:text-background">
+                <Users className="w-3.5 h-3.5" /> Friends
+              </ToggleGroupItem>
+              <ToggleGroupItem value="community" className="rounded-full px-4 text-xs uppercase tracking-[0.15em] gap-1.5 data-[state=on]:bg-foreground data-[state=on]:text-background">
+                <Globe className="w-3.5 h-3.5" /> Community
+              </ToggleGroupItem>
+            </ToggleGroup>
+            {audience === "friends" && friendIds.size === 0 && (
+              <p className="text-xs text-muted-foreground mt-2 italic">
+                No friends yet — <Link to="/friends" className="underline hover:text-foreground">add some</Link> to see their items here.
+              </p>
+            )}
+          </div>
+        )}
 
         {/* Search + filter */}
         <div className="flex flex-col sm:flex-row gap-3 mb-6">
