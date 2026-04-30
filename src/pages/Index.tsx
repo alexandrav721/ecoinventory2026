@@ -127,6 +127,9 @@ const Index = () => {
               <span className="italic font-display-wonk">Rent</span>, <span className="italic font-display-wonk">lend</span>, and <span className="italic font-display-wonk">buy</span> from neighbors and friends.
               Own less. <span className="italic font-display-wonk">Access more.</span>
             </p>
+            <p className="text-base md:text-lg text-foreground/60 mt-5 max-w-xl leading-relaxed">
+              Track everything you already own — we'll flag the <span className="italic font-display-wonk text-foreground/80">duplicates</span>, the <span className="italic font-display-wonk text-foreground/80">excess</span>, and the things gathering dust — so you never re-buy what's already on a shelf.
+            </p>
 
             <div className="flex flex-col sm:flex-row flex-wrap gap-3 mt-10">
               {isLoggedIn ? (
@@ -233,40 +236,6 @@ const Index = () => {
       </section>
 
       {/* HOW IT WORKS */}
-      {/* INVENTORY + EXCESS — editorial */}
-      <section className="border-b border-border/60 bg-secondary/30">
-        <div className="container mx-auto px-6 py-24 md:py-32">
-          <div className="grid md:grid-cols-12 gap-10 md:gap-16 items-start">
-            <div className="md:col-span-5">
-              <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-6">§ Know what you own</div>
-              <h2 className="font-display text-4xl md:text-6xl leading-[1.02] font-light">
-                Stop buying<br />
-                <span className="italic text-primary">what you already own.</span>
-              </h2>
-              <p className="mt-8 text-lg text-muted-foreground leading-relaxed max-w-md">
-                Track every item across every room. Our system flags duplicates, surfaces things you haven't touched in a year, and shows the cash sitting idle on your shelves.
-              </p>
-            </div>
-
-            <div className="md:col-span-7 md:pl-10 md:border-l border-border">
-              <ol className="space-y-px bg-border">
-                {[
-                  { n: '01', label: 'Duplicates flagged', desc: 'Three flashlights, two waffle irons — we tell you before you buy a fourth.' },
-                  { n: '02', label: 'Excess by category', desc: 'See where your shelves are over-stocked vs. comfortably curated.' },
-                  { n: '03', label: 'Idle value', desc: 'Total dollar value of items you haven\'t used in 12+ months.' },
-                  { n: '04', label: 'Room-by-room view', desc: 'Walk your home digitally. Find that thing you forgot you had.' },
-                ].map((row) => (
-                  <li key={row.n} className="bg-background grid grid-cols-12 gap-4 py-6 px-4 items-baseline hover:bg-secondary/40 transition-colors">
-                    <span className="col-span-2 font-display text-2xl text-primary italic">{row.n}</span>
-                    <h3 className="col-span-4 font-display text-lg md:text-xl font-normal">{row.label}</h3>
-                    <p className="col-span-6 text-sm text-muted-foreground leading-relaxed">{row.desc}</p>
-                  </li>
-                ))}
-              </ol>
-            </div>
-          </div>
-        </div>
-      </section>
 
       <section className="border-b border-border/60">
         <div className="container mx-auto px-6 py-24 md:py-32">
