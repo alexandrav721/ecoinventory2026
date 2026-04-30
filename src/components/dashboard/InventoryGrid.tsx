@@ -885,11 +885,6 @@ const InventoryGrid = () => {
                     : t('empty.search.description')
                 }
               />
-            ) : viewMode === 'location' ? (
-              <InventoryLocationView
-                items={sortedItems}
-                onItemClick={(item) => setViewingItem(item as unknown as InventoryItem)}
-              />
             ) : (
             <div className="border rounded-lg overflow-hidden">
               <DndContext
