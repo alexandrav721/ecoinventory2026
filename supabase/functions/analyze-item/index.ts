@@ -35,7 +35,9 @@ serve(async (req) => {
     if (description) {
       content.push({
         type: "text",
-        text: `Analyze this product description and extract details: "${description}"`
+        text: multi
+          ? `The user is describing one OR MORE household items in a single message. Parse the text and extract EVERY distinct item mentioned, even if listed casually (commas, "and", new lines, bullets). For each item, fill in all known details and reasonable estimates. Text: "${description}"`
+          : `Analyze this product description and extract details: "${description}"`
       });
     }
     
