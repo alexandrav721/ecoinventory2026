@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useCallback, ReactNode } from "react";
-import { DEMO_ITEMS, DEMO_CATEGORIES, DEMO_STATS, DEMO_FRIENDS, DEMO_FRIENDS_ITEMS, DEMO_FRIEND_REQUESTS, DEMO_EXCESS_INSIGHTS, DEMO_COMMUNITY_ACTIVITY } from "@/data/demoData";
+import { DEMO_ITEMS, DEMO_CATEGORIES, DEMO_STATS, DEMO_FRIENDS, DEMO_FRIENDS_ITEMS, DEMO_FRIEND_REQUESTS, DEMO_EXCESS_INSIGHTS, DEMO_COMMUNITY_ACTIVITY, DEMO_EVENTS } from "@/data/demoData";
 
 interface DemoContextType {
   isDemoMode: boolean;
@@ -13,6 +13,7 @@ interface DemoContextType {
   demoFriendRequests: typeof DEMO_FRIEND_REQUESTS;
   demoExcessInsights: typeof DEMO_EXCESS_INSIGHTS;
   demoCommunityActivity: typeof DEMO_COMMUNITY_ACTIVITY;
+  demoEvents: typeof DEMO_EVENTS;
 }
 
 const DemoContext = createContext<DemoContextType | undefined>(undefined);
@@ -46,6 +47,7 @@ export const DemoProvider = ({ children }: { children: ReactNode }) => {
         demoFriendRequests: DEMO_FRIEND_REQUESTS,
         demoExcessInsights: DEMO_EXCESS_INSIGHTS,
         demoCommunityActivity: DEMO_COMMUNITY_ACTIVITY,
+        demoEvents: DEMO_EVENTS,
       }}
     >
       {children}
