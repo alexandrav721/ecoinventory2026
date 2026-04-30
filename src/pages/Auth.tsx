@@ -131,16 +131,16 @@ const Auth = () => {
     }
   };
 
-  const handleSocialAuth = async (provider: 'apple' | 'facebook' | 'google') => {
+  const handleSocialAuth = async (provider: 'apple' | 'google') => {
     try {
       setLoading(true);
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider,
-        options: {
-          redirectTo: `${window.location.origin}/dashboard`,
-        },
+      const { lovable } = await import("@/integrations/lovable/index");
+      const result = await lovable.auth.signInWithOAuth(provider, {
+        redirect_uri: `${window.location.origin}/dashboard`,
       });
-      if (error) throw error;
+      if (result.error) throw result.error;
+      if (result.redirected) return;
+      navigate("/dashboard");
     } catch (error: any) {
       toast.error(error.message || t('auth.authError'));
       setLoading(false);
