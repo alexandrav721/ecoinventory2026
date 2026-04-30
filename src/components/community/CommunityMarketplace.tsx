@@ -52,8 +52,12 @@ export function CommunityMarketplace() {
     supabase.auth.getSession().then(({ data: { session } }) => setAuthed(!!session));
   }, []);
 
-  // Listen for hero search events
+  // Read ?q= URL param on mount, and listen for hero search events
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get("q");
+    if (q) setSearch(q);
+
     const handler = (e: Event) => {
       const detail = (e as CustomEvent<string>).detail;
       if (typeof detail === "string") setSearch(detail);
