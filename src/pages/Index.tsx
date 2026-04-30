@@ -8,7 +8,6 @@ import DashboardNav from "@/components/DashboardNav";
 import { useTranslation } from "react-i18next";
 import { Logo } from "@/components/Logo";
 import { useDemo } from "@/contexts/DemoContext";
-import { CommunityMarketplace } from "@/components/community/CommunityMarketplace";
 import heroBg from "@/assets/hero-community.jpg";
 
 const Index = () => {
@@ -27,18 +26,7 @@ const Index = () => {
   const handleHeroSearch = (e: React.FormEvent) => {
     e.preventDefault();
     const q = heroSearch.trim();
-    const target = q ? `#marketplace?q=${encodeURIComponent(q)}` : "#marketplace";
-    // Smooth scroll to the marketplace section
-    const el = document.getElementById("marketplace");
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
-      if (q) {
-        // Dispatch a custom event the marketplace listens to
-        window.dispatchEvent(new CustomEvent("marketplace:search", { detail: q }));
-      }
-    } else {
-      window.location.hash = target;
-    }
+    navigate(q ? `/community?q=${encodeURIComponent(q)}` : "/community");
   };
 
   useEffect(() => {
@@ -176,9 +164,6 @@ const Index = () => {
           </div>
         </div>
       </section>
-
-      {/* COMMUNITY MARKETPLACE — Show value immediately */}
-      <CommunityMarketplace />
 
       {/* THE MATH — Big editorial numbers */}
       <section className="border-b border-border/60">

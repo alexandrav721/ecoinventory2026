@@ -10,6 +10,7 @@ import NearbySearch from "@/components/dashboard/NearbySearch";
 import SearchCommunity from "@/components/dashboard/SearchCommunity";
 import LocationSettings from "@/components/dashboard/LocationSettings";
 import { DemoNearbyItems } from "@/components/community/DemoNearbyItems";
+import { CommunityMarketplace } from "@/components/community/CommunityMarketplace";
 import { useDemo } from "@/contexts/DemoContext";
 
 const Community = () => {
@@ -75,6 +76,9 @@ const Community = () => {
             Discover items available for sharing in your area
           </p>
         </div>
+
+        {/* Live community marketplace (real items) */}
+        {!isDemoMode && <CommunityMarketplace />}
 
         {/* Demo Nearby Items */}
         {isDemoMode && <DemoNearbyItems />}
