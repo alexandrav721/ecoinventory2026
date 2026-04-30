@@ -1,7 +1,7 @@
 import { Link, useLocation, useSearchParams } from "react-router-dom";
 import { 
   Home, Package, MapPin, FileText, Info, Shield, Users, MessageSquare, 
-  BarChart3, FolderTree, ChevronDown, Compass, Bell, Inbox, Activity, LayoutDashboard
+  BarChart3, FolderTree, ChevronDown, Compass, Bell, Inbox, Activity, LayoutDashboard, Search
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
