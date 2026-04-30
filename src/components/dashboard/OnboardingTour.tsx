@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Joyride, { CallBackProps, STATUS, Step } from "react-joyride";
+import { Joyride, STATUS, type CallBackProps, type Step } from "react-joyride";
 
 interface OnboardingTourProps {
   open: boolean;
