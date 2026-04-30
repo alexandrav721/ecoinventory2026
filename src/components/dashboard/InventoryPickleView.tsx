@@ -257,6 +257,11 @@ const InventoryPickleView = () => {
     );
   }
 
+  const excessCount = useMemo(
+    () => items.filter((i) => (i.quantity ?? 1) > 1).length,
+    [items]
+  );
+
   // Quick chips at top of sidebar
   const chips: { label: string; active: boolean; onClick: () => void }[] = [
     {
@@ -264,6 +269,15 @@ const InventoryPickleView = () => {
       active: withImagesOnly,
       onClick: () => setWithImagesOnly((v) => !v),
     },
+    ...(excessCount > 0
+      ? [
+          {
+            label: `Excess / duplicates (${excessCount})`,
+            active: excessOnly,
+            onClick: () => setExcessOnly((v) => !v),
+          },
+        ]
+      : []),
     ...PRICE_BUCKETS.map((b) => ({
       label: b.label,
       active: activePrice === b.label,
