@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Eye, Heart, Play } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { ArrowRight, Eye, Heart, Play, Search } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import DashboardNav from "@/components/DashboardNav";
@@ -8,6 +9,7 @@ import { useTranslation } from "react-i18next";
 import { Logo } from "@/components/Logo";
 import { useDemo } from "@/contexts/DemoContext";
 import { CommunityMarketplace } from "@/components/community/CommunityMarketplace";
+import heroBg from "@/assets/hero-community.jpg";
 
 const Index = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -15,10 +17,28 @@ const Index = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { enterDemoMode } = useDemo();
+  const [heroSearch, setHeroSearch] = useState("");
 
   const handleTryDemo = () => {
     enterDemoMode();
     navigate("/dashboard");
+  };
+
+  const handleHeroSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    const q = heroSearch.trim();
+    const target = q ? `#marketplace?q=${encodeURIComponent(q)}` : "#marketplace";
+    // Smooth scroll to the marketplace section
+    const el = document.getElementById("marketplace");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+      if (q) {
+        // Dispatch a custom event the marketplace listens to
+        window.dispatchEvent(new CustomEvent("marketplace:search", { detail: q }));
+      }
+    } else {
+      window.location.hash = target;
+    }
   };
 
   useEffect(() => {
