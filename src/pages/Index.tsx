@@ -166,8 +166,6 @@ const Index = () => {
       </section>
 
       {/* THE MATH — Big editorial numbers */}
-
-      {/* THE MATH — Big editorial numbers */}
       <section className="border-b border-border/60">
         <div className="container mx-auto px-6 py-24 md:py-32">
           <div className="max-w-3xl mb-20">
