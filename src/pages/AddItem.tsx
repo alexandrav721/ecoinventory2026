@@ -231,10 +231,14 @@ const AddItem = () => {
 
     setAnalyzingItem(true);
     try {
+      // Text-only path → multi-item extraction + bulk insert
+      const isMulti = !!smartInput && !smartImage;
+
       const { data, error } = await supabase.functions.invoke('analyze-item', {
-        body: { 
+        body: {
           image: smartImage,
-          description: smartInput 
+          description: smartInput,
+          multi: isMulti,
         }
       });
 
@@ -249,33 +253,95 @@ const AddItem = () => {
         return;
       }
 
-      if (data?.success && data.data) {
-        const aiData = data.data;
-        
-        const conditionMap: Record<string, string> = {
-          'new': 'new',
-          'like_new': 'like_new',
-          'good': 'good',
-          'fair': 'fair',
-          'poor': 'poor'
-        };
+      const conditionMap: Record<string, string> = {
+        new: 'new', like_new: 'like_new', good: 'good', fair: 'fair', poor: 'poor'
+      };
 
-        let categoryId = "";
-        if (aiData.category) {
-          const matchingCategory = categories.find(c => 
-            c.name.toLowerCase().includes(aiData.category.toLowerCase()) ||
-            aiData.category.toLowerCase().includes(c.name.toLowerCase())
-          );
-          if (matchingCategory) {
-            categoryId = matchingCategory.id;
-          }
+      const matchCategoryId = (catName?: string) => {
+        if (!catName) return "";
+        const m = categories.find(c =>
+          c.name.toLowerCase().includes(catName.toLowerCase()) ||
+          catName.toLowerCase().includes(c.name.toLowerCase())
+        );
+        return m?.id || "";
+      };
+
+      // ── Multi-item bulk insert path ──
+      if (isMulti && data?.success && Array.isArray(data.items)) {
+        const items = data.items;
+        if (items.length === 0) {
+          toast.error("Couldn't find any items in your description.");
+          return;
         }
 
+        // Single item → fall through to review form
+        if (items.length === 1) {
+          const aiData = items[0];
+          setFormData({
+            ...formData,
+            name: aiData.name || "",
+            description: aiData.description || "",
+            category_id: matchCategoryId(aiData.category),
+            brand: aiData.brand || "",
+            color: aiData.color || "",
+            size: aiData.size || "",
+            condition: conditionMap[aiData.condition] || "good",
+            original_price: aiData.estimatedPrice ? aiData.estimatedPrice.toString() : "",
+            location: aiData.location || "",
+            quantity: aiData.quantity || 1,
+          });
+          toast.success("✨ AI found 1 item — review and save.");
+          setMode("manual");
+          setSmartInput("");
+          return;
+        }
+
+        // Multiple → insert all directly
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+          toast.error("Please log in to add items");
+          return;
+        }
+
+        const itemsToInsert = items.map((aiData: any) => ({
+          user_id: user.id,
+          name: aiData.name,
+          description: aiData.description || null,
+          category_id: matchCategoryId(aiData.category) || null,
+          brand: aiData.brand || null,
+          color: aiData.color || null,
+          condition: conditionMap[aiData.condition] || 'good',
+          size: aiData.size || null,
+          original_price: aiData.estimatedPrice || null,
+          location: aiData.location || null,
+          quantity: aiData.quantity || 1,
+          image_urls: [],
+        }));
+
+        const { data: inserted, error: insertError } = await supabase
+          .from('inventory_items')
+          .insert(itemsToInsert)
+          .select("id, name");
+
+        if (insertError) throw insertError;
+
+        if (inserted && inserted.length > 0) {
+          autoCategorizeItems(inserted).catch(e => console.warn("Auto-categorize failed:", e));
+        }
+
+        toast.success(`✨ Added ${items.length} items!`);
+        navigate("/dashboard");
+        return;
+      }
+
+      // ── Single-item path (image, or fallback) ──
+      if (data?.success && data.data) {
+        const aiData = data.data;
         setFormData({
           ...formData,
           name: aiData.name || "",
           description: aiData.description || "",
-          category_id: categoryId,
+          category_id: matchCategoryId(aiData.category),
           brand: aiData.brand || "",
           color: aiData.color || "",
           size: aiData.size || "",
