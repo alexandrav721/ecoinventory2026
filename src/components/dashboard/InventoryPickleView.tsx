@@ -67,6 +67,7 @@ const InventoryPickleView = () => {
   const [activeConditions, setActiveConditions] = useState<Set<string>>(new Set());
   const [activePrice, setActivePrice] = useState<string | null>(null);
   const [withImagesOnly, setWithImagesOnly] = useState(false);
+  const [excessOnly, setExcessOnly] = useState(false);
 
   useEffect(() => {
     const load = async () => {
@@ -180,6 +181,7 @@ const InventoryPickleView = () => {
         if (bucket && (p < bucket.min || p >= bucket.max)) return false;
       }
       if (withImagesOnly && !it.image_url) return false;
+      if (excessOnly && (it.quantity ?? 1) <= 1) return false;
       return true;
     });
 
@@ -205,6 +207,7 @@ const InventoryPickleView = () => {
     activeConditions,
     activePrice,
     withImagesOnly,
+    excessOnly,
   ]);
 
   const toggleSet = <T,>(setter: (s: Set<T>) => void, current: Set<T>, val: T) => {
@@ -221,6 +224,7 @@ const InventoryPickleView = () => {
     setActiveConditions(new Set());
     setActivePrice(null);
     setWithImagesOnly(false);
+    setExcessOnly(false);
   };
 
   const hasFilters =
@@ -229,7 +233,8 @@ const InventoryPickleView = () => {
     activeBrands.size > 0 ||
     activeConditions.size > 0 ||
     activePrice !== null ||
-    withImagesOnly;
+    withImagesOnly ||
+    excessOnly;
 
   if (loading) {
     return (
@@ -252,6 +257,11 @@ const InventoryPickleView = () => {
     );
   }
 
+  const excessCount = useMemo(
+    () => items.filter((i) => (i.quantity ?? 1) > 1).length,
+    [items]
+  );
+
   // Quick chips at top of sidebar
   const chips: { label: string; active: boolean; onClick: () => void }[] = [
     {
@@ -259,6 +269,15 @@ const InventoryPickleView = () => {
       active: withImagesOnly,
       onClick: () => setWithImagesOnly((v) => !v),
     },
+    ...(excessCount > 0
+      ? [
+          {
+            label: `Excess / duplicates (${excessCount})`,
+            active: excessOnly,
+            onClick: () => setExcessOnly((v) => !v),
+          },
+        ]
+      : []),
     ...PRICE_BUCKETS.map((b) => ({
       label: b.label,
       active: activePrice === b.label,
