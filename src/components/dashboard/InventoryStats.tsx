@@ -294,11 +294,11 @@ const InventoryStats = () => {
 
   if (loading) {
     return (
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 border-t border-l border-border/60">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
         {[...Array(9)].map((_, i) => (
-          <div key={i} className="border-r border-b border-border/60 p-5 animate-pulse">
-            <div className="h-3 bg-muted rounded w-20 mb-3" />
-            <div className="h-8 bg-muted rounded w-16" />
+          <div key={i} className="rounded-lg border border-border/60 bg-card p-3 animate-pulse">
+            <div className="h-3 bg-muted rounded w-16 mb-2" />
+            <div className="h-5 bg-muted rounded w-12" />
           </div>
         ))}
       </div>
@@ -307,24 +307,25 @@ const InventoryStats = () => {
 
   return (
     <TooltipProvider>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 border-t border-l border-border/60">
-        {statCards.map((stat, idx) => {
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
+        {statCards.map((stat) => {
           const isNegative = (stat as any).negative;
+          const Icon = stat.icon;
           return (
             <div
               key={stat.title}
               data-metric={(stat as any).dataMetric}
-              className="group relative border-r border-b border-border/60 p-5 transition-colors hover:bg-muted/30"
+              className="group rounded-lg border border-border/60 bg-card px-3 py-2.5 hover:bg-muted/30 transition-colors"
             >
-              {/* Section number, magazine-style */}
-              <div className="flex items-baseline justify-between mb-3">
-                <span className="text-[10px] font-mono text-muted-foreground/60 tracking-wider">
-                  § {String(idx + 1).padStart(2, '0')}
-                </span>
+              <div className="flex items-center justify-between mb-1">
+                <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground font-medium uppercase tracking-wide min-w-0">
+                  <Icon className="w-3 h-3 shrink-0" />
+                  <span className="truncate">{stat.title}</span>
+                </div>
                 {(stat as any).tooltip && (
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <Info className="h-3 w-3 text-muted-foreground/50 cursor-help hover:text-foreground" />
+                      <Info className="h-3 w-3 text-muted-foreground/50 cursor-help hover:text-foreground shrink-0" />
                     </TooltipTrigger>
                     <TooltipContent className="max-w-xs">
                       <p className="text-sm">{(stat as any).tooltip}</p>
@@ -332,24 +333,14 @@ const InventoryStats = () => {
                   </Tooltip>
                 )}
               </div>
-
-              {/* Label — lowercase italic, editorial */}
-              <p className="text-xs italic text-muted-foreground mb-2 lowercase">
-                {stat.title}
-              </p>
-
-              {/* The number — oversized Fraunces serif */}
               <div
-                className={`font-display font-light leading-none tracking-tight mb-2 ${
+                className={`text-xl font-semibold leading-tight tabular-nums ${
                   isNegative ? 'text-destructive' : 'text-foreground'
                 }`}
-                style={{ fontSize: 'clamp(1.75rem, 3vw, 2.5rem)' }}
               >
                 {isNegative && '−'}{stat.value}
               </div>
-
-              {/* Description — hairline above */}
-              <p className="text-[11px] text-muted-foreground/80 pt-2 border-t border-border/40">
+              <p className="text-[10px] text-muted-foreground/80 truncate mt-0.5">
                 {stat.description}
               </p>
             </div>
