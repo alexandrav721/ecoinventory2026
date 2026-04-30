@@ -131,6 +131,12 @@ const Index = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row flex-wrap gap-3 mt-10">
+              <Button asChild size="lg" variant="outline" className="rounded-full border-foreground/30 hover:bg-foreground hover:text-background gap-2">
+                <Link to="/community">
+                  <Search className="w-4 h-4" />
+                  Browse public inventory
+                </Link>
+              </Button>
               {isLoggedIn ? (
                 <Button asChild size="lg" className="rounded-full bg-foreground text-background hover:bg-foreground/90 gap-2">
                   <Link to="/dashboard">
@@ -139,25 +145,17 @@ const Index = () => {
                   </Link>
                 </Button>
               ) : (
-                <>
-                  <Button asChild size="lg" variant="outline" className="rounded-full border-foreground/30 hover:bg-foreground hover:text-background gap-2">
-                    <Link to="/community">
-                      <Search className="w-4 h-4" />
-                      Browse public inventory
-                    </Link>
-                  </Button>
-                  <Button asChild size="lg" className="rounded-full bg-foreground text-background hover:bg-foreground/90 gap-2">
-                    <Link to="/auth">
-                      Sign up for free
-                      <ArrowRight className="w-4 h-4" />
-                    </Link>
-                  </Button>
-                  <Button size="lg" variant="ghost" onClick={handleTryDemo} className="rounded-full gap-2 hover:bg-secondary/60">
-                    <Eye className="w-4 h-4" />
-                    Try demo
-                  </Button>
-                </>
+                <Button asChild size="lg" className="rounded-full bg-foreground text-background hover:bg-foreground/90 gap-2">
+                  <Link to="/auth">
+                    Sign up for free
+                    <ArrowRight className="w-4 h-4" />
+                  </Link>
+                </Button>
               )}
+              <Button size="lg" variant="ghost" onClick={handleTryDemo} className="rounded-full gap-2 hover:bg-secondary/60">
+                <Eye className="w-4 h-4" />
+                Try demo
+              </Button>
             </div>
           </div>
         </div>
