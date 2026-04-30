@@ -29,7 +29,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ImageUpload } from "./ImageUpload";
 import { TagInput } from "./TagInput";
 import { CategorySelector } from "./CategorySelector";
-import LocationInput from "./LocationInput";
 import BrandInput from "./BrandInput";
 import { z } from "zod";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -147,7 +146,6 @@ const AddItemDialog = ({ open, onOpenChange }: AddItemDialogProps) => {
     condition: "good",
     usage_frequency: "",
     sharing_level: "private" as "private" | "friends" | "public",
-    location: "",
     tags: [] as string[],
   });
 
@@ -472,7 +470,6 @@ const AddItemDialog = ({ open, onOpenChange }: AddItemDialogProps) => {
           color: formData.color.trim() || null,
           dimensions: formData.dimensions.trim() || null,
           size: formData.size.trim() || null,
-          location: formData.location.trim() || null,
           tags: formData.tags,
           user_id: user.id,
           original_price: formData.original_price ? parseFloat(formData.original_price) : null,
@@ -507,7 +504,6 @@ const AddItemDialog = ({ open, onOpenChange }: AddItemDialogProps) => {
         condition: "good",
         usage_frequency: "",
         sharing_level: "private",
-        location: "",
         tags: [],
       });
       setBrandSuggestions([]);
@@ -690,7 +686,6 @@ const AddItemDialog = ({ open, onOpenChange }: AddItemDialogProps) => {
           condition: conditionMap[aiData.condition] || 'good',
           size: aiData.size || null,
           original_price: aiData.estimatedPrice || null,
-          location: aiData.location || null,
           image_urls: [img.url],
           quantity: 1
         };
@@ -777,7 +772,6 @@ const AddItemDialog = ({ open, onOpenChange }: AddItemDialogProps) => {
           size: aiData.size || "",
           condition: conditionMap[aiData.condition] || "good",
           original_price: aiData.estimatedPrice ? aiData.estimatedPrice.toString() : "",
-          location: aiData.location || "",
           image_urls: smartImage ? [smartImage] : [],
         });
 
@@ -1521,14 +1515,6 @@ const AddItemDialog = ({ open, onOpenChange }: AddItemDialogProps) => {
               />
               {errors.color && <p className="text-sm text-destructive">{errors.color}</p>}
             </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="location">Location</Label>
-            <LocationInput
-              value={formData.location}
-              onChange={(location) => setFormData({ ...formData, location })}
-            />
           </div>
 
           <div className="space-y-2">

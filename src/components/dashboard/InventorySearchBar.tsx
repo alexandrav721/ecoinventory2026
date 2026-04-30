@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 interface QuickFilter {
   label: string;
   value: string;
-  type: 'category' | 'location' | 'condition' | 'recent';
+  type: 'category' | 'condition' | 'recent';
 }
 
 interface InventorySearchBarProps {

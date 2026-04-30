@@ -15,7 +15,6 @@ interface InventoryItem {
   brand: string | null;
   original_price: number | null;
   quantity: number;
-  location: string | null;
   condition: string | null;
 }
 

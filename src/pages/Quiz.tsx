@@ -102,7 +102,6 @@ const Quiz = () => {
         user_id: userId,
         name: it.name,
         original_price: it.typicalPrice,
-        location: it.room,
         quantity: 1,
       }));
 

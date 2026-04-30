@@ -29,7 +29,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ImageUpload } from "./ImageUpload";
 import { TagInput } from "./TagInput";
 import { CategorySelector } from "./CategorySelector";
-import LocationInput from "./LocationInput";
 import BrandInput from "./BrandInput";
 import { formatCurrency } from "@/lib/utils";
 
@@ -147,7 +146,6 @@ const EditItemDialog = ({ item, open, onOpenChange, onItemUpdated }: EditItemDia
     usage_frequency: "",
     sharing_level: "private" as "private" | "friends" | "public",
     sharing_price: "",
-    location: "",
     is_donated: false,
     is_sold: false,
     donated_price: "",
@@ -493,7 +491,6 @@ const EditItemDialog = ({ item, open, onOpenChange, onItemUpdated }: EditItemDia
           color: formData.color.trim() || null,
           dimensions: formData.dimensions.trim() || null,
           size: formData.size.trim() || null,
-          location: formData.location.trim() || null,
           category_id: formData.category_id || null,
           quantity: formData.quantity,
           original_price: formData.original_price ? parseFloat(formData.original_price) : null,
@@ -627,11 +624,6 @@ const EditItemDialog = ({ item, open, onOpenChange, onItemUpdated }: EditItemDia
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="location">Location</Label>
-            <LocationInput
-              value={formData.location}
-              onChange={(location) => setFormData({ ...formData, location })}
-            />
           </div>
 
           <div className="space-y-2">

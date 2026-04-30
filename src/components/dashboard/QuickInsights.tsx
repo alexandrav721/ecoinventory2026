@@ -231,7 +231,7 @@ const QuickInsights = () => {
       }
 
       // Insight: Well organized
-      const organizedItems = activeItems.filter(item => item.location && item.category_id);
+      const organizedItems = activeItems.filter(item => item.category_id);
       const organizationRate = activeItems.length > 0 ? (organizedItems.length / activeItems.length) * 100 : 0;
       
       if (organizationRate >= 80) {

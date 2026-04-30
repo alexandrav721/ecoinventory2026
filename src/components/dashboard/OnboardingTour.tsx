@@ -28,7 +28,7 @@ const steps: OnboardingStep[] = [
     tips: [
       "Keep track of everything you own in one place",
       "Know what you have to avoid duplicate purchases",
-      "Organize items by location, category, and condition",
+      "Organize items by category and condition",
       "Access your inventory from anywhere",
     ],
   },
@@ -84,7 +84,7 @@ const steps: OnboardingStep[] = [
     icon: Lightbulb,
     tips: [
       "Add items with photos for easy identification",
-      "Use categories and locations to stay organized",
+      "Use categories to stay organized",
       "Check Analytics regularly for insights",
       "Share items with friends to build your community",
     ],

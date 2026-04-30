@@ -20,7 +20,6 @@ import { Switch } from "@/components/ui/switch";
 import { ImageUpload } from "@/components/dashboard/ImageUpload";
 import { TagInput } from "@/components/dashboard/TagInput";
 import { CategorySelector } from "@/components/dashboard/CategorySelector";
-import LocationInput from "@/components/dashboard/LocationInput";
 import BrandInput from "@/components/dashboard/BrandInput";
 import { PersonalizedCatalogSelector } from "@/components/dashboard/PersonalizedCatalogSelector";
 import { z } from "zod";
@@ -82,7 +81,6 @@ const AddItem = () => {
     condition: "good",
     usage_frequency: "",
     sharing_level: "private" as "private" | "friends" | "public",
-    location: "",
     tags: [] as string[],
   });
 
@@ -123,7 +121,6 @@ const AddItem = () => {
         size: aiData.size || "",
         condition: conditionMap[aiData.condition] || "good",
         original_price: aiData.estimatedPrice ? aiData.estimatedPrice.toString() : "",
-        location: aiData.location || "",
         image_urls: quickAddData.imageUrl ? [quickAddData.imageUrl] : [],
       }));
     }
@@ -181,7 +178,6 @@ const AddItem = () => {
           color: formData.color.trim() || null,
           dimensions: formData.dimensions.trim() || null,
           size: formData.size.trim() || null,
-          location: formData.location.trim() || null,
           tags: formData.tags,
           user_id: user.id,
           original_price: formData.original_price ? parseFloat(formData.original_price) : null,
@@ -287,7 +283,6 @@ const AddItem = () => {
             size: aiData.size || "",
             condition: conditionMap[aiData.condition] || "good",
             original_price: aiData.estimatedPrice ? aiData.estimatedPrice.toString() : "",
-            location: aiData.location || "",
             quantity: aiData.quantity || 1,
           });
           toast.success("✨ AI found 1 item — review and save.");
@@ -313,7 +308,6 @@ const AddItem = () => {
           condition: conditionMap[aiData.condition] || 'good',
           size: aiData.size || null,
           original_price: aiData.estimatedPrice || null,
-          location: aiData.location || null,
           quantity: aiData.quantity || 1,
           image_urls: [],
         }));
@@ -347,7 +341,6 @@ const AddItem = () => {
           size: aiData.size || "",
           condition: conditionMap[aiData.condition] || "good",
           original_price: aiData.estimatedPrice ? aiData.estimatedPrice.toString() : "",
-          location: aiData.location || "",
           image_urls: smartImage ? [smartImage] : [],
         });
 
@@ -485,7 +478,6 @@ const AddItem = () => {
           condition: conditionMap[aiData.condition] || 'good',
           size: aiData.size || null,
           original_price: aiData.estimatedPrice || null,
-          location: aiData.location || null,
           image_urls: [img.url],
           quantity: 1
         };
@@ -1184,11 +1176,6 @@ const AddItem = () => {
                 />
               </div>
             </div>
-
-            <LocationInput
-              value={formData.location}
-              onChange={(value) => setFormData({ ...formData, location: value })}
-            />
 
             <TagInput
               value={formData.tags}
