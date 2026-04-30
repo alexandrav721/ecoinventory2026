@@ -37,7 +37,7 @@ const Dashboard = () => {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const activeTab = searchParams.get("tab") || "analytics";
+  const activeTab = searchParams.get("tab") || "inventory";
   const { t } = useTranslation();
   const { showOnboarding: showAnalyticsOnboarding, handleComplete: handleAnalyticsOnboardingComplete } = useAnalyticsOnboarding();
   const { isDemoMode, exitDemoMode } = useDemo();
@@ -165,18 +165,18 @@ const Dashboard = () => {
         <Tabs value={activeTab} onValueChange={(value) => setSearchParams({ tab: value })} className="w-full">
           <TabsList className="h-11 p-1 bg-muted/50 rounded-xl gap-1 w-fit mb-6">
             <TabsTrigger
-              value="analytics"
-              className="gap-2 rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm px-4"
-            >
-              <BarChart3 className="w-4 h-4" />
-              <span className="hidden sm:inline">{t('dashboard.analytics')}</span>
-            </TabsTrigger>
-            <TabsTrigger
               value="inventory"
               className="gap-2 rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm px-4"
             >
               <Package className="w-4 h-4" />
               <span className="hidden sm:inline">{t('dashboard.myInventory')}</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="analytics"
+              className="gap-2 rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm px-4"
+            >
+              <BarChart3 className="w-4 h-4" />
+              <span className="hidden sm:inline">{t('dashboard.analytics')}</span>
             </TabsTrigger>
           </TabsList>
 
@@ -196,12 +196,7 @@ const Dashboard = () => {
               <section className="space-y-5 min-w-0">
                 <QuizPrompt />
 
-                <div className="flex items-center justify-between gap-3">
-                  <div>
-                    <h3 className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                      My stuff
-                    </h3>
-                  </div>
+                <div className="flex items-center justify-end gap-3">
                   <Button onClick={() => navigate("/dashboard/add-item")} size="sm" className="gap-2">
                     <Plus className="w-4 h-4" />
                     {t('dashboard.addItem')}
