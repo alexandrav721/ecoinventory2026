@@ -125,7 +125,7 @@ const Index = () => {
             </h1>
             <p className="text-lg md:text-xl text-foreground/70 mt-8 max-w-xl leading-relaxed">
               <span className="italic font-display-wonk">Rent</span>, <span className="italic font-display-wonk">lend</span>, and <span className="italic font-display-wonk">buy</span> from neighbors and friends.
-              Everything you need is already on your block.
+              Own less. <span className="italic font-display-wonk">Access more.</span>
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 mt-10">
