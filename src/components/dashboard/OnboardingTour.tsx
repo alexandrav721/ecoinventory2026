@@ -9,7 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
-import { ChevronLeft, ChevronRight, TrendingUp, Receipt, DollarSign, Gift, Lightbulb, Package, Heart, BarChart3, Users } from "lucide-react";
+import { ChevronLeft, ChevronRight, Lightbulb, Package, Sparkles, TrendingUp, Users } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
 interface OnboardingStep {
@@ -22,71 +22,44 @@ interface OnboardingStep {
 
 const steps: OnboardingStep[] = [
   {
-    title: "Welcome to EcoInventory! 🌱",
-    description: "Your personal inventory tracker that helps you organize, share, sell, and make smarter decisions about your stuff.",
+    title: "Welcome to EcoInventory 🌱",
+    description: "Your personal inventory tracker — organize what you own, avoid duplicate buys, and make smarter decisions about your stuff.",
     icon: Package,
     tips: [
-      "Keep track of everything you own in one place",
-      "Know what you have to avoid duplicate purchases",
-      "Organize items by category and condition",
-      "Access your inventory from anywhere",
+      "Add items with photos, categories, and condition",
+      "Access your inventory from any device",
+      "Snap a photo and let AI fill in the details",
     ],
   },
   {
-    title: "Donate & Declutter 💚",
-    description: "Identify items you no longer need and give them a second life through donation.",
-    icon: Heart,
+    title: "Add Items Your Way ✨",
+    description: "Add items quickly with the camera, bulk upload, CSV import, or just chat with the AI assistant.",
+    icon: Sparkles,
     tips: [
-      "Mark items as donated to track your giving impact",
-      "See the value of items you've donated over time",
-      "Help reduce waste by passing things on to others",
-      "Feel good about decluttering with purpose",
+      "Tap the floating chat to add items conversationally",
+      "Use Smart Add to scan multiple items at once",
+      "Export your inventory to CSV anytime",
     ],
   },
   {
-    title: "Analyze Excess Inventory 📊",
-    description: "Our smart insights help you spot duplicates, rarely-used items, and things you might not need.",
-    icon: BarChart3,
-    tips: [
-      "Find duplicate items you didn't know you had",
-      "Identify items you haven't used in a while",
-      "Get recommendations on what to sell or donate",
-      "Make informed decisions about your belongings",
-    ],
-    highlight: "quick-insights",
-  },
-  {
-    title: "Share with Your Community 🤝",
-    description: "Connect with friends and neighbors to borrow, lend, and share items instead of buying new.",
-    icon: Users,
-    tips: [
-      "Lend items to friends and track who has what",
-      "Borrow things you only need occasionally",
-      "Build a sharing community in your neighborhood",
-      "Save money and reduce waste together",
-    ],
-  },
-  {
-    title: "Market Value & Selling 💰",
-    description: "See what your items are worth and discover earning opportunities.",
+    title: "Insights & Market Value 📊",
+    description: "See what your stuff is worth, spot duplicates and unused items, and find earning or donation opportunities.",
     icon: TrendingUp,
     tips: [
-      "Track what your items could sell for",
-      "Compare prices with similar items in the marketplace",
-      "Identify which items have the most earning potential",
-      "Monitor your selling performance over time",
+      "Track total market value of your inventory",
+      "Get suggestions on what to sell or donate",
+      "Identify items you haven't used in a while",
     ],
     highlight: "market-value",
   },
   {
-    title: "Ready to Get Organized! 🚀",
-    description: "You're all set! Start adding items to your inventory and take control of your stuff.",
-    icon: Lightbulb,
+    title: "Share with Your Community 🤝",
+    description: "Lend, borrow, sell, or donate with people nearby — save money and reduce waste together.",
+    icon: Users,
     tips: [
-      "Add items with photos for easy identification",
-      "Use categories to stay organized",
-      "Check Analytics regularly for insights",
-      "Share items with friends to build your community",
+      "Lend items and track who has what",
+      "Browse the community feed to borrow or buy",
+      "Mark items donated to track your impact",
     ],
   },
 ];
