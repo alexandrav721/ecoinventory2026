@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { Button } from "@/components/ui/button";
-import { Leaf, Plus, GraduationCap, BarChart3, Package, Sheet, ChevronDown, FileUp, Sparkles, Lightbulb, LayoutGrid } from "lucide-react";
+import { Leaf, Plus, GraduationCap, BarChart3, Package, Sheet, ChevronDown, FileUp, Sparkles, Lightbulb, LayoutGrid, Search } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
