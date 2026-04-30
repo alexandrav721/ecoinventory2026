@@ -211,7 +211,6 @@ const Auth = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-        <CardContent>
           {isForgotPassword ? (
             <>
               <form onSubmit={handleForgotPassword} className="space-y-4">
