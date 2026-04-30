@@ -25,6 +25,7 @@ import AddItem from "./pages/AddItem";
 import EditItem from "./pages/EditItem";
 import Quiz from "./pages/Quiz";
 import Declutter from "./pages/Declutter";
+import BeforeYouBuy from "./pages/BeforeYouBuy";
 import CircularEconomyGuide from "./pages/articles/CircularEconomyGuide";
 import OrganizingInventory from "./pages/articles/OrganizingInventory";
 import ItemDepreciation from "./pages/articles/ItemDepreciation";
