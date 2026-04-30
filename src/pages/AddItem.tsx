@@ -600,18 +600,7 @@ const AddItem = () => {
               </div>
             </Card>
 
-            <Card 
-              className="p-6 cursor-pointer hover:bg-accent transition-colors"
-              onClick={() => setMode("catalog-multi")}
-            >
-              <div className="flex flex-col items-center text-center space-y-3">
-                <Package className="h-12 w-12 text-primary" />
-                <h3 className="font-semibold">EcoInventory Catalog</h3>
-                <p className="text-sm text-muted-foreground">
-                  Browse personalized recommendations
-                </p>
-              </div>
-            </Card>
+            {/* EcoInventory Catalog removed */}
 
             <Card 
               className="p-6 cursor-pointer hover:bg-accent transition-colors"
