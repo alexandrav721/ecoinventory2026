@@ -119,13 +119,12 @@ const Index = () => {
           {/* Bottom-left: massive headline */}
           <div className="mt-auto pt-20 md:pt-32 max-w-4xl">
             <h1 className="font-display text-[clamp(3rem,9vw,7.5rem)] leading-[0.92] font-light text-foreground">
-              Never buy
+              Own less.
               <br />
-              <span className="italic font-display-wonk text-primary">anything again.</span>
+              <span className="italic font-display-wonk text-primary">Access more.</span>
             </h1>
             <p className="text-lg md:text-xl text-foreground/70 mt-8 max-w-xl leading-relaxed">
-              <span className="italic font-display-wonk">Rent</span>, <span className="italic font-display-wonk">lend</span>, and <span className="italic font-display-wonk">buy</span> from neighbors and friends.
-              Own less. <span className="italic font-display-wonk">Access more.</span>
+              <span className="italic font-display-wonk">Rent</span>, <span className="italic font-display-wonk">donate</span>, and <span className="italic font-display-wonk">buy</span> from neighbors and friends. Your next purchase is probably <span className="italic font-display-wonk">three doors down.</span>
             </p>
             <p className="text-base md:text-lg text-foreground/60 mt-5 max-w-xl leading-relaxed">
               Track everything you already own — we'll flag the <span className="italic font-display-wonk text-foreground/80">duplicates</span>, the <span className="italic font-display-wonk text-foreground/80">excess</span>, and the things gathering dust — so you never re-buy what's already on a shelf.
