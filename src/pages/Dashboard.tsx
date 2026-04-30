@@ -28,6 +28,7 @@ import ProfileDropdown from "@/components/ProfileDropdown";
 import NotificationBell from "@/components/NotificationBell";
 import { WelcomeHeader } from "@/components/dashboard/WelcomeHeader";
 import { FloatingAddButton } from "@/components/dashboard/FloatingAddButton";
+import { HeaderSearch } from "@/components/HeaderSearch";
 import { QuizPrompt } from "@/components/dashboard/QuizPrompt";
 
 const Dashboard = () => {
