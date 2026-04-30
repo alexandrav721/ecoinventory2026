@@ -22,7 +22,7 @@ import ColumnSettings, { ColumnConfig } from "./ColumnSettings";
 import InventorySummaryBar from "./InventorySummaryBar";
 import QuickAddTemplates from "./QuickAddTemplates";
 
-import InventoryLocationView from "./InventoryLocationView";
+
 import { formatCurrency } from "@/lib/utils";
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, sortableKeyboardCoordinates, horizontalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
@@ -33,7 +33,7 @@ import { useTranslation } from "react-i18next";
 import { useDemo } from "@/contexts/DemoContext";
 import { useExcessInsights } from "@/hooks/useExcessInsights";
 
-type ViewMode = 'list' | 'location';
+type ViewMode = 'list';
 
 interface InventoryItem {
   id: string;
@@ -62,7 +62,7 @@ interface InventoryItem {
   is_eliminated: boolean | null;
   eliminated_date: string | null;
   tags: string[];
-  location: string | null;
+  
 }
 
 interface Category {
@@ -199,12 +199,10 @@ const InventoryGrid = () => {
     const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
     const totalValue = items.reduce((sum, item) => sum + ((item.original_price || 0) * item.quantity), 0);
     const uniqueCategories = new Set(items.map(item => item.category_id).filter(Boolean));
-    const uniqueLocations = new Set(items.map(item => item.location).filter(Boolean));
     return {
       totalItems,
       totalValue,
       categoryCount: uniqueCategories.size,
-      locationCount: uniqueLocations.size,
     };
   }, [items]);
 
@@ -748,7 +746,7 @@ const InventoryGrid = () => {
           totalItems={summaryStats.totalItems}
           totalValue={summaryStats.totalValue}
           categoryCount={summaryStats.categoryCount}
-          locationCount={summaryStats.locationCount}
+          
         />
 
         {/* Quick Add Templates */}
@@ -760,30 +758,12 @@ const InventoryGrid = () => {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex items-center gap-4">
                 <CardTitle className="text-lg">My Stuff</CardTitle>
-                {/* View Mode Toggle */}
-                <ToggleGroup 
-                  type="single" 
-                  value={viewMode} 
-                  onValueChange={(value) => value && setViewMode(value as ViewMode)}
-                  className="bg-muted rounded-lg p-1"
-                >
-                  <ToggleGroupItem value="list" aria-label="List view" className="gap-1.5 data-[state=on]:bg-background">
-                    <List className="w-4 h-4" />
-                    <span className="hidden sm:inline text-xs">List</span>
-                  </ToggleGroupItem>
-                  <ToggleGroupItem value="location" aria-label="Location view" className="gap-1.5 data-[state=on]:bg-background">
-                    <MapPin className="w-4 h-4" />
-                    <span className="hidden sm:inline text-xs">Rooms</span>
-                  </ToggleGroupItem>
-                </ToggleGroup>
               </div>
               <div className="flex gap-2">
-                {viewMode === 'list' && (
-                  <ColumnSettings 
-                    columns={columns}
-                    onColumnVisibilityChange={handleColumnVisibilityChange}
-                  />
-                )}
+                <ColumnSettings
+                  columns={columns}
+                  onColumnVisibilityChange={handleColumnVisibilityChange}
+                />
                 <Button onClick={exportToCSV} variant="outline" size="sm" className="gap-2">
                   <Download className="w-4 h-4" />
                   <span className="hidden sm:inline">Export</span>
@@ -904,11 +884,6 @@ const InventoryGrid = () => {
                     ? t('empty.inventory.description')
                     : t('empty.search.description')
                 }
-              />
-            ) : viewMode === 'location' ? (
-              <InventoryLocationView
-                items={sortedItems}
-                onItemClick={(item) => setViewingItem(item as unknown as InventoryItem)}
               />
             ) : (
             <div className="border rounded-lg overflow-hidden">
@@ -1056,13 +1031,6 @@ const InventoryGrid = () => {
                                           {/* Secondary info line */}
                                           <div className="flex items-center gap-2 text-xs text-muted-foreground">
                                             {item.brand && <span>{item.brand}</span>}
-                                            {item.brand && item.location && <span>•</span>}
-                                            {item.location && (
-                                              <span className="flex items-center gap-1">
-                                                <MapPin className="w-3 h-3" />
-                                                {item.location}
-                                              </span>
-                                            )}
                                           </div>
                                         </div>
                                       </TableCell>

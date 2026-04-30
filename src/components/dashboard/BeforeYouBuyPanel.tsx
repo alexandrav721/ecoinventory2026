@@ -12,7 +12,7 @@ import { toast } from "sonner";
 
 type Result = {
   product: { product_name: string; category?: string; estimated_price: number; estimated_co2_kg: number };
-  ownedItems: Array<{ id: string; name: string; quantity: number; location?: string; image_urls?: string[]; original_price?: number }>;
+  ownedItems: Array<{ id: string; name: string; quantity: number; image_urls?: string[]; original_price?: number }>;
   borrowableItems: Array<{ id: string; name: string; user_id: string; image_urls?: string[]; sharing_price?: number }>;
   recommendation: "skip" | "borrow" | "consider" | "buy";
   reason: string;
@@ -162,7 +162,7 @@ export default function BeforeYouBuyPanel() {
                     <div className="flex-1 min-w-0">
                       <div className="font-medium truncate">{item.name}</div>
                       <div className="text-sm text-muted-foreground truncate">
-                        Qty {item.quantity}{item.location ? ` · ${item.location}` : ""}
+                        Qty {item.quantity}
                       </div>
                     </div>
                   </button>

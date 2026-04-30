@@ -35,7 +35,7 @@ interface Item {
   group: TopLevelGroup;
   original_price: number | null;
   quantity: number;
-  location: string | null;
+  
   condition: string | null;
   brand: string | null;
   image_url: string | null;
@@ -62,7 +62,7 @@ const InventoryPickleView = () => {
 
   // filters
   const [activeGroups, setActiveGroups] = useState<Set<TopLevelGroup>>(new Set());
-  const [activeLocations, setActiveLocations] = useState<Set<string>>(new Set());
+  
   const [activeBrands, setActiveBrands] = useState<Set<string>>(new Set());
   const [activeConditions, setActiveConditions] = useState<Set<string>>(new Set());
   const [activePrice, setActivePrice] = useState<string | null>(null);
@@ -90,7 +90,6 @@ const InventoryPickleView = () => {
                 group: categoryToGroup(catName),
                 original_price: it.original_price ?? null,
                 quantity: it.quantity ?? 1,
-                location: it.location ?? null,
                 condition: it.condition ?? null,
                 brand: it.brand ?? null,
                 image_url: img,
@@ -104,7 +103,7 @@ const InventoryPickleView = () => {
           supabase
             .from("inventory_items")
             .select(
-              "id, name, category_id, original_price, quantity, location, condition, brand, image_urls, created_at, is_donated, is_sold, is_eliminated"
+              "id, name, category_id, original_price, quantity, condition, brand, image_urls, created_at, is_donated, is_sold, is_eliminated"
             )
             .eq("is_donated", false)
             .eq("is_sold", false)
@@ -127,7 +126,7 @@ const InventoryPickleView = () => {
               group: categoryToGroup(catName),
               original_price: it.original_price ?? null,
               quantity: it.quantity ?? 1,
-              location: it.location ?? null,
+              
               condition: it.condition ?? null,
               brand: it.brand ?? null,
               image_url:
@@ -146,11 +145,6 @@ const InventoryPickleView = () => {
     load();
   }, [isDemoMode, demoItems, demoCategories]);
 
-  const locations = useMemo(() => {
-    const s = new Set<string>();
-    items.forEach((i) => i.location && s.add(i.location));
-    return Array.from(s).sort();
-  }, [items]);
 
   const brands = useMemo(() => {
     const s = new Set<string>();
@@ -162,15 +156,13 @@ const InventoryPickleView = () => {
     const q = search.trim().toLowerCase();
     let list = items.filter((it) => {
       if (q) {
-        const hay = [it.name, it.brand, it.category_name, it.location]
+        const hay = [it.name, it.brand, it.category_name]
           .filter(Boolean)
           .join(" ")
           .toLowerCase();
         if (!hay.includes(q)) return false;
       }
       if (activeGroups.size && !activeGroups.has(it.group)) return false;
-      if (activeLocations.size && !(it.location && activeLocations.has(it.location)))
-        return false;
       if (activeBrands.size && !(it.brand && activeBrands.has(it.brand)))
         return false;
       if (activeConditions.size && !(it.condition && activeConditions.has(it.condition)))
@@ -202,7 +194,6 @@ const InventoryPickleView = () => {
     search,
     sort,
     activeGroups,
-    activeLocations,
     activeBrands,
     activeConditions,
     activePrice,
@@ -219,7 +210,7 @@ const InventoryPickleView = () => {
 
   const clearAll = () => {
     setActiveGroups(new Set());
-    setActiveLocations(new Set());
+    
     setActiveBrands(new Set());
     setActiveConditions(new Set());
     setActivePrice(null);
@@ -234,7 +225,7 @@ const InventoryPickleView = () => {
 
   const hasFilters =
     activeGroups.size > 0 ||
-    activeLocations.size > 0 ||
+    
     activeBrands.size > 0 ||
     activeConditions.size > 0 ||
     activePrice !== null ||
@@ -318,7 +309,7 @@ const InventoryPickleView = () => {
 
           <Accordion
             type="multiple"
-            defaultValue={["category", "location"]}
+            defaultValue={["category"]}
             className="border-t border-border/60"
           >
             <AccordionItem value="category" className="border-border/60">
@@ -357,46 +348,6 @@ const InventoryPickleView = () => {
               </AccordionContent>
             </AccordionItem>
 
-            {locations.length > 0 && (
-              <AccordionItem value="location" className="border-border/60">
-                <AccordionTrigger className="text-xs uppercase tracking-[0.15em] text-muted-foreground hover:no-underline">
-                  Room / Location
-                </AccordionTrigger>
-                <AccordionContent>
-                  <div className="space-y-1.5 max-h-60 overflow-auto pr-1">
-                    {locations.map((loc) => {
-                      const count = items.filter((i) => i.location === loc).length;
-                      const active = activeLocations.has(loc);
-                      return (
-                        <label
-                          key={loc}
-                          className="flex items-center justify-between text-sm cursor-pointer hover:text-foreground"
-                        >
-                          <span className="flex items-center gap-2 truncate">
-                            <input
-                              type="checkbox"
-                              checked={active}
-                              onChange={() =>
-                                toggleSet(
-                                  setActiveLocations,
-                                  activeLocations,
-                                  loc
-                                )
-                              }
-                              className="rounded border-border"
-                            />
-                            <span className="truncate">{loc}</span>
-                          </span>
-                          <span className="text-xs text-muted-foreground tabular-nums">
-                            {count}
-                          </span>
-                        </label>
-                      );
-                    })}
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            )}
 
             {brands.length > 0 && (
               <AccordionItem value="brand" className="border-border/60">
@@ -566,7 +517,7 @@ const ItemCard = ({ item, onClick }: { item: Item; onClick: () => void }) => {
           {item.name}
         </h3>
         <p className="text-xs text-muted-foreground truncate">
-          {[item.brand, item.location].filter(Boolean).join(" · ") ||
+          {item.brand ||
             item.category_name ||
             "—"}
         </p>

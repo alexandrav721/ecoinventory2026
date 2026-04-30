@@ -23,7 +23,6 @@ interface Item {
   id: string;
   name: string;
   brand: string | null;
-  location: string | null;
   original_price: number | null;
   quantity: number;
   usage_frequency: string | null;
@@ -84,7 +83,6 @@ const Declutter = () => {
           id: it.id,
           name: it.name,
           brand: it.brand ?? null,
-          location: it.location ?? null,
           original_price: it.original_price ?? null,
           quantity: it.quantity ?? 1,
           usage_frequency: it.usage_frequency ?? null,
@@ -98,7 +96,7 @@ const Declutter = () => {
           supabase
             .from("inventory_items")
             .select(
-              "id, name, brand, location, original_price, quantity, usage_frequency, condition, image_urls, created_at, category_id, is_donated, is_sold, is_eliminated"
+              "id, name, brand, original_price, quantity, usage_frequency, condition, image_urls, created_at, category_id, is_donated, is_sold, is_eliminated"
             )
             .eq("is_donated", false)
             .eq("is_sold", false)
@@ -110,7 +108,6 @@ const Declutter = () => {
           id: it.id,
           name: it.name,
           brand: it.brand,
-          location: it.location,
           original_price: it.original_price,
           quantity: it.quantity ?? 1,
           usage_frequency: it.usage_frequency,
@@ -368,9 +365,6 @@ const Declutter = () => {
                   <DollarSign className="w-3 h-3" />
                   {formatCurrency(itemValue)}
                 </Badge>
-              )}
-              {current.location && (
-                <Badge variant="outline">{current.location}</Badge>
               )}
               {current.condition && (
                 <Badge variant="outline" className="capitalize">

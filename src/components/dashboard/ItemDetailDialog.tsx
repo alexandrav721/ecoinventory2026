@@ -69,7 +69,6 @@ const ItemDetailDialog = ({ item, open, onOpenChange, onItemUpdated }: ItemDetai
           color: item.color,
           dimensions: item.dimensions,
           size: item.size,
-          location: (item as any).location,
           user_id: user.id,
           original_price: item.original_price,
           purchase_date: item.purchase_date,
@@ -175,13 +174,6 @@ const ItemDetailDialog = ({ item, open, onOpenChange, onItemUpdated }: ItemDetai
               <div>
                 <span className="text-sm font-semibold">Size:</span>
                 <p className="text-sm text-muted-foreground">{item.size}</p>
-              </div>
-            )}
-
-            {(item as any).location && (
-              <div>
-                <span className="text-sm font-semibold">Location:</span>
-                <p className="text-sm text-muted-foreground">{(item as any).location}</p>
               </div>
             )}
 

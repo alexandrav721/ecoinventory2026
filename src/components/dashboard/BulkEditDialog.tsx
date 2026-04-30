@@ -23,17 +23,14 @@ interface BulkEditDialogProps {
 
 export default function BulkEditDialog({ open, onOpenChange, selectedItemIds, onSuccess }: BulkEditDialogProps) {
   const [categories, setCategories] = useState<Category[]>([]);
-  const [locations, setLocations] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
-  
+
   const [categoryId, setCategoryId] = useState<string>("");
-  const [location, setLocation] = useState<string>("");
   const [condition, setCondition] = useState<string>("");
 
   useEffect(() => {
     if (open) {
       fetchCategories();
-      fetchLocations();
     }
   }, [open]);
 
@@ -45,18 +42,6 @@ export default function BulkEditDialog({ open, onOpenChange, selectedItemIds, on
     if (data) setCategories(data);
   };
 
-  const fetchLocations = async () => {
-    const { data } = await supabase
-      .from("suggested_locations")
-      .select("location_name")
-      .order("usage_count", { ascending: false })
-      .limit(50);
-    
-    if (data) {
-      setLocations(data.map(l => l.location_name));
-    }
-  };
-
   const getCategoryDepth = (categoryId: string): number => {
     const category = categories.find(c => c.id === categoryId);
     if (!category || !category.parent_id) return 0;
@@ -64,7 +49,7 @@ export default function BulkEditDialog({ open, onOpenChange, selectedItemIds, on
   };
 
   const handleSubmit = async () => {
-    if (!categoryId && !location && !condition) {
+    if (!categoryId && !condition) {
       toast.error("Please select at least one field to update");
       return;
     }
@@ -73,7 +58,6 @@ export default function BulkEditDialog({ open, onOpenChange, selectedItemIds, on
     try {
       const updates: any = {};
       if (categoryId) updates.category_id = categoryId;
-      if (location) updates.location = location;
       if (condition) updates.condition = condition;
 
       const { error } = await supabase
@@ -85,13 +69,12 @@ export default function BulkEditDialog({ open, onOpenChange, selectedItemIds, on
 
       const fieldNames = [];
       if (categoryId) fieldNames.push("category");
-      if (location) fieldNames.push("location");
       if (condition) fieldNames.push("condition");
 
       toast.success(
         `Updated ${fieldNames.join(", ")} for ${selectedItemIds.length} ${selectedItemIds.length === 1 ? 'item' : 'items'}`
       );
-      
+
       onSuccess();
       handleClose();
     } catch (error) {
@@ -104,7 +87,6 @@ export default function BulkEditDialog({ open, onOpenChange, selectedItemIds, on
 
   const handleClose = () => {
     setCategoryId("");
-    setLocation("");
     setCondition("");
     onOpenChange(false);
   };
@@ -115,7 +97,7 @@ export default function BulkEditDialog({ open, onOpenChange, selectedItemIds, on
         <DialogHeader>
           <DialogTitle>Edit {selectedItemIds.length} Items</DialogTitle>
           <DialogDescription>
-            Update category, location, or condition for the selected items. Leave fields empty to keep their current values.
+            Update category or condition for the selected items. Leave fields empty to keep their current values.
           </DialogDescription>
         </DialogHeader>
 
@@ -139,23 +121,6 @@ export default function BulkEditDialog({ open, onOpenChange, selectedItemIds, on
                     </SelectItem>
                   );
                 })}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-2">
-            <Label>Location (optional)</Label>
-            <Select value={location} onValueChange={setLocation}>
-              <SelectTrigger>
-                <SelectValue placeholder="Keep current locations" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="__clear__">Clear location</SelectItem>
-                {locations.map((loc) => (
-                  <SelectItem key={loc} value={loc}>
-                    {loc}
-                  </SelectItem>
-                ))}
               </SelectContent>
             </Select>
           </div>

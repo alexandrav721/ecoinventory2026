@@ -17,7 +17,6 @@ import {
 import { ImageUpload } from "@/components/dashboard/ImageUpload";
 import { TagInput } from "@/components/dashboard/TagInput";
 import { CategorySelector } from "@/components/dashboard/CategorySelector";
-import LocationInput from "@/components/dashboard/LocationInput";
 import BrandInput from "@/components/dashboard/BrandInput";
 import { z } from "zod";
 import { QuirkyLoader } from "@/components/QuirkyLoader";
@@ -58,7 +57,6 @@ const EditItem = () => {
     usage_frequency: "",
     sharing_level: "private" as "private" | "friends" | "public",
     sharing_price: "",
-    location: "",
     tags: [] as string[],
     is_donated: false,
     is_sold: false,
@@ -115,7 +113,6 @@ const EditItem = () => {
           usage_frequency: data.usage_frequency || "",
           sharing_level: (data.sharing_level as "private" | "friends" | "public") || "private",
           sharing_price: data.sharing_price?.toString() || "",
-          location: data.location || "",
           tags: data.tags || [],
           is_donated: data.is_donated || false,
           is_sold: data.is_sold || false,
@@ -180,7 +177,6 @@ const EditItem = () => {
           color: formData.color.trim() || null,
           dimensions: formData.dimensions.trim() || null,
           size: formData.size.trim() || null,
-          location: formData.location.trim() || null,
           tags: formData.tags,
           original_price: formData.original_price ? parseFloat(formData.original_price) : null,
           purchase_date: formData.purchase_date || null,
@@ -388,11 +384,6 @@ const EditItem = () => {
                 </SelectContent>
               </Select>
             </div>
-
-            <LocationInput
-              value={formData.location}
-              onChange={(value) => setFormData({ ...formData, location: value })}
-            />
 
             <TagInput
               value={formData.tags}
