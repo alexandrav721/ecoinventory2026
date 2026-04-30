@@ -96,7 +96,7 @@ const Index = () => {
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/40" />
         </div>
 
-        <div className="relative container mx-auto px-6 pt-16 pb-24 md:pt-24 md:pb-40 min-h-[640px] md:min-h-[720px] flex flex-col">
+        <div className="relative container mx-auto px-6 pt-8 pb-24 md:pt-12 md:pb-40 min-h-[640px] md:min-h-[720px] flex flex-col">
           {/* Top-left: search */}
           <div className="max-w-xl">
             <div className="flex items-center gap-3 mb-6 text-xs uppercase tracking-[0.2em] text-muted-foreground">
