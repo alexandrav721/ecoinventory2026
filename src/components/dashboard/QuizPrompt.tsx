@@ -16,6 +16,18 @@ export const QuizPrompt = () => {
   const { isDemoMode } = useDemo();
   const [count, setCount] = useState<number | null>(null);
   const [dismissed, setDismissed] = useState(false);
+  const [collapsed, setCollapsed] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return localStorage.getItem("quiz-prompt-collapsed") === "true";
+  });
+
+  const toggleCollapsed = () => {
+    setCollapsed((prev) => {
+      const next = !prev;
+      localStorage.setItem("quiz-prompt-collapsed", String(next));
+      return next;
+    });
+  };
 
   useEffect(() => {
     if (isDemoMode) {
