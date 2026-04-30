@@ -92,48 +92,86 @@ const Index = () => {
         </nav>
       )}
 
-      {/* HERO — Editorial, asymmetric */}
-      <section className="relative overflow-hidden border-b border-border/60">
-        <div className="container mx-auto px-6 pt-20 pb-24 md:pt-32 md:pb-40">
-          <div className="grid md:grid-cols-12 gap-8 items-end">
-            <div className="md:col-span-8">
-              <div className="flex items-center gap-3 mb-10 text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                <span className="editorial-rule" />
-                <span>Vol. 01 · A different way to own things</span>
-              </div>
-              <h1 className="font-display text-[clamp(3rem,9vw,8rem)] leading-[0.92] font-light text-foreground">
-                {t('home.hero.title1')}
-                <br />
-                <span className="italic font-display-wonk text-primary">{t('home.hero.title2')}</span>
-              </h1>
+      {/* HERO — Full-bleed editorial with search */}
+      <section className="relative overflow-hidden border-b border-border/60 bg-background">
+        {/* Background image */}
+        <div className="absolute inset-0">
+          <img
+            src={heroBg}
+            alt=""
+            width={1920}
+            height={1080}
+            className="w-full h-full object-cover object-right"
+          />
+          {/* Left-to-right fade so left side stays clean for type */}
+          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/85 to-background/10" />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/40" />
+        </div>
+
+        <div className="relative container mx-auto px-6 pt-16 pb-24 md:pt-24 md:pb-40 min-h-[640px] md:min-h-[720px] flex flex-col">
+          {/* Top-left: search */}
+          <div className="max-w-xl">
+            <div className="flex items-center gap-3 mb-6 text-xs uppercase tracking-[0.2em] text-muted-foreground">
+              <span className="editorial-rule" />
+              <span>Vol. 01 · A different way to own things</span>
             </div>
-            <div className="md:col-span-4 md:pb-4">
-              <p className="text-lg text-muted-foreground leading-relaxed max-w-sm">
-                {t('home.hero.subtitle')}
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3 mt-8">
-                {isLoggedIn ? (
+
+            <form onSubmit={handleHeroSearch} className="relative">
+              <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" />
+              <Input
+                value={heroSearch}
+                onChange={(e) => setHeroSearch(e.target.value)}
+                placeholder="Search drills, cameras, bikes near you…"
+                className="h-14 pl-14 pr-32 rounded-full bg-background border-foreground/20 shadow-lg text-base focus-visible:ring-primary"
+              />
+              <Button
+                type="submit"
+                size="sm"
+                className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-foreground text-background hover:bg-foreground/90 h-10 px-5"
+              >
+                Search
+              </Button>
+            </form>
+
+            <p className="text-xs text-muted-foreground mt-3 ml-1">
+              Try “drill”, “tent”, “stand mixer”, “projector”
+            </p>
+          </div>
+
+          {/* Bottom-left: massive headline */}
+          <div className="mt-auto pt-20 md:pt-32 max-w-4xl">
+            <h1 className="font-display text-[clamp(3rem,9vw,7.5rem)] leading-[0.92] font-light text-foreground">
+              Never buy
+              <br />
+              <span className="italic font-display-wonk text-primary">anything again.</span>
+            </h1>
+            <p className="text-lg md:text-xl text-foreground/70 mt-8 max-w-xl leading-relaxed">
+              Borrow what you need from neighbors. Sell what you don't.
+              The street is the store.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-3 mt-10">
+              {isLoggedIn ? (
+                <Button asChild size="lg" className="rounded-full bg-foreground text-background hover:bg-foreground/90 gap-2">
+                  <Link to="/dashboard">
+                    {t('home.hero.goToDashboard')}
+                    <ArrowRight className="w-4 h-4" />
+                  </Link>
+                </Button>
+              ) : (
+                <>
                   <Button asChild size="lg" className="rounded-full bg-foreground text-background hover:bg-foreground/90 gap-2">
-                    <Link to="/dashboard">
-                      {t('home.hero.goToDashboard')}
+                    <Link to="/auth">
+                      {t('home.hero.getStarted')}
                       <ArrowRight className="w-4 h-4" />
                     </Link>
                   </Button>
-                ) : (
-                  <>
-                    <Button asChild size="lg" className="rounded-full bg-foreground text-background hover:bg-foreground/90 gap-2">
-                      <Link to="/auth">
-                        {t('home.hero.getStarted')}
-                        <ArrowRight className="w-4 h-4" />
-                      </Link>
-                    </Button>
-                    <Button size="lg" variant="ghost" onClick={handleTryDemo} className="rounded-full gap-2 hover:bg-secondary">
-                      <Eye className="w-4 h-4" />
-                      {t('home.hero.tryDemo', 'Try demo')}
-                    </Button>
-                  </>
-                )}
-              </div>
+                  <Button size="lg" variant="ghost" onClick={handleTryDemo} className="rounded-full gap-2 hover:bg-secondary/60">
+                    <Eye className="w-4 h-4" />
+                    {t('home.hero.tryDemo', 'Try demo')}
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </div>
