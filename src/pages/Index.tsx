@@ -124,9 +124,8 @@ const Index = () => {
               <span className="italic font-display-wonk text-primary">anything again.</span>
             </h1>
             <p className="text-lg md:text-xl text-foreground/70 mt-8 max-w-xl leading-relaxed">
-              <span className="italic font-display-wonk">Borrow</span> or <span className="italic font-display-wonk">buy</span> what you need from neighbors.{" "}
-              <span className="italic font-display-wonk">Rent</span> or <span className="italic font-display-wonk">sell</span> what you don't.
-              The street is the store.
+              <span className="italic font-display-wonk">Rent</span>, <span className="italic font-display-wonk">lend</span>, and <span className="italic font-display-wonk">buy</span> from neighbors and friends.
+              Everything you need is already on your block.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 mt-10">
