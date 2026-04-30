@@ -155,6 +155,12 @@ export function CommunityMarketplace() {
 
   const filtered = useMemo(() => {
     return items.filter((it) => {
+      // Audience filter
+      if (audience === "friends") {
+        if (!currentUserId || !friendIds.has(it.user_id)) return false;
+      } else if (audience === "community") {
+        if (currentUserId && friendIds.has(it.user_id)) return false;
+      }
       if (search) {
         const q = search.toLowerCase();
         const hay = `${it.name} ${it.description ?? ""}`.toLowerCase();
@@ -169,7 +175,7 @@ export function CommunityMarketplace() {
       }
       return true;
     });
-  }, [items, search, distanceFilter, location]);
+  }, [items, search, distanceFilter, location, audience, friendIds, currentUserId]);
 
   const borrowItems = filtered.filter((it) => !it.sharing_price || it.sharing_price === 0 || (it.sharing_price && it.sharing_price > 0 && it.sharing_price <= 0));
   // Treat sharing_price null/0 → free borrow; >0 → both borrow (paid) and buy unclear.
