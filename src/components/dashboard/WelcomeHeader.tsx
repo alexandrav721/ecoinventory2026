@@ -8,17 +8,20 @@ import {
   Package,
   TrendingUp,
   Heart,
-  Plus,
   Camera,
   Trophy,
   ArrowRight,
   Flame,
   ImageIcon,
+  ShoppingBag,
+  Gift,
+  DollarSign,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Progress } from "@/components/ui/progress";
-import { cn } from "@/lib/utils";
+import { cn, formatCurrency } from "@/lib/utils";
+import { useInventoryStats } from "@/hooks/useInventoryStats";
 
 interface WelcomeHeaderProps {
   user: User | null;
@@ -55,6 +58,7 @@ export const WelcomeHeader = ({ user }: WelcomeHeaderProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { isDemoMode, demoItems } = useDemo();
+  const { stats: extra, loading: extraLoading } = useInventoryStats();
   const [profile, setProfile] = useState<{ full_name: string | null } | null>(null);
   const [stats, setStats] = useState<QuickStats>({
     totalItems: 0,
@@ -146,21 +150,22 @@ export const WelcomeHeader = ({ user }: WelcomeHeaderProps) => {
   if (loading) {
     return (
       <div className="mb-6 grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-4">
-        <Skeleton className="h-56 rounded-2xl" />
-        <Skeleton className="h-56 rounded-2xl" />
+        <Skeleton className="h-72 rounded-2xl" />
+        <Skeleton className="h-72 rounded-2xl" />
       </div>
     );
   }
 
-  // Build the photo collage layout — Pickle style: one big lead photo + small tiles
   const lead = photos[0];
   const tiles = photos.slice(1, 5);
+  const decluttered = (extra.donatedCount || 0) + (extra.eliminatedCount || 0);
+  const profitPositive = (extra.profitLoss || 0) >= 0;
 
   return (
-    <div className="mb-6 grid grid-cols-1 lg:grid-cols-[1fr_260px] gap-4">
+    <div className="mb-6 grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-4">
       {/* LEFT: Hero with photo collage */}
       <div className="relative rounded-2xl overflow-hidden border bg-card">
-        <div className="grid grid-cols-1 md:grid-cols-[1.2fr_1fr] h-full min-h-[240px]">
+        <div className="grid grid-cols-1 md:grid-cols-[1.2fr_1fr] h-full min-h-[280px]">
           {/* Greeting block */}
           <div className="p-6 md:p-7 flex flex-col justify-between gap-5 bg-gradient-to-br from-primary/8 via-background to-background">
             <div>
@@ -259,50 +264,108 @@ export const WelcomeHeader = ({ user }: WelcomeHeaderProps) => {
 
       {/* RIGHT: Condensed stats rail */}
       <aside className="rounded-2xl border bg-card p-4 flex flex-col">
-        <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center justify-between mb-2">
           <h3 className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
             At a glance
           </h3>
+          <button
+            onClick={() => navigate("/dashboard?tab=analytics")}
+            className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground hover:text-foreground inline-flex items-center gap-1"
+          >
+            Details
+            <ArrowRight className="w-3 h-3" />
+          </button>
         </div>
 
         <div className="divide-y divide-border/60">
+          {/* Items */}
           <button
             onClick={() => navigate("/dashboard?tab=inventory")}
-            className="w-full flex items-center justify-between py-2.5 group text-left"
+            className="w-full flex items-center justify-between py-2 text-left"
           >
             <span className="flex items-center gap-2.5 text-sm text-muted-foreground">
               <Package className="w-4 h-4 text-primary" />
               Items
             </span>
-            <span className="text-base font-semibold tabular-nums">
+            <span className="text-sm font-semibold tabular-nums">
               {stats.totalItems}
             </span>
           </button>
 
-          <div className="flex items-center justify-between py-2.5">
+          {/* What you paid */}
+          <div className="flex items-center justify-between py-2">
             <span className="flex items-center gap-2.5 text-sm text-muted-foreground">
-              <TrendingUp className="w-4 h-4 text-emerald-500" />
-              Value
+              <DollarSign className="w-4 h-4 text-foreground/60" />
+              Paid
             </span>
-            <span className="text-base font-semibold tabular-nums">
+            <span className="text-sm font-semibold tabular-nums">
               ${stats.totalValue.toLocaleString()}
             </span>
           </div>
 
+          {/* Worth now / market value */}
+          <div className="flex items-center justify-between py-2">
+            <span className="flex items-center gap-2.5 text-sm text-muted-foreground">
+              <TrendingUp className="w-4 h-4 text-emerald-500" />
+              Worth now
+            </span>
+            <span className="text-sm font-semibold tabular-nums text-emerald-600">
+              {extraLoading ? "—" : formatCurrency(extra.marketValue || 0)}
+            </span>
+          </div>
+
+          {/* Sold + profit */}
+          <div className="flex items-center justify-between py-2">
+            <span className="flex items-center gap-2.5 text-sm text-muted-foreground">
+              <ShoppingBag className="w-4 h-4 text-blue-500" />
+              Sold
+            </span>
+            <span className="text-sm font-semibold tabular-nums flex items-baseline gap-1.5">
+              {extra.soldCount}
+              {extra.soldCount > 0 && (
+                <span
+                  className={cn(
+                    "text-[10px] font-medium",
+                    profitPositive ? "text-emerald-600" : "text-destructive"
+                  )}
+                >
+                  {profitPositive ? "+" : ""}
+                  {formatCurrency(extra.profitLoss)}
+                </span>
+              )}
+            </span>
+          </div>
+
+          {/* Decluttered */}
+          <button
+            onClick={() => navigate("/dashboard?tab=inventory")}
+            className="w-full flex items-center justify-between py-2 text-left"
+          >
+            <span className="flex items-center gap-2.5 text-sm text-muted-foreground">
+              <Gift className="w-4 h-4 text-pink-500" />
+              Decluttered
+            </span>
+            <span className="text-sm font-semibold tabular-nums">
+              {decluttered}
+            </span>
+          </button>
+
+          {/* Sharing */}
           <button
             onClick={() => navigate("/community")}
-            className="w-full flex items-center justify-between py-2.5 text-left"
+            className="w-full flex items-center justify-between py-2 text-left"
           >
             <span className="flex items-center gap-2.5 text-sm text-muted-foreground">
               <Heart className="w-4 h-4 text-pink-500" />
               Sharing
             </span>
-            <span className="text-base font-semibold tabular-nums">
+            <span className="text-sm font-semibold tabular-nums">
               {stats.sharedItems}
             </span>
           </button>
 
-          <div className="py-2.5">
+          {/* Milestone */}
+          <div className="py-2">
             <div className="flex items-center justify-between mb-1.5">
               <span className="flex items-center gap-2.5 text-sm text-muted-foreground">
                 <Trophy className="w-4 h-4 text-amber-500" />
