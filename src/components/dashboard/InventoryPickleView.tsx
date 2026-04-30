@@ -181,6 +181,7 @@ const InventoryPickleView = () => {
         if (bucket && (p < bucket.min || p >= bucket.max)) return false;
       }
       if (withImagesOnly && !it.image_url) return false;
+      if (excessOnly && (it.quantity ?? 1) <= 1) return false;
       return true;
     });
 
