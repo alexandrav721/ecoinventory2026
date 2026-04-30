@@ -31,6 +31,7 @@ import { WelcomeHeader } from "@/components/dashboard/WelcomeHeader";
 import { FloatingAddButton } from "@/components/dashboard/FloatingAddButton";
 import { HeaderSearch } from "@/components/HeaderSearch";
 import { QuizPrompt } from "@/components/dashboard/QuizPrompt";
+import { UpcomingEventsCard } from "@/components/dashboard/UpcomingEventsCard";
 
 const Dashboard = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -201,6 +202,9 @@ const Dashboard = () => {
                 <BeforeYouBuyPanel />
               </TabsContent>
             </Tabs>
+
+            {/* Upcoming community events */}
+            <UpcomingEventsCard />
 
             {/* Impact & Achievements (collapsible) */}
             <InventoryAnalytics />
