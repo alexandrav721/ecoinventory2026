@@ -200,10 +200,12 @@ const Auth = () => {
             </div>
           </div>
           <CardTitle className="text-2xl font-bold">
-            {isLogin ? t('auth.welcomeBack') : t('auth.joinEco')}
+            {isForgotPassword ? "Reset your password" : isLogin ? t('auth.welcomeBack') : t('auth.joinEco')}
           </CardTitle>
           <CardDescription>
-            {isLogin
+            {isForgotPassword
+              ? "Enter your email and we'll send you a link to reset your password."
+              : isLogin
               ? t('auth.signInDesc')
               : t('auth.createAccountDesc')}
           </CardDescription>
