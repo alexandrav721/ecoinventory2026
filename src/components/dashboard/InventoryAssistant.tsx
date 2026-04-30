@@ -101,6 +101,7 @@ export const InventoryAssistant = () => {
           onClick={() => setOpen(true)}
           aria-label="Open inventory assistant"
           className="fixed bottom-6 right-6 z-40 h-14 w-14 rounded-full bg-primary text-primary-foreground shadow-lg hover:shadow-xl transition-all hover:scale-105 flex items-center justify-center"
+          data-tour="ai-assistant"
         >
           <Sparkles className="w-6 h-6" />
         </button>
