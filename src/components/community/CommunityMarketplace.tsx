@@ -383,6 +383,33 @@ export function CommunityMarketplace() {
           )}
         </div>
 
+        {/* Audience toggle */}
+        {authed && (
+          <div className="mb-4">
+            <ToggleGroup
+              type="single"
+              value={audience}
+              onValueChange={(v) => v && setAudience(v as typeof audience)}
+              className="inline-flex rounded-full border border-border bg-background p-1"
+            >
+              <ToggleGroupItem value="all" className="rounded-full px-4 text-xs uppercase tracking-[0.15em] data-[state=on]:bg-foreground data-[state=on]:text-background">
+                Both
+              </ToggleGroupItem>
+              <ToggleGroupItem value="friends" className="rounded-full px-4 text-xs uppercase tracking-[0.15em] gap-1.5 data-[state=on]:bg-foreground data-[state=on]:text-background">
+                <Users className="w-3.5 h-3.5" /> Friends
+              </ToggleGroupItem>
+              <ToggleGroupItem value="community" className="rounded-full px-4 text-xs uppercase tracking-[0.15em] gap-1.5 data-[state=on]:bg-foreground data-[state=on]:text-background">
+                <Globe className="w-3.5 h-3.5" /> Community
+              </ToggleGroupItem>
+            </ToggleGroup>
+            {audience === "friends" && friendIds.size === 0 && (
+              <p className="text-xs text-muted-foreground mt-2 italic">
+                No friends yet — <Link to="/friends" className="underline hover:text-foreground">add some</Link> to see their items here.
+              </p>
+            )}
+          </div>
+        )}
+
         {/* Search + filter */}
         <div className="flex flex-col sm:flex-row gap-3 mb-6">
           <div className="relative flex-1">
