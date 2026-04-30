@@ -257,6 +257,78 @@ export type Database = {
         }
         Relationships: []
       }
+      community_events: {
+        Row: {
+          address: string | null
+          borough: string | null
+          cover_image_url: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          ends_at: string | null
+          event_type: Database["public"]["Enums"]["event_type"]
+          external_url: string | null
+          host_name: string | null
+          id: string
+          is_free: boolean
+          items_focus: string | null
+          latitude: number | null
+          longitude: number | null
+          max_attendees: number | null
+          neighborhood: string | null
+          starts_at: string
+          status: Database["public"]["Enums"]["event_status"]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          borough?: string | null
+          cover_image_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          ends_at?: string | null
+          event_type: Database["public"]["Enums"]["event_type"]
+          external_url?: string | null
+          host_name?: string | null
+          id?: string
+          is_free?: boolean
+          items_focus?: string | null
+          latitude?: number | null
+          longitude?: number | null
+          max_attendees?: number | null
+          neighborhood?: string | null
+          starts_at: string
+          status?: Database["public"]["Enums"]["event_status"]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          borough?: string | null
+          cover_image_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          ends_at?: string | null
+          event_type?: Database["public"]["Enums"]["event_type"]
+          external_url?: string | null
+          host_name?: string | null
+          id?: string
+          is_free?: boolean
+          items_focus?: string | null
+          latitude?: number | null
+          longitude?: number | null
+          max_attendees?: number | null
+          neighborhood?: string | null
+          starts_at?: string
+          status?: Database["public"]["Enums"]["event_status"]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       conversation_participants: {
         Row: {
           conversation_id: string
@@ -321,6 +393,44 @@ export type Database = {
             columns: ["item_id"]
             isOneToOne: false
             referencedRelation: "inventory_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      event_rsvps: {
+        Row: {
+          bringing_items: string | null
+          created_at: string
+          event_id: string
+          id: string
+          status: Database["public"]["Enums"]["rsvp_status"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          bringing_items?: string | null
+          created_at?: string
+          event_id: string
+          id?: string
+          status?: Database["public"]["Enums"]["rsvp_status"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          bringing_items?: string | null
+          created_at?: string
+          event_id?: string
+          id?: string
+          status?: Database["public"]["Enums"]["rsvp_status"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_rsvps_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "community_events"
             referencedColumns: ["id"]
           },
         ]
@@ -1062,6 +1172,15 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "user"
+      event_status: "draft" | "published" | "cancelled" | "completed"
+      event_type:
+        | "swap_party"
+        | "repair_cafe"
+        | "stoop_sale"
+        | "donation_drive"
+        | "lending_circle"
+        | "skill_share"
+      rsvp_status: "going" | "interested" | "waitlist"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1190,6 +1309,16 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "user"],
+      event_status: ["draft", "published", "cancelled", "completed"],
+      event_type: [
+        "swap_party",
+        "repair_cafe",
+        "stoop_sale",
+        "donation_drive",
+        "lending_circle",
+        "skill_share",
+      ],
+      rsvp_status: ["going", "interested", "waitlist"],
     },
   },
 } as const
