@@ -11,7 +11,7 @@ serve(async (req) => {
   }
 
   try {
-    const { image, description } = await req.json();
+    const { image, description, multi } = await req.json();
     
     if (!image && !description) {
       return new Response(
