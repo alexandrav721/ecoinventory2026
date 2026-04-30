@@ -28,6 +28,7 @@ import ProfileDropdown from "@/components/ProfileDropdown";
 import NotificationBell from "@/components/NotificationBell";
 import { WelcomeHeader } from "@/components/dashboard/WelcomeHeader";
 import { FloatingAddButton } from "@/components/dashboard/FloatingAddButton";
+import { HeaderSearch } from "@/components/HeaderSearch";
 import { QuizPrompt } from "@/components/dashboard/QuizPrompt";
 
 const Dashboard = () => {
@@ -121,9 +122,9 @@ const Dashboard = () => {
       {/* Unified Header + Navigation */}
       <header className="border-b bg-card/80 backdrop-blur-md sticky top-0 z-10">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between h-14">
+          <div className="flex items-center justify-between h-14 gap-4">
             {/* Logo + Title */}
-            <div className="flex items-center gap-2.5">
+            <div className="flex items-center gap-2.5 shrink-0">
               <div className="w-8 h-8 rounded-lg bg-gradient-eco flex items-center justify-center shadow-sm">
                 <Leaf className="w-4 h-4 text-white" />
               </div>
@@ -137,8 +138,11 @@ const Dashboard = () => {
               </div>
             </div>
 
+            {/* Search */}
+            <HeaderSearch />
+
             {/* Actions */}
-            <div className="flex items-center gap-0.5">
+            <div className="flex items-center gap-0.5 shrink-0">
               <Button variant="ghost" size="sm" onClick={handleRestartTour} className="h-8 px-2.5 text-muted-foreground hover:text-foreground">
                 <GraduationCap className="w-4 h-4" />
                 <span className="hidden sm:inline ml-1.5">Tour</span>
