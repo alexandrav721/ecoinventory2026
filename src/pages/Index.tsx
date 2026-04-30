@@ -68,7 +68,7 @@ const Index = () => {
               <Input
                 value={heroSearch}
                 onChange={(e) => setHeroSearch(e.target.value)}
-                placeholder="Search drills, cameras, bikes near you…"
+                placeholder="Search cameras, bikes, espresso machines…"
                 className="h-11 pl-11 pr-4 rounded-full bg-secondary/60 border-transparent focus-visible:bg-background focus-visible:border-foreground/20 text-sm"
               />
             </form>
