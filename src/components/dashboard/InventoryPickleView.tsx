@@ -67,6 +67,7 @@ const InventoryPickleView = () => {
   const [activeConditions, setActiveConditions] = useState<Set<string>>(new Set());
   const [activePrice, setActivePrice] = useState<string | null>(null);
   const [withImagesOnly, setWithImagesOnly] = useState(false);
+  const [excessOnly, setExcessOnly] = useState(false);
 
   useEffect(() => {
     const load = async () => {
