@@ -25,6 +25,7 @@ import AddItem from "./pages/AddItem";
 import EditItem from "./pages/EditItem";
 import Quiz from "./pages/Quiz";
 import Declutter from "./pages/Declutter";
+import BeforeYouBuy from "./pages/BeforeYouBuy";
 import CircularEconomyGuide from "./pages/articles/CircularEconomyGuide";
 import OrganizingInventory from "./pages/articles/OrganizingInventory";
 import ItemDepreciation from "./pages/articles/ItemDepreciation";
@@ -47,6 +48,7 @@ const App = () => (
             <Route path="/dashboard/add-item" element={<AddItem />} />
             <Route path="/dashboard/quiz" element={<Quiz />} />
             <Route path="/dashboard/declutter" element={<Declutter />} />
+            <Route path="/dashboard/before-you-buy" element={<BeforeYouBuy />} />
             <Route path="/dashboard/edit-item/:id" element={<EditItem />} />
             <Route path="/friends" element={<Friends />} />
             <Route path="/friends/:friendId" element={<FriendProfile />} />

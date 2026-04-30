@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { Button } from "@/components/ui/button";
-import { Leaf, Plus, GraduationCap, BarChart3, Package, Sheet, ChevronDown, FileUp, Sparkles, Lightbulb, LayoutGrid } from "lucide-react";
+import { Leaf, Plus, GraduationCap, BarChart3, Package, Sheet, ChevronDown, FileUp, Sparkles, Lightbulb, LayoutGrid, Search } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -186,7 +186,16 @@ const Dashboard = () => {
           <TabsContent value="inventory" className="mt-0 space-y-6">
             <QuizPrompt />
 
-            <div className="flex items-center justify-end gap-2">
+            <div className="flex items-center justify-end gap-2 flex-wrap">
+              <Button
+                variant="outline"
+                onClick={() => navigate("/dashboard/before-you-buy")}
+                className="gap-2"
+              >
+                <Search className="w-4 h-4" />
+                <span className="hidden sm:inline">Before you buy</span>
+                <span className="sm:hidden">Check first</span>
+              </Button>
               <Button
                 variant="outline"
                 onClick={() => navigate("/dashboard/declutter")}
