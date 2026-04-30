@@ -52,6 +52,16 @@ export function CommunityMarketplace() {
     supabase.auth.getSession().then(({ data: { session } }) => setAuthed(!!session));
   }, []);
 
+  // Listen for hero search events
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent<string>).detail;
+      if (typeof detail === "string") setSearch(detail);
+    };
+    window.addEventListener("marketplace:search", handler);
+    return () => window.removeEventListener("marketplace:search", handler);
+  }, []);
+
   useEffect(() => {
     let cancelled = false;
     const fetchItems = async () => {
