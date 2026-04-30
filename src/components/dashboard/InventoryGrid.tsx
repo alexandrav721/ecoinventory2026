@@ -758,30 +758,12 @@ const InventoryGrid = () => {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex items-center gap-4">
                 <CardTitle className="text-lg">My Stuff</CardTitle>
-                {/* View Mode Toggle */}
-                <ToggleGroup 
-                  type="single" 
-                  value={viewMode} 
-                  onValueChange={(value) => value && setViewMode(value as ViewMode)}
-                  className="bg-muted rounded-lg p-1"
-                >
-                  <ToggleGroupItem value="list" aria-label="List view" className="gap-1.5 data-[state=on]:bg-background">
-                    <List className="w-4 h-4" />
-                    <span className="hidden sm:inline text-xs">List</span>
-                  </ToggleGroupItem>
-                  <ToggleGroupItem value="location" aria-label="Location view" className="gap-1.5 data-[state=on]:bg-background">
-                    <MapPin className="w-4 h-4" />
-                    <span className="hidden sm:inline text-xs">Rooms</span>
-                  </ToggleGroupItem>
-                </ToggleGroup>
               </div>
               <div className="flex gap-2">
-                {viewMode === 'list' && (
-                  <ColumnSettings 
-                    columns={columns}
-                    onColumnVisibilityChange={handleColumnVisibilityChange}
-                  />
-                )}
+                <ColumnSettings
+                  columns={columns}
+                  onColumnVisibilityChange={handleColumnVisibilityChange}
+                />
                 <Button onClick={exportToCSV} variant="outline" size="sm" className="gap-2">
                   <Download className="w-4 h-4" />
                   <span className="hidden sm:inline">Export</span>
