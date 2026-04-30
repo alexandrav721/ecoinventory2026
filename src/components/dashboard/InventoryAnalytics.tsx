@@ -5,11 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { 
-  DollarSign, TrendingUp, AlertTriangle, Sparkles, 
+import {
+  DollarSign, TrendingUp, AlertTriangle, Sparkles,
   Package, Gift, ShoppingBag,
-  Lightbulb, RefreshCw, Copy, Info, ChevronRight
+  Lightbulb, RefreshCw, Copy, Info, ChevronRight, ChevronDown
 } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useInventoryStats } from "@/hooks/useInventoryStats";
 import { useDemo } from "@/contexts/DemoContext";
 import { formatCurrency } from "@/lib/utils";
@@ -253,16 +254,21 @@ const InventoryAnalytics = () => {
       <div className="space-y-8">
         {/* Hero stats moved to the WelcomeHeader "At a glance" rail */}
 
-        {/* Achievements - Compact */}
-        <div>
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 rounded-lg bg-muted">
-              <Sparkles className="w-4 h-4 text-muted-foreground" />
-            </div>
-            <h3 className="font-semibold">Your Impact</h3>
-          </div>
-          <AchievementsPanel achievements={achievements} />
-        </div>
+        {/* Achievements - Collapsible */}
+        <Collapsible defaultOpen={false}>
+          <CollapsibleTrigger className="group flex items-center justify-between w-full rounded-lg border bg-card px-4 py-3 hover:bg-muted/30 transition-colors">
+            <span className="flex items-center gap-3">
+              <div className="p-1.5 rounded-md bg-muted">
+                <Sparkles className="w-4 h-4 text-muted-foreground" />
+              </div>
+              <span className="font-semibold text-sm">Your Impact & Achievements</span>
+            </span>
+            <ChevronDown className="w-4 h-4 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
+          </CollapsibleTrigger>
+          <CollapsibleContent className="pt-4">
+            <AchievementsPanel achievements={achievements} />
+          </CollapsibleContent>
+        </Collapsible>
       </div>
     </TooltipProvider>
   );
