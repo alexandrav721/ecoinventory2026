@@ -22,7 +22,7 @@ import ColumnSettings, { ColumnConfig } from "./ColumnSettings";
 import InventorySummaryBar from "./InventorySummaryBar";
 import QuickAddTemplates from "./QuickAddTemplates";
 
-import InventoryLocationView from "./InventoryLocationView";
+
 import { formatCurrency } from "@/lib/utils";
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, sortableKeyboardCoordinates, horizontalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
@@ -33,7 +33,7 @@ import { useTranslation } from "react-i18next";
 import { useDemo } from "@/contexts/DemoContext";
 import { useExcessInsights } from "@/hooks/useExcessInsights";
 
-type ViewMode = 'list' | 'location';
+type ViewMode = 'list';
 
 interface InventoryItem {
   id: string;
@@ -62,7 +62,7 @@ interface InventoryItem {
   is_eliminated: boolean | null;
   eliminated_date: string | null;
   tags: string[];
-  location: string | null;
+  
 }
 
 interface Category {
@@ -199,12 +199,10 @@ const InventoryGrid = () => {
     const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
     const totalValue = items.reduce((sum, item) => sum + ((item.original_price || 0) * item.quantity), 0);
     const uniqueCategories = new Set(items.map(item => item.category_id).filter(Boolean));
-    const uniqueLocations = new Set(items.map(item => item.location).filter(Boolean));
     return {
       totalItems,
       totalValue,
       categoryCount: uniqueCategories.size,
-      locationCount: uniqueLocations.size,
     };
   }, [items]);
 
@@ -748,7 +746,7 @@ const InventoryGrid = () => {
           totalItems={summaryStats.totalItems}
           totalValue={summaryStats.totalValue}
           categoryCount={summaryStats.categoryCount}
-          locationCount={summaryStats.locationCount}
+          
         />
 
         {/* Quick Add Templates */}
