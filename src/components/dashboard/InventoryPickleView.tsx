@@ -207,6 +207,7 @@ const InventoryPickleView = () => {
     activeConditions,
     activePrice,
     withImagesOnly,
+    excessOnly,
   ]);
 
   const toggleSet = <T,>(setter: (s: Set<T>) => void, current: Set<T>, val: T) => {
