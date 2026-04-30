@@ -56,7 +56,23 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background text-foreground">
       {isLoggedIn ? (
-        <DashboardNav />
+        <nav className="border-b border-border/60 bg-background/80 backdrop-blur sticky top-0 z-50">
+          <div className="container mx-auto px-6 h-20 flex items-center gap-6">
+            <Logo size="sm" />
+            <form onSubmit={handleHeroSearch} className="relative flex-1 max-w-xl hidden md:block">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+              <Input
+                value={heroSearch}
+                onChange={(e) => setHeroSearch(e.target.value)}
+                placeholder="Search cameras, bikes, espresso machines…"
+                className="h-11 pl-11 pr-4 rounded-full bg-secondary/60 border-transparent focus-visible:bg-background focus-visible:border-foreground/20 text-sm"
+              />
+            </form>
+            <div className="ml-auto">
+              <DashboardNav />
+            </div>
+          </div>
+        </nav>
       ) : (
         <nav className="border-b border-border/60 bg-background/80 backdrop-blur sticky top-0 z-50">
           <div className="container mx-auto px-6 h-20 flex items-center gap-6">
