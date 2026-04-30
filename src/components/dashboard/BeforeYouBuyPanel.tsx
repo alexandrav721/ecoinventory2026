@@ -162,7 +162,7 @@ export default function BeforeYouBuyPanel() {
                     <div className="flex-1 min-w-0">
                       <div className="font-medium truncate">{item.name}</div>
                       <div className="text-sm text-muted-foreground truncate">
-                        Qty {item.quantity}{item.location ? ` · ${item.location}` : ""}
+                        Qty {item.quantity}
                       </div>
                     </div>
                   </button>
