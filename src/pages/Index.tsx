@@ -127,6 +127,9 @@ const Index = () => {
               <span className="italic font-display-wonk">Rent</span>, <span className="italic font-display-wonk">lend</span>, and <span className="italic font-display-wonk">buy</span> from neighbors and friends.
               Own less. <span className="italic font-display-wonk">Access more.</span>
             </p>
+            <p className="text-base md:text-lg text-foreground/60 mt-5 max-w-xl leading-relaxed">
+              Track everything you already own — we'll flag the <span className="italic font-display-wonk text-foreground/80">duplicates</span>, the <span className="italic font-display-wonk text-foreground/80">excess</span>, and the things gathering dust — so you never re-buy what's already on a shelf.
+            </p>
 
             <div className="flex flex-col sm:flex-row flex-wrap gap-3 mt-10">
               {isLoggedIn ? (
