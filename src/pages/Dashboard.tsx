@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import InventorySpreadsheet from "@/components/dashboard/InventorySpreadsheet";
 import InventoryPickleView from "@/components/dashboard/InventoryPickleView";
 import { OpportunitiesPanel } from "@/components/dashboard/OpportunitiesPanel";
+import BeforeYouBuyPanel from "@/components/dashboard/BeforeYouBuyPanel";
 
 
 import InventoryAnalytics from "@/components/dashboard/InventoryAnalytics";
