@@ -842,7 +842,7 @@ const AddItem = () => {
           <div className="mb-8">
             <h1 className="text-3xl font-bold mb-2">✨ Smart Add with AI</h1>
             <p className="text-muted-foreground">
-              Snap a photo or describe your item - AI will fill in the details
+              Snap a photo, or describe one item — or many at once — and AI does the rest
             </p>
           </div>
 
