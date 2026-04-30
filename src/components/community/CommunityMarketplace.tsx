@@ -355,20 +355,7 @@ export function CommunityMarketplace() {
   return (
     <section id="marketplace" className="border-b border-border/60 bg-secondary/20 scroll-mt-20">
       <div className="container mx-auto px-6 py-20 md:py-28">
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10">
-          <div>
-            <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-4">
-              § Available now in your community
-            </div>
-            <h2 className="font-display text-4xl md:text-5xl leading-[1.05] font-light max-w-2xl">
-              Borrow what you need.<br />
-              <span className="italic font-display-wonk text-primary">Buy from neighbors.</span>
-            </h2>
-            <p className="text-muted-foreground mt-4 max-w-lg">
-              Real items shared by real people nearby. Stop buying what already exists on your street.
-            </p>
-          </div>
-
+        <div className="flex flex-col md:flex-row md:items-center md:justify-end gap-6 mb-10">
           {!location && !locLoading && (
             <Button variant="outline" onClick={requestBrowserLocation} className="rounded-full gap-2 self-start">
               <Navigation className="w-4 h-4" />
