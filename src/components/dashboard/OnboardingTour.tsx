@@ -9,7 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
-import { ChevronLeft, ChevronRight, TrendingUp, Receipt, DollarSign, Gift, Lightbulb, Package, Heart, BarChart3, Users } from "lucide-react";
+import { ChevronLeft, ChevronRight, Lightbulb, Package, Sparkles, TrendingUp, Users } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
 interface OnboardingStep {
