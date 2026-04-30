@@ -224,6 +224,7 @@ const InventoryPickleView = () => {
     setActiveConditions(new Set());
     setActivePrice(null);
     setWithImagesOnly(false);
+    setExcessOnly(false);
   };
 
   const hasFilters =
