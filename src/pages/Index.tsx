@@ -165,8 +165,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* COMMUNITY MARKETPLACE — Show value immediately */}
-      <CommunityMarketplace />
+      {/* THE MATH — Big editorial numbers */}
 
       {/* THE MATH — Big editorial numbers */}
       <section className="border-b border-border/60">
