@@ -435,6 +435,27 @@ export type Database = {
           },
         ]
       }
+      follows: {
+        Row: {
+          created_at: string
+          followee_id: string
+          follower_id: string
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          followee_id: string
+          follower_id: string
+          id?: string
+        }
+        Update: {
+          created_at?: string
+          followee_id?: string
+          follower_id?: string
+          id?: string
+        }
+        Relationships: []
+      }
       friendships: {
         Row: {
           created_at: string | null
@@ -1167,6 +1188,10 @@ export type Database = {
       }
       is_conversation_participant: {
         Args: { conv_id: string; user_uuid: string }
+        Returns: boolean
+      }
+      is_following: {
+        Args: { _followee: string; _follower: string }
         Returns: boolean
       }
     }

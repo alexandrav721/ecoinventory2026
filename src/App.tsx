@@ -27,6 +27,8 @@ import EditItem from "./pages/EditItem";
 import Quiz from "./pages/Quiz";
 import Declutter from "./pages/Declutter";
 import BeforeYouBuy from "./pages/BeforeYouBuy";
+import People from "./pages/People";
+import PublicProfile from "./pages/PublicProfile";
 import CircularEconomyGuide from "./pages/articles/CircularEconomyGuide";
 import OrganizingInventory from "./pages/articles/OrganizingInventory";
 import ItemDepreciation from "./pages/articles/ItemDepreciation";
@@ -61,6 +63,9 @@ const App = () => (
             <Route path="/founders" element={<Founders />} />
             <Route path="/community" element={<Community />} />
             <Route path="/events" element={<Events />} />
+            <Route path="/people" element={<People />} />
+            <Route path="/me" element={<PublicProfile selfMode />} />
+            <Route path="/profile/:id" element={<PublicProfile />} />
             <Route path="/articles" element={<Articles />} />
             <Route path="/articles/:slug" element={<Article />} />
             <Route path="/articles/circular-economy" element={<CircularEconomyGuide />} />
