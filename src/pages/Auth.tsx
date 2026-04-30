@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { Leaf, Apple, Facebook, Phone, ArrowLeft } from "lucide-react";
 import { z } from "zod";
 import { useTranslation } from "react-i18next";
+import authHero from "@/assets/auth-hero.jpg";
 
 const authSchema = z.object({
   email: z.string().trim().email("Please enter a valid email address").max(255, "Email must be less than 255 characters"),
@@ -124,16 +125,50 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-subtle px-4 py-8">
-      <div className="w-full max-w-md mb-4">
-        <Link
-          to="/"
-          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          {t('nav.home')}
-        </Link>
+    <div className="min-h-screen grid lg:grid-cols-2 bg-background">
+      {/* Editorial image panel */}
+      <div className="relative hidden lg:block overflow-hidden">
+        <img
+          src={authHero}
+          alt="A curated still-life of borrowable household items in warm light"
+          className="absolute inset-0 w-full h-full object-cover"
+          width={1024}
+          height={1536}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+        <div className="absolute top-8 left-8 right-8 flex items-center justify-between text-white/90">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 text-sm hover:text-white transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            {t('nav.home')}
+          </Link>
+          <span className="text-xs uppercase tracking-[0.2em]">§ 01 — Welcome</span>
+        </div>
+        <div className="absolute bottom-10 left-10 right-10 text-white">
+          <p className="text-xs uppercase tracking-[0.25em] mb-4 opacity-80">A neighborhood library of things</p>
+          <h2 className="font-display text-4xl xl:text-5xl leading-[1.05] tracking-tight">
+            Own less.<br />
+            <span className="italic font-light">Share more.</span>
+          </h2>
+          <p className="mt-4 text-sm max-w-sm opacity-90">
+            Join a community treating their stuff like a library — beautiful, useful, and shared.
+          </p>
+        </div>
       </div>
+
+      {/* Form panel */}
+      <div className="flex flex-col items-center justify-center px-4 py-8 lg:py-12 bg-gradient-subtle">
+        <div className="w-full max-w-md mb-4 lg:hidden">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            {t('nav.home')}
+          </Link>
+        </div>
       <Card className="w-full max-w-md shadow-soft">
         <CardHeader className="text-center space-y-2">
           <div className="flex justify-center mb-4">
@@ -294,6 +329,7 @@ const Auth = () => {
           </div>
         </CardContent>
       </Card>
+      </div>
     </div>
   );
 };
