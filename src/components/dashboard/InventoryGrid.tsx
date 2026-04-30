@@ -1056,13 +1056,6 @@ const InventoryGrid = () => {
                                           {/* Secondary info line */}
                                           <div className="flex items-center gap-2 text-xs text-muted-foreground">
                                             {item.brand && <span>{item.brand}</span>}
-                                            {item.brand && item.location && <span>•</span>}
-                                            {item.location && (
-                                              <span className="flex items-center gap-1">
-                                                <MapPin className="w-3 h-3" />
-                                                {item.location}
-                                              </span>
-                                            )}
                                           </div>
                                         </div>
                                       </TableCell>
