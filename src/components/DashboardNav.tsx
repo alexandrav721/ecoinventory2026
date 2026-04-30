@@ -31,6 +31,7 @@ const DashboardNav = () => {
   const mySpaceItems: NavItem[] = [
     { path: "/dashboard", label: t('dashboard.analytics'), icon: BarChart3, tab: "analytics" },
     { path: "/dashboard", label: t('dashboard.myInventory'), icon: Package, tab: "inventory" },
+    { path: "/dashboard/before-you-buy", label: "Before you buy", icon: Search },
   ];
 
   const notificationItems: NavItem[] = [
