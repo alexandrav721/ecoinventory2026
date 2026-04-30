@@ -45,12 +45,31 @@ export function CommunityMarketplace() {
   const [items, setItems] = useState<MarketItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [authed, setAuthed] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const [friendIds, setFriendIds] = useState<Set<string>>(new Set());
+  const [audience, setAudience] = useState<"all" | "friends" | "community">("all");
   const [search, setSearch] = useState("");
   const [distanceFilter, setDistanceFilter] = useState<string>("all");
   const [borrowItem, setBorrowItem] = useState<MarketItem | null>(null);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => setAuthed(!!session));
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      const uid = session?.user?.id ?? null;
+      setAuthed(!!session);
+      setCurrentUserId(uid);
+      if (uid) {
+        const { data: fr } = await supabase
+          .from("friendships")
+          .select("user_id, friend_id, status")
+          .eq("status", "accepted")
+          .or(`user_id.eq.${uid},friend_id.eq.${uid}`);
+        const ids = new Set<string>();
+        (fr || []).forEach((f: any) => {
+          ids.add(f.user_id === uid ? f.friend_id : f.user_id);
+        });
+        setFriendIds(ids);
+      }
+    });
   }, []);
 
   // Read ?q= URL param on mount, and listen for hero search events
