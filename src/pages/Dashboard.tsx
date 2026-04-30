@@ -3,12 +3,11 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { Button } from "@/components/ui/button";
-import { Leaf, Plus, GraduationCap, BarChart3, Package, Sheet, ChevronDown, FileUp, Lightbulb, LayoutGrid, Search } from "lucide-react";
+import { Leaf, Plus, GraduationCap, BarChart3, Package, ChevronDown, FileUp, Lightbulb, LayoutGrid, Search } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import InventorySpreadsheet from "@/components/dashboard/InventorySpreadsheet";
 import InventoryPickleView from "@/components/dashboard/InventoryPickleView";
 import { OpportunitiesPanel } from "@/components/dashboard/OpportunitiesPanel";
 import BeforeYouBuyPanel from "@/components/dashboard/BeforeYouBuyPanel";
@@ -185,10 +184,6 @@ const Dashboard = () => {
                   <LayoutGrid className="w-4 h-4" />
                   <span className="hidden sm:inline">Gallery</span>
                 </TabsTrigger>
-                <TabsTrigger value="spreadsheet" className="h-8 px-4 gap-2 rounded-md text-sm data-[state=active]:bg-background data-[state=active]:shadow-sm">
-                  <Sheet className="w-4 h-4" />
-                  <span className="hidden sm:inline">Spreadsheet</span>
-                </TabsTrigger>
                 <TabsTrigger value="opportunities" className="h-8 px-4 gap-2 rounded-md text-sm data-[state=active]:bg-background data-[state=active]:shadow-sm">
                   <Lightbulb className="w-4 h-4" />
                   <span className="hidden sm:inline">Opportunities</span>
@@ -201,9 +196,6 @@ const Dashboard = () => {
               </TabsList>
               <TabsContent value="gallery" className="mt-6">
                 <InventoryPickleView />
-              </TabsContent>
-              <TabsContent value="spreadsheet" className="mt-6">
-                <InventorySpreadsheet />
               </TabsContent>
               <TabsContent value="opportunities" className="mt-6">
                 <OpportunitiesPanel />
