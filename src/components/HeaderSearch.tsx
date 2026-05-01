@@ -1,16 +1,28 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
 export const HeaderSearch = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [q, setQ] = useState("");
+
+  const goToSearch = (term?: string) => {
+    const t = (term ?? q).trim();
+    const target = t ? `/community?q=${encodeURIComponent(t)}` : "/community";
+    navigate(target);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const term = q.trim();
-    navigate(term ? `/community?q=${encodeURIComponent(term)}` : "/community");
+    goToSearch();
+  };
+
+  const handleFocusOrClick = () => {
+    if (location.pathname !== "/community") {
+      goToSearch();
+    }
   };
 
   return (
@@ -25,8 +37,10 @@ export const HeaderSearch = () => {
       <Input
         value={q}
         onChange={(e) => setQ(e.target.value)}
+        onFocus={handleFocusOrClick}
+        onClick={handleFocusOrClick}
         placeholder="Search the community…"
-        className="h-9 pl-10 pr-4 rounded-full bg-secondary/60 border-transparent focus-visible:bg-background focus-visible:border-foreground/20 text-sm"
+        className="h-9 pl-10 pr-4 rounded-full bg-secondary/60 border-transparent focus-visible:bg-background focus-visible:border-foreground/20 text-sm cursor-pointer"
       />
     </form>
   );
