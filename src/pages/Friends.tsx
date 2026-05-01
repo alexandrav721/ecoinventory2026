@@ -3,11 +3,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AppHeader from "@/components/AppHeader";
-import { Search, Users, UserPlus, Package, HandHeart } from "lucide-react";
+import { Users, UserPlus, HandHeart } from "lucide-react";
 import { FriendSearch } from "@/components/friends/FriendSearch";
 import { FriendRequests } from "@/components/friends/FriendRequests";
 import { FriendsList } from "@/components/friends/FriendsList";
-import { FriendsItems } from "@/components/friends/FriendsItems";
 import { BorrowingRequestsManager } from "@/components/friends/BorrowingRequestsManager";
 import { useDemo } from "@/contexts/DemoContext";
 import { DemoBanner } from "@/components/demo/DemoBanner";
@@ -68,12 +67,12 @@ const Friends = () => {
             </p>
           </div>
 
-          <Tabs defaultValue="items" className="w-full">
-            <TabsList className="grid w-full grid-cols-5">
-              <TabsTrigger value="items" className="gap-2">
-                <Package className="w-4 h-4" />
-                Their Items
-              </TabsTrigger>
+          <div className="mb-6">
+            <FriendSearch userId={user.id} />
+          </div>
+
+          <Tabs defaultValue="requests-manage" className="w-full">
+            <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="requests-manage" className="gap-2">
                 <HandHeart className="w-4 h-4" />
                 Borrow Requests
@@ -86,15 +85,7 @@ const Friends = () => {
                 <UserPlus className="w-4 h-4" />
                 Follow Requests
               </TabsTrigger>
-              <TabsTrigger value="search" className="gap-2">
-                <Search className="w-4 h-4" />
-                Find People
-              </TabsTrigger>
             </TabsList>
-
-            <TabsContent value="items" className="mt-6">
-              <FriendsItems userId={user.id} />
-            </TabsContent>
 
             <TabsContent value="requests-manage" className="mt-6">
               <BorrowingRequestsManager />
@@ -106,10 +97,6 @@ const Friends = () => {
 
             <TabsContent value="requests" className="mt-6">
               <FriendRequests userId={user.id} />
-            </TabsContent>
-
-            <TabsContent value="search" className="mt-6">
-              <FriendSearch userId={user.id} />
             </TabsContent>
           </Tabs>
         </div>
