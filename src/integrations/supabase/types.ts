@@ -707,6 +707,48 @@ export type Database = {
           },
         ]
       }
+      item_requests: {
+        Row: {
+          audience: Database["public"]["Enums"]["request_audience"]
+          city: string | null
+          created_at: string
+          description: string | null
+          id: string
+          is_anonymous: boolean
+          item_name: string
+          neighborhood: string | null
+          requester_id: string
+          status: Database["public"]["Enums"]["request_status"]
+          updated_at: string
+        }
+        Insert: {
+          audience?: Database["public"]["Enums"]["request_audience"]
+          city?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_anonymous?: boolean
+          item_name: string
+          neighborhood?: string | null
+          requester_id: string
+          status?: Database["public"]["Enums"]["request_status"]
+          updated_at?: string
+        }
+        Update: {
+          audience?: Database["public"]["Enums"]["request_audience"]
+          city?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_anonymous?: boolean
+          item_name?: string
+          neighborhood?: string | null
+          requester_id?: string
+          status?: Database["public"]["Enums"]["request_status"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
       messages: {
         Row: {
           content: string
@@ -1261,6 +1303,8 @@ export type Database = {
         | "donation_drive"
         | "lending_circle"
         | "skill_share"
+      request_audience: "friends" | "neighbors" | "both"
+      request_status: "open" | "fulfilled" | "closed"
       rsvp_status: "going" | "interested" | "waitlist"
       swap_status:
         | "pending"
@@ -1405,6 +1449,8 @@ export const Constants = {
         "lending_circle",
         "skill_share",
       ],
+      request_audience: ["friends", "neighbors", "both"],
+      request_status: ["open", "fulfilled", "closed"],
       rsvp_status: ["going", "interested", "waitlist"],
       swap_status: [
         "pending",

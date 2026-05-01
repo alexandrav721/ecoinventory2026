@@ -9,6 +9,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Search, Sparkles, Link as LinkIcon, ArrowLeft, CheckCircle2, XCircle, Users, Leaf, DollarSign, Loader2, Package } from "lucide-react";
 import { toast } from "sonner";
+import { AskNeighborsPanel } from "@/components/before-you-buy/AskNeighborsPanel";
 
 type Result = {
   product: { product_name: string; category?: string; estimated_price: number; estimated_co2_kg: number };
@@ -215,6 +216,14 @@ export default function BeforeYouBuy() {
                 Nothing matching found in your inventory or your friends' shared items.
               </Card>
             )}
+
+            <AskNeighborsPanel defaultItemName={result.product.product_name} />
+          </div>
+        )}
+
+        {!result && (
+          <div className="mt-6">
+            <AskNeighborsPanel />
           </div>
         )}
       </div>
