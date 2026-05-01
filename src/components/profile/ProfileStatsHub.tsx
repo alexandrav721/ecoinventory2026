@@ -38,35 +38,27 @@ type Insight = {
   action_recommended: string | null;
 };
 
-const StatCard = ({
+const StatRow = ({
   label,
   value,
   sub,
   icon: Icon,
-  accent,
+  iconClass,
 }: {
   label: string;
   value: React.ReactNode;
   sub?: string;
   icon: any;
-  accent?: string;
+  iconClass?: string;
 }) => (
-  <Card className="overflow-hidden">
-    <CardContent className="p-4">
-      <div className="flex items-start justify-between gap-2">
-        <div className="text-xs uppercase tracking-wide text-muted-foreground">{label}</div>
-        <div
-          className={`w-7 h-7 rounded-md flex items-center justify-center ${
-            accent ?? "bg-primary/10 text-primary"
-          }`}
-        >
-          <Icon className="w-4 h-4" />
-        </div>
-      </div>
-      <div className="font-display text-2xl font-semibold mt-2">{value}</div>
-      {sub && <div className="text-xs text-muted-foreground mt-1">{sub}</div>}
-    </CardContent>
-  </Card>
+  <div className="flex-1 min-w-0 px-4 py-3 first:pl-5 last:pr-5">
+    <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+      <Icon className={`w-3.5 h-3.5 ${iconClass ?? "text-primary"}`} />
+      <span className="truncate">{label}</span>
+    </div>
+    <div className="font-display text-xl font-semibold mt-1 tabular-nums truncate">{value}</div>
+    {sub && <div className="text-[11px] text-muted-foreground mt-0.5 truncate">{sub}</div>}
+  </div>
 );
 
 export const ProfileStatsHub = ({ userId }: Props) => {
