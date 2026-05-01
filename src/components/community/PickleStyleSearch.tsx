@@ -230,7 +230,7 @@ export function PickleStyleSearch() {
         break;
     }
     return list;
-  }, [items, query, sizes, brands, colors, cats, conditions, locations, priceMin, priceMax, chips, sort]);
+  }, [items, query, sizes, brands, colors, cats, conditions, locations, priceMin, priceMax, chips, sort, audience, friendIds]);
 
   const toggleSet = <T,>(setter: React.Dispatch<React.SetStateAction<Set<T>>>, value: T) => {
     setter((prev) => {
