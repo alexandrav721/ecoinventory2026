@@ -63,6 +63,9 @@ export function PickleStyleSearch() {
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
   const [authed, setAuthed] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const [friendIds, setFriendIds] = useState<Set<string>>(new Set());
+  const [audience, setAudience] = useState<"public" | "friends">("public");
   const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
 
   // Filters
@@ -85,7 +88,23 @@ export function PickleStyleSearch() {
   }, [searchParams]);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => setAuthed(!!session));
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      const uid = session?.user?.id ?? null;
+      setAuthed(!!session);
+      setCurrentUserId(uid);
+      if (uid) {
+        const { data: fr } = await supabase
+          .from("friendships")
+          .select("user_id, friend_id, status")
+          .eq("status", "accepted")
+          .or(`user_id.eq.${uid},friend_id.eq.${uid}`);
+        const ids = new Set<string>();
+        (fr ?? []).forEach((f: any) => {
+          ids.add(f.user_id === uid ? f.friend_id : f.user_id);
+        });
+        setFriendIds(ids);
+      }
+    });
     supabase
       .from("categories")
       .select("id, name")
