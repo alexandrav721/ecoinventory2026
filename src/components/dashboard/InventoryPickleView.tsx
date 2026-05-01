@@ -488,7 +488,7 @@ const InventoryPickleView = () => {
               <ItemCard
                 key={it.id}
                 item={it}
-                onClick={() => navigate(`/dashboard/edit-item/${it.id}`)}
+                onClick={() => setOpenItemId(it.id)}
               />
             ))}
           </div>
