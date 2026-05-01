@@ -144,7 +144,7 @@ export function CommunityMarketplace() {
         return { ...r, owner, distance };
       });
 
-      // Sort: items with distance first (nearest), then the rest
+      // Default ordering by distance (re-sorted later by sortBy)
       enriched.sort((a, b) => {
         if (a.distance == null && b.distance == null) return 0;
         if (a.distance == null) return 1;
