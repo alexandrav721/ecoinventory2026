@@ -173,7 +173,7 @@ const ProfileSettings = () => {
                   </TabsTrigger>
                   <TabsTrigger value="friends" className="gap-2">
                     <Users className="w-4 h-4" />
-                    Followers
+                    My Network
                   </TabsTrigger>
                   <TabsTrigger value="location" className="gap-2">
                     <MapPin className="w-4 h-4" />
@@ -267,7 +267,7 @@ const ProfileSettings = () => {
 
                 <TabsContent value="friends" className="space-y-6 mt-6">
                   <div className="space-y-2">
-                    <Label htmlFor="friends_display_name">Followers Display Name</Label>
+                    <Label htmlFor="friends_display_name">Network Display Name</Label>
                     <Input
                       id="friends_display_name"
                       value={profile.friends_display_name}
@@ -280,7 +280,7 @@ const ProfileSettings = () => {
                   </div>
 
                   <div className="space-y-2">
-                    <Label>Followers Avatar</Label>
+                    <Label>Network Avatar</Label>
                     <div className="flex items-center gap-4">
                       <Avatar className="w-20 h-20">
                         <AvatarImage src={profile.friends_avatar_url || profile.avatar_url} />
@@ -309,7 +309,7 @@ const ProfileSettings = () => {
                     <div className="flex items-center justify-between space-x-4 p-4 border rounded-lg">
                       <div className="flex-1">
                         <Label htmlFor="location-friends" className="text-base font-medium">
-                          Share Location with Followers
+                          Share Location with Your Network
                         </Label>
                         <p className="text-sm text-muted-foreground mt-1">
                           Allow people who follow you to see your city and state

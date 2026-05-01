@@ -138,12 +138,12 @@ export default function People() {
   const handleToggle = async (p: PublicProfile) => {
     if (isFollowing(p.id)) {
       const err = await unfollow(p.id);
-      if (err) toast.error("Could not unfollow");
-      else toast.success(`Unfollowed ${p.display_name}`);
+      if (err) toast.error("Could not remove from network");
+      else toast.success(`Removed ${p.display_name} from your network`);
     } else {
       const err = await follow(p.id);
-      if (err) toast.error("Could not follow");
-      else toast.success(`Following ${p.display_name}`);
+      if (err) toast.error("Could not add to network");
+      else toast.success(`Added ${p.display_name} to your network`);
     }
   };
 
@@ -167,7 +167,7 @@ export default function People() {
             {isFriend && <Badge variant="secondary" className="text-xs">Friend</Badge>}
           </Link>
           <div className="flex items-center justify-between text-xs text-muted-foreground">
-            <span>{p.follower_count} {p.follower_count === 1 ? "follower" : "followers"}</span>
+            <span>{p.follower_count} in network</span>
             <span>{p.available_count} shareable</span>
           </div>
           <Button
@@ -176,7 +176,7 @@ export default function People() {
             onClick={() => handleToggle(p)}
             className="w-full"
           >
-            {following ? <><UserCheck className="w-4 h-4 mr-1" />Following</> : <><UserPlus className="w-4 h-4 mr-1" />Follow</>}
+            {following ? <><UserCheck className="w-4 h-4 mr-1" />In your network</> : <><UserPlus className="w-4 h-4 mr-1" />Add to network</>}
           </Button>
         </CardContent>
       </Card>
@@ -191,7 +191,7 @@ export default function People() {
           <div>
             <h1 className="text-3xl font-display font-semibold">People</h1>
             <p className="text-muted-foreground text-sm mt-1">
-              Discover neighbors with stuff to lend, follow inspiring members, and see your friends.
+              Discover neighbors with stuff to lend, add inspiring members to your network, and see your trusted friends.
             </p>
           </div>
           <Button asChild variant="outline">
@@ -223,7 +223,7 @@ export default function People() {
                 )}
               </div>
               {suggestions.length === 0 ? (
-                <p className="text-sm text-muted-foreground">You're following everyone we'd suggest. Nice.</p>
+                <p className="text-sm text-muted-foreground">Everyone we'd suggest is already in your network. Nice.</p>
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {suggestions.map((p) => <PersonCard key={p.id} p={p} />)}
@@ -232,9 +232,9 @@ export default function People() {
             </section>
 
             <section>
-              <h2 className="text-xl font-display mb-3">Following ({followingList.length})</h2>
+              <h2 className="text-xl font-display mb-3">In your network ({followingList.length})</h2>
               {followingList.length === 0 ? (
-                <p className="text-sm text-muted-foreground">You're not following anyone yet.</p>
+                <p className="text-sm text-muted-foreground">No one in your network yet.</p>
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {followingList.map((p) => <PersonCard key={p.id} p={p} />)}

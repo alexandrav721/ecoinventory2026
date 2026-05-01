@@ -75,7 +75,7 @@ export function FriendSearch({ userId }: FriendSearchProps) {
         });
 
       if (error) throw error;
-      toast.success("Follow request sent!");
+      toast.success("Network request sent!");
       setResults(results.filter(r => r.id !== friendId));
     } catch (error) {
       console.error("Send request error:", error);

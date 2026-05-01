@@ -392,7 +392,7 @@ export function PickleStyleSearch() {
               {([
                 { value: "all" as Audience, label: "Everyone", Icon: Layers },
                 { value: "public" as Audience, label: "Public", Icon: Globe },
-                { value: "friends" as Audience, label: `Following${authed && friendIds.size > 0 ? ` · ${friendIds.size}` : ""}`, Icon: Users },
+                { value: "friends" as Audience, label: `In network${authed && friendIds.size > 0 ? ` · ${friendIds.size}` : ""}`, Icon: Users },
               ]).map(({ value, label, Icon }) => (
                 <button
                   key={value}

@@ -61,9 +61,9 @@ const Friends = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-6xl mx-auto">
           <div className="mb-8">
-            <h1 className="text-4xl font-bold mb-2">Followers</h1>
+            <h1 className="text-4xl font-bold mb-2">My Network</h1>
             <p className="text-muted-foreground">
-              Follow people to see their stuff. Some people require approval before you can follow them — anyone can also follow you back.
+              Add neighbors and trusted friends to your network to see their stuff. Some people require approval before joining their network — anyone can also add you to theirs.
             </p>
           </div>
 
@@ -79,11 +79,11 @@ const Friends = () => {
               </TabsTrigger>
               <TabsTrigger value="friends" className="gap-2">
                 <Users className="w-4 h-4" />
-                Following
+                In your network
               </TabsTrigger>
               <TabsTrigger value="requests" className="gap-2">
                 <UserPlus className="w-4 h-4" />
-                Follow Requests
+                Network Requests
               </TabsTrigger>
             </TabsList>
 

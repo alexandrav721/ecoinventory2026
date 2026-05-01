@@ -125,12 +125,12 @@ export default function PublicProfile({ selfMode = false }: Props) {
     if (!profile) return;
     if (isFollowing(profile.id)) {
       const err = await unfollow(profile.id);
-      if (err) toast.error("Could not unfollow");
-      else { toast.success("Unfollowed"); setFollowerCount((c) => c - 1); }
+      if (err) toast.error("Could not remove from network");
+      else { toast.success("Removed from your network"); setFollowerCount((c) => c - 1); }
     } else {
       const err = await follow(profile.id);
-      if (err) toast.error("Could not follow");
-      else { toast.success("Following"); setFollowerCount((c) => c + 1); }
+      if (err) toast.error("Could not add to network");
+      else { toast.success("Added to your network"); setFollowerCount((c) => c + 1); }
     }
   };
 
@@ -174,8 +174,8 @@ export default function PublicProfile({ selfMode = false }: Props) {
                 </p>
               )}
               <div className="flex gap-6 text-sm pt-2">
-                <span><strong>{followerCount}</strong> <span className="text-muted-foreground">followers</span></span>
-                <span><strong>{followingCount}</strong> <span className="text-muted-foreground">following</span></span>
+                <span><strong>{followerCount}</strong> <span className="text-muted-foreground">in network</span></span>
+                <span><strong>{followingCount}</strong> <span className="text-muted-foreground">in their network</span></span>
                 <span><strong>{items.length}</strong> <span className="text-muted-foreground">shareable</span></span>
               </div>
             </div>
@@ -186,7 +186,7 @@ export default function PublicProfile({ selfMode = false }: Props) {
                 </Button>
               ) : (
                 <Button size="sm" variant={isFollowing(profile.id) ? "outline" : "default"} onClick={handleToggle}>
-                  {isFollowing(profile.id) ? <><UserCheck className="w-4 h-4 mr-1" />Following</> : <><UserPlus className="w-4 h-4 mr-1" />Follow</>}
+                  {isFollowing(profile.id) ? <><UserCheck className="w-4 h-4 mr-1" />In your network</> : <><UserPlus className="w-4 h-4 mr-1" />Add to network</>}
                 </Button>
               )}
             </div>
