@@ -379,10 +379,22 @@ export function CommunityMarketplace() {
       );
     }
     if (list.length === 0) {
+      const noItemsAtAll = items.length === 0;
       return (
         <div className="text-center py-16 text-muted-foreground">
-          <p>No items match your filters yet.</p>
-          <p className="text-sm mt-1">Be the first to share — your community starts with you.</p>
+          {noItemsAtAll ? (
+            <>
+              <p>No one in your area has shared items yet.</p>
+              <p className="text-sm mt-1">
+                Be the first — <Link to="/dashboard/inventory" className="underline hover:text-foreground">share something from your inventory</Link>.
+              </p>
+            </>
+          ) : (
+            <>
+              <p>No items match your filters.</p>
+              <p className="text-sm mt-1">Try widening the distance or clearing filters.</p>
+            </>
+          )}
         </div>
       );
     }
