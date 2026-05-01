@@ -90,6 +90,29 @@ const ProfileDropdown = ({ user }: ProfileDropdownProps) => {
     return "User";
   };
 
+  // Logged-out, non-demo: show sign up / log in CTAs instead of an avatar menu
+  if (!user && !isDemoMode) {
+    return (
+      <div className="flex items-center gap-1.5 pl-1">
+        <Button
+          variant="ghost"
+          size="sm"
+          className="h-9 px-3 text-sm"
+          onClick={() => navigate("/auth?mode=login")}
+        >
+          Log in
+        </Button>
+        <Button
+          size="sm"
+          className="h-9 px-3 text-sm font-medium"
+          onClick={() => navigate("/auth?mode=signup")}
+        >
+          Sign up free
+        </Button>
+      </div>
+    );
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
