@@ -484,6 +484,24 @@ export function CommunityMarketplace() {
         )}
       </div>
 
+      {/* Sort */}
+      <div>
+        <Label className="text-xs uppercase tracking-[0.15em] text-muted-foreground mb-3 block">
+          Sort by
+        </Label>
+        <Select value={sortBy} onValueChange={(v) => setSortBy(v as SortBy)}>
+          <SelectTrigger className="bg-background">
+            <SelectValue placeholder="Sort" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="distance">Nearest first</SelectItem>
+            <SelectItem value="price_high">Price: high to low</SelectItem>
+            <SelectItem value="price_low">Price: low to high</SelectItem>
+            <SelectItem value="newest">Newest</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
       {/* Audience (signed-in only) */}
       {authed && (
         <div>
