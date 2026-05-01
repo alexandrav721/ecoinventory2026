@@ -70,7 +70,7 @@ export function FriendsItems({ userId }: FriendsItemsProps) {
       setItems(friendsItems || []);
     } catch (error) {
       console.error("Fetch friends' items error:", error);
-      toast.error("Failed to load friends' items");
+      toast.error("Failed to load items from people you follow");
     } finally {
       setLoading(false);
     }
