@@ -101,26 +101,16 @@ export default function MarketplaceItem() {
 
     (async () => {
       try {
-        const { data, error } = await supabase.functions.invoke("find-similar-items", {
-          body: null,
-          method: "GET" as any,
-        }).catch(() => ({ data: null, error: "invoke-failed" } as any));
-
-        // supabase.functions.invoke doesn't pass query params well — fall back to fetch.
         let ids: string[] = [];
-        if (data && Array.isArray((data as any).ids)) {
-          ids = (data as any).ids;
-        } else {
-          const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/find-similar-items?itemId=${item.id}&limit=${SIMILAR_LIMIT}`;
-          const resp = await fetch(url, {
-            headers: {
-              Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-            },
-          });
-          if (resp.ok) {
-            const json = await resp.json();
-            ids = Array.isArray(json.ids) ? json.ids : [];
-          }
+        const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/find-similar-items?itemId=${item.id}&limit=${SIMILAR_LIMIT}`;
+        const resp = await fetch(url, {
+          headers: {
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          },
+        });
+        if (resp.ok) {
+          const json = await resp.json();
+          ids = Array.isArray(json.ids) ? json.ids : [];
         }
 
         if (cancelled || ids.length === 0) {
