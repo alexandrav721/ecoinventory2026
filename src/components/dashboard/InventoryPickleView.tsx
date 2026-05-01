@@ -236,6 +236,38 @@ const InventoryPickleView = () => {
     [items]
   );
 
+  const itemNames = useMemo(
+    () => items.map((i) => i.name.toLowerCase()),
+    [items]
+  );
+
+  const insightSummary = useMemo(() => {
+    const groups = MOCK_DUPLICATE_GROUPS.filter((g) =>
+      g.matchTerms.some((t) => itemNames.some((n) => n.includes(t)))
+    );
+    const duplicateValue = groups.reduce((s, g) => s + g.estResaleValue, 0);
+    const demandCount = items.filter((i) => !!findDemandSignal(i.name)).length;
+    const allDupTerms = groups.flatMap((g) => g.matchTerms);
+    return {
+      duplicateGroups: groups.length,
+      duplicateValue,
+      demandCount,
+      allDupTerms,
+    };
+  }, [items, itemNames]);
+
+  const scrollToGrid = () => {
+    document
+      .getElementById("my-assets-grid")
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const highlightAndScroll = (terms: string[]) => {
+    setHighlightTerms(terms);
+    scrollToGrid();
+    window.setTimeout(() => setHighlightTerms([]), 2800);
+  };
+
   const hasFilters =
     activeGroups.size > 0 ||
     
