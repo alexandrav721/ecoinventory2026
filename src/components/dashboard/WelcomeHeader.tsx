@@ -56,6 +56,7 @@ export const WelcomeHeader = ({ user }: WelcomeHeaderProps) => {
     recentlyAdded: 0,
   });
   const [loading, setLoading] = useState(true);
+  const [addOpen, setAddOpen] = useState(false);
 
   useEffect(() => {
     if (isDemoMode) {
