@@ -12,6 +12,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useUserRole } from "@/hooks/useUserRole";
 import { useTranslation } from "react-i18next";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useDemo } from "@/contexts/DemoContext";
 
 
 interface NavItem {
