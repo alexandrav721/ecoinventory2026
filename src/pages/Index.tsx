@@ -134,17 +134,10 @@ const Index = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row flex-wrap gap-3 mt-10">
-              {isLoggedIn ? (
+              {isLoggedIn && (
                 <Button asChild size="lg" className="rounded-full bg-foreground text-background hover:bg-foreground/90 gap-2 h-14 px-8 text-base">
                   <Link to="/dashboard">
                     {t('home.hero.goToDashboard')}
-                    <ArrowRight className="w-4 h-4" />
-                  </Link>
-                </Button>
-              ) : (
-                <Button asChild size="lg" className="rounded-full bg-foreground text-background hover:bg-foreground/90 gap-2 h-14 px-8 text-base">
-                  <Link to="/auth">
-                    Sign up — it's free
                     <ArrowRight className="w-4 h-4" />
                   </Link>
                 </Button>
