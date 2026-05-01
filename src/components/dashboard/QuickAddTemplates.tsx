@@ -44,7 +44,7 @@ const QuickAddTemplates = () => {
         variant="default"
         size="sm"
         className="gap-1.5 h-8 text-xs"
-        onClick={() => navigate("/dashboard/add-item")}
+        onClick={() => window.dispatchEvent(new CustomEvent("open-add-item-modal"))}
       >
         <Plus className="w-3.5 h-3.5" />
         Other
