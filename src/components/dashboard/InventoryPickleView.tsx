@@ -60,6 +60,7 @@ const InventoryPickleView = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<SortKey>("recent");
+  const [openItemId, setOpenItemId] = useState<string | null>(null);
 
   // filters
   const [activeGroups, setActiveGroups] = useState<Set<TopLevelGroup>>(new Set());
