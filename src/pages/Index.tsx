@@ -15,13 +15,7 @@ const Index = () => {
   const [stats, setStats] = useState({ totalItems: 0, totalUsers: 0, itemsShared: 0 });
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { enterDemoMode } = useDemo();
   const [heroSearch, setHeroSearch] = useState("");
-
-  const handleTryDemo = () => {
-    enterDemoMode();
-    navigate("/dashboard");
-  };
 
   const handleHeroSearch = (e: React.FormEvent) => {
     e.preventDefault();
