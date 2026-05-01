@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { AddItemModal } from "@/components/dashboard/AddItemModal";
 
 interface WelcomeHeaderProps {
   user: User | null;
