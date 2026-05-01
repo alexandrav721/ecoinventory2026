@@ -34,23 +34,25 @@ export const AppHeader = () => {
     <header className="border-b bg-card/80 backdrop-blur-md sticky top-0 z-10">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-14 gap-4">
-          {/* Logo + Title */}
-          <Link to="/" className="flex items-center gap-2.5 shrink-0">
-            <div className="w-8 h-8 rounded-lg bg-gradient-eco flex items-center justify-center shadow-sm">
-              <Leaf className="w-4 h-4 text-white" />
-            </div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-lg font-bold">{t('dashboard.title')}</h1>
-              {isDemoMode && (
-                <span className="text-xs px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium">
-                  Demo
-                </span>
-              )}
-            </div>
-          </Link>
+          {/* Left cluster: Logo + Search */}
+          <div className="flex items-center gap-4 flex-1 min-w-0">
+            <Link to="/" className="flex items-center gap-2.5 shrink-0">
+              <div className="w-8 h-8 rounded-lg bg-gradient-eco flex items-center justify-center shadow-sm">
+                <Leaf className="w-4 h-4 text-white" />
+              </div>
+              <div className="flex items-center gap-2">
+                <h1 className="text-lg font-bold">{t('dashboard.title')}</h1>
+                {isDemoMode && (
+                  <span className="text-xs px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium">
+                    Demo
+                  </span>
+                )}
+              </div>
+            </Link>
 
-          {/* Search — always visible on every page */}
-          <HeaderSearch />
+            {/* Search — always visible on every page, top-left */}
+            <HeaderSearch />
+          </div>
 
           {/* Actions */}
           <div className="flex items-center gap-0.5 shrink-0">
