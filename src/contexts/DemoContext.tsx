@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useState, useCallback, ReactNode } from "react";
+import React, { createContext, useContext, useState, useCallback, useEffect, ReactNode } from "react";
 import { DEMO_ITEMS, DEMO_CATEGORIES, DEMO_STATS, DEMO_FRIENDS, DEMO_FRIENDS_ITEMS, DEMO_FRIEND_REQUESTS, DEMO_EXCESS_INSIGHTS, DEMO_COMMUNITY_ACTIVITY, DEMO_EVENTS } from "@/data/demoData";
+import { supabase } from "@/integrations/supabase/client";
 
 interface DemoContextType {
   isDemoMode: boolean;
@@ -31,6 +32,22 @@ export const DemoProvider = ({ children }: { children: ReactNode }) => {
   const exitDemoMode = useCallback(() => {
     sessionStorage.removeItem("demoMode");
     setIsDemoMode(false);
+  }, []);
+
+  // CRITICAL: If a real user is signed in, auto-exit demo mode so they
+  // never see seeded sandbox items on /dashboard ("My Stuff").
+  useEffect(() => {
+    const clearIfAuthed = (session: any) => {
+      if (session?.user) {
+        sessionStorage.removeItem("demoMode");
+        setIsDemoMode(false);
+      }
+    };
+    supabase.auth.getSession().then(({ data: { session } }) => clearIfAuthed(session));
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
+      clearIfAuthed(session);
+    });
+    return () => subscription.unsubscribe();
   }, []);
 
   return (
