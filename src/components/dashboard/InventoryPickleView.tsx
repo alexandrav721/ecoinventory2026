@@ -353,6 +353,7 @@ const InventoryPickleView = () => {
             )}
           </div>
 
+          {showAdvancedFilters && (
           <Accordion
             type="multiple"
             defaultValue={["category"]}
