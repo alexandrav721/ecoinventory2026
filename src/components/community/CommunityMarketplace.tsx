@@ -580,10 +580,20 @@ export function CommunityMarketplace() {
               <FiltersPanel />
             </SheetContent>
           </Sheet>
-          {location && (
+          {(sortBy === "distance" && location) && (
             <div className="hidden md:flex text-xs uppercase tracking-[0.2em] text-muted-foreground items-center gap-2">
               <Navigation className="w-3 h-3" />
               Sorted by distance
+            </div>
+          )}
+          {sortBy === "price_high" && (
+            <div className="hidden md:flex text-xs uppercase tracking-[0.2em] text-muted-foreground items-center gap-2">
+              Sorted by price · high to low
+            </div>
+          )}
+          {sortBy === "price_low" && (
+            <div className="hidden md:flex text-xs uppercase tracking-[0.2em] text-muted-foreground items-center gap-2">
+              Sorted by price · low to high
             </div>
           )}
         </div>
