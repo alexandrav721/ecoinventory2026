@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowRight, Eye, Heart, Play, Search } from "lucide-react";
+import { ArrowRight, Heart, Play, Search } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import DashboardNav from "@/components/DashboardNav";
 import { useTranslation } from "react-i18next";
 import { Logo } from "@/components/Logo";
-import { useDemo } from "@/contexts/DemoContext";
 import heroBg from "@/assets/hero-community.jpg";
 
 const Index = () => {
