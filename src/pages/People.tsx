@@ -191,7 +191,7 @@ export default function People() {
           <div>
             <h1 className="text-3xl font-display font-semibold">People</h1>
             <p className="text-muted-foreground text-sm mt-1">
-              Discover neighbors with stuff to lend, follow inspiring members, and see your friends.
+              Discover neighbors with stuff to lend, add inspiring members to your network, and see your trusted friends.
             </p>
           </div>
           <Button asChild variant="outline">
