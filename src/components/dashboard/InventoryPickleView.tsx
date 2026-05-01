@@ -24,6 +24,7 @@ import { useDemo } from "@/contexts/DemoContext";
 import { ItemDetailSheet } from "@/components/dashboard/ItemDetailSheet";
 import { DuplicateAlertBanner } from "@/components/dashboard/DuplicateAlertBanner";
 import { InsightChipRow } from "@/components/dashboard/InsightChipRow";
+import { LowInventoryPreviewBanner } from "@/components/dashboard/LowInventoryPreviewBanner";
 import { MOCK_DUPLICATE_GROUPS, findDemandSignal } from "@/lib/mockInsights";
 import {
   categoryToGroup,
@@ -524,6 +525,14 @@ const InventoryPickleView = () => {
           itemNames={itemNames}
           onViewItems={highlightAndScroll}
         />
+
+        {/* Low inventory preview — motivating banner when 1–4 items */}
+        {items.length > 0 && items.length < 5 && (
+          <LowInventoryPreviewBanner
+            itemCount={items.length}
+            onAddItem={() => navigate("/dashboard/add-item")}
+          />
+        )}
 
         {/* Grid */}
         <div id="my-assets-grid">
