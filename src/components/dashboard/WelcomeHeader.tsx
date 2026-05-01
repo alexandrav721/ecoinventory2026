@@ -153,7 +153,7 @@ export const WelcomeHeader = ({ user }: WelcomeHeaderProps) => {
             </p>
           </div>
           <Button
-            onClick={() => navigate("/dashboard/add-item")}
+            onClick={() => setAddOpen(true)}
             size="sm"
             className="gap-2 shrink-0"
           >
@@ -163,6 +163,9 @@ export const WelcomeHeader = ({ user }: WelcomeHeaderProps) => {
           </Button>
         </div>
       </div>
+
+      <AddItemModal open={addOpen} onOpenChange={setAddOpen} />
+
 
 
 
