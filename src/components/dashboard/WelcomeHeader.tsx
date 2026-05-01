@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { AddItemModal } from "@/components/dashboard/AddItemModal";
 
 interface WelcomeHeaderProps {
   user: User | null;
@@ -55,6 +56,7 @@ export const WelcomeHeader = ({ user }: WelcomeHeaderProps) => {
     recentlyAdded: 0,
   });
   const [loading, setLoading] = useState(true);
+  const [addOpen, setAddOpen] = useState(false);
 
   useEffect(() => {
     if (isDemoMode) {
@@ -151,7 +153,7 @@ export const WelcomeHeader = ({ user }: WelcomeHeaderProps) => {
             </p>
           </div>
           <Button
-            onClick={() => navigate("/dashboard/add-item")}
+            onClick={() => setAddOpen(true)}
             size="sm"
             className="gap-2 shrink-0"
           >
@@ -161,6 +163,9 @@ export const WelcomeHeader = ({ user }: WelcomeHeaderProps) => {
           </Button>
         </div>
       </div>
+
+      <AddItemModal open={addOpen} onOpenChange={setAddOpen} />
+
 
 
 
