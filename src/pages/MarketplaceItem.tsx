@@ -65,7 +65,7 @@ export default function MarketplaceItem() {
       const { data, error } = await supabase
         .from("inventory_items")
         .select(
-          "id, user_id, name, description, image_urls, condition, sharing_price, brand, tags, category_id"
+          "id, user_id, name, description, image_urls, condition, sharing_price, brand, tags, category_id, is_for_borrow, is_for_sale"
         )
         .eq("id", id)
         .eq("is_available_for_sharing", true)
@@ -123,7 +123,7 @@ export default function MarketplaceItem() {
         const { data: rows } = await supabase
           .from("inventory_items")
           .select(
-            "id, user_id, name, description, image_urls, condition, sharing_price, brand, tags, category_id"
+            "id, user_id, name, description, image_urls, condition, sharing_price, brand, tags, category_id, is_for_borrow, is_for_sale"
           )
           .in("id", ids)
           .eq("is_available_for_sharing", true);
