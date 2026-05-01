@@ -57,6 +57,7 @@ export function CommunityMarketplace() {
   const [distanceFilter, setDistanceFilter] = useState<string>("all");
   const [borrowItem, setBorrowItem] = useState<MarketItem | null>(null);
   const [mode, setMode] = useState<Mode>("all");
+  const [sortBy, setSortBy] = useState<SortBy>("distance");
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   useEffect(() => {
