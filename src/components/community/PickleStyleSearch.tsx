@@ -183,9 +183,12 @@ export function PickleStyleSearch() {
 
   const filtered = useMemo(() => {
     let list = items;
-    // Audience filter: friends-only or public (everyone, including friends)
+    // Audience filter: 'all' shows everyone, 'public' = strangers (not friends, not me),
+    // 'friends' = only my accepted friends
     if (audience === "friends") {
       list = list.filter((it) => friendIds.has(it.user_id));
+    } else if (audience === "public") {
+      list = list.filter((it) => !friendIds.has(it.user_id) && it.user_id !== currentUserId);
     }
     if (query.trim()) {
       const q = query.toLowerCase();
@@ -202,8 +205,8 @@ export function PickleStyleSearch() {
     if (priceMin) list = list.filter((it) => Number(it.sharing_price ?? 0) >= Number(priceMin));
     if (priceMax) list = list.filter((it) => Number(it.sharing_price ?? 0) <= Number(priceMax));
 
-    if (chips.has("borrow")) list = list.filter((it) => !it.sharing_price || Number(it.sharing_price) === 0);
-    if (chips.has("buy")) list = list.filter((it) => it.sharing_price && Number(it.sharing_price) > 0);
+    if (offer === "borrow") list = list.filter((it) => !it.sharing_price || Number(it.sharing_price) === 0);
+    if (offer === "buy") list = list.filter((it) => it.sharing_price && Number(it.sharing_price) > 0);
     if (chips.has("discounts"))
       list = list.filter(
         (it) =>
