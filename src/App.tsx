@@ -35,6 +35,7 @@ import OrganizingInventory from "./pages/articles/OrganizingInventory";
 import ItemDepreciation from "./pages/articles/ItemDepreciation";
 import BuildingSharingCommunity from "./pages/articles/BuildingSharingCommunity";
 import MarketplaceItem from "./pages/MarketplaceItem";
+import ItemDetail from "./pages/ItemDetail";
 
 const queryClient = new QueryClient();
 
@@ -56,6 +57,7 @@ const App = () => (
             <Route path="/dashboard/declutter" element={<Declutter />} />
             <Route path="/dashboard/before-you-buy" element={<BeforeYouBuy />} />
             <Route path="/dashboard/edit-item/:id" element={<EditItem />} />
+            <Route path="/dashboard/item/:id" element={<ItemDetail />} />
             <Route path="/friends" element={<Friends />} />
             <Route path="/friends/:friendId" element={<FriendProfile />} />
             <Route path="/profile-settings" element={<ProfileSettings />} />

@@ -21,6 +21,7 @@ import { QuirkyLoader } from "@/components/QuirkyLoader";
 import { EmptyState } from "@/components/EmptyState";
 import { formatCurrency } from "@/lib/utils";
 import { useDemo } from "@/contexts/DemoContext";
+import { ItemDetailSheet } from "@/components/dashboard/ItemDetailSheet";
 import {
   categoryToGroup,
   TOP_LEVEL_GROUPS,
@@ -59,6 +60,7 @@ const InventoryPickleView = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<SortKey>("recent");
+  const [openItemId, setOpenItemId] = useState<string | null>(null);
 
   // filters
   const [activeGroups, setActiveGroups] = useState<Set<TopLevelGroup>>(new Set());
@@ -486,12 +488,17 @@ const InventoryPickleView = () => {
               <ItemCard
                 key={it.id}
                 item={it}
-                onClick={() => navigate(`/dashboard/edit-item/${it.id}`)}
+                onClick={() => setOpenItemId(it.id)}
               />
             ))}
           </div>
         )}
       </div>
+      <ItemDetailSheet
+        itemId={openItemId}
+        open={!!openItemId}
+        onOpenChange={(o) => !o && setOpenItemId(null)}
+      />
     </div>
   );
 };
