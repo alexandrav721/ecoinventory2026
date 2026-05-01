@@ -149,12 +149,6 @@ const DashboardNav = () => {
           </Link>
         </Button>
 
-        {/* Dropdown menus */}
-        <NavDropdown label={t('nav.mySpace')} icon={LayoutDashboard} items={mySpaceItems} />
-        <NavDropdown label={t('nav.notifications')} icon={Bell} items={notificationItems} />
-        <NavDropdown label={t('nav.social')} icon={Users} items={socialItems} />
-        <NavDropdown label={t('nav.explore')} icon={Compass} items={exploreItems} />
-
         {/* Profile link */}
         <Button
           asChild
@@ -168,9 +162,16 @@ const DashboardNav = () => {
         >
           <Link to="/me">
             <User className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Profile</span>
+            <span className="hidden sm:inline">My Profile</span>
           </Link>
         </Button>
+
+        {/* Dropdown menus in requested order */}
+        <NavDropdown label="Community Inventory" icon={MapPin} items={communityItems} />
+        <NavDropdown label={t('nav.mySpace')} icon={LayoutDashboard} items={mySpaceItems} />
+        <NavDropdown label={t('nav.friends')} icon={Users} items={friendsItems} />
+        <NavDropdown label="Other" icon={Compass} items={otherItems} />
+        <NavDropdown label={t('nav.notifications')} icon={Bell} items={notificationItems} />
         
         {/* Admin link if applicable */}
         {isAdmin && !loading && (
