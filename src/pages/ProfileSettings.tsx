@@ -156,7 +156,7 @@ const ProfileSettings = () => {
             <CardHeader>
               <CardTitle>Display Preferences</CardTitle>
               <CardDescription>
-                Set different display names and pictures for public viewing and friends
+                Set different display names and pictures for public viewing and for your followers
               </CardDescription>
             </CardHeader>
             <CardContent>
