@@ -155,9 +155,9 @@ export default function PublicProfile({ selfMode = false }: Props) {
           <ArrowLeft className="w-4 h-4 mr-1" />Back
         </Button>
 
-        <Card>
+        <Card className="border-0 bg-slate-900 text-white shadow-xl overflow-hidden">
           <CardContent className="p-6 flex flex-col sm:flex-row gap-6 items-start">
-            <Avatar className="h-24 w-24 ring-2 ring-accent/60 ring-offset-2 ring-offset-background shadow-md">
+            <Avatar className="h-24 w-24 ring-2 ring-accent/70 ring-offset-2 ring-offset-slate-900 shadow-lg">
               <AvatarImage src={profile.avatar_url ?? undefined} />
               <AvatarFallback className="text-2xl font-display font-semibold text-white bg-gradient-to-br from-primary via-primary/80 to-accent">
                 {(profile.display_name ?? "")
@@ -171,29 +171,35 @@ export default function PublicProfile({ selfMode = false }: Props) {
             </Avatar>
             <div className="flex-1 space-y-2">
               <div className="flex items-center gap-2 flex-wrap">
-                <h1 className="text-2xl font-display font-semibold">{profile.display_name}</h1>
-                {isFriend && <Badge variant="secondary">Friend</Badge>}
-                {isSelf && <Badge variant="outline">You</Badge>}
+                <h1 className="text-2xl font-display font-semibold text-white">{profile.display_name}</h1>
+                {isFriend && <Badge className="bg-white/15 text-white hover:bg-white/20 border-0">Friend</Badge>}
+                {isSelf && <Badge variant="outline" className="border-white/30 text-white">You</Badge>}
               </div>
               {(profile.city || profile.state) && (
-                <p className="text-sm text-muted-foreground flex items-center gap-1">
+                <p className="text-sm text-white/60 flex items-center gap-1">
                   <MapPin className="w-3.5 h-3.5" />
                   {[profile.city, profile.state].filter(Boolean).join(", ")}
                 </p>
               )}
-              <div className="flex gap-6 text-sm pt-2">
-                <span><strong>{followerCount}</strong> <span className="text-muted-foreground">in network</span></span>
-                <span><strong>{followingCount}</strong> <span className="text-muted-foreground">in their network</span></span>
-                <span><strong>{items.length}</strong> <span className="text-muted-foreground">shareable</span></span>
+              <div className="flex gap-6 text-sm pt-2 text-white/80">
+                <span><strong className="text-white">{followerCount}</strong> <span className="text-white/60">in network</span></span>
+                <span><strong className="text-white">{followingCount}</strong> <span className="text-white/60">in their network</span></span>
+                <span><strong className="text-white">{items.length}</strong> <span className="text-white/60">shareable</span></span>
               </div>
             </div>
             <div className="flex gap-2">
               {isSelf ? (
-                <Button asChild variant="outline" size="sm">
+                <Button asChild variant="outline" size="sm" className="bg-transparent border-white/30 text-white hover:bg-white/10 hover:text-white">
                   <Link to="/profile-settings"><Settings className="w-4 h-4 mr-1" />Edit profile</Link>
                 </Button>
               ) : (
-                <Button size="sm" variant={isFollowing(profile.id) ? "outline" : "default"} onClick={handleToggle}>
+                <Button
+                  size="sm"
+                  onClick={handleToggle}
+                  className={isFollowing(profile.id)
+                    ? "bg-transparent border border-white/30 text-white hover:bg-white/10"
+                    : "bg-white text-slate-900 hover:bg-white/90"}
+                >
                   {isFollowing(profile.id) ? <><UserCheck className="w-4 h-4 mr-1" />In your network</> : <><UserPlus className="w-4 h-4 mr-1" />Add to network</>}
                 </Button>
               )}
