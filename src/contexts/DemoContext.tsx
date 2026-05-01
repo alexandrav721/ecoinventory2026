@@ -34,6 +34,22 @@ export const DemoProvider = ({ children }: { children: ReactNode }) => {
     setIsDemoMode(false);
   }, []);
 
+  // CRITICAL: If a real user is signed in, auto-exit demo mode so they
+  // never see seeded sandbox items on /dashboard ("My Stuff").
+  useEffect(() => {
+    const clearIfAuthed = (session: any) => {
+      if (session?.user) {
+        sessionStorage.removeItem("demoMode");
+        setIsDemoMode(false);
+      }
+    };
+    supabase.auth.getSession().then(({ data: { session } }) => clearIfAuthed(session));
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
+      clearIfAuthed(session);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
   return (
     <DemoContext.Provider
       value={{
