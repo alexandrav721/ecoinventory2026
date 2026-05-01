@@ -62,7 +62,7 @@ export function FriendSearch({ userId }: FriendSearchProps) {
         .single();
 
       if (existing) {
-        toast.error("Friend request already exists");
+        toast.error("Already following or request pending");
         return;
       }
 
@@ -75,11 +75,11 @@ export function FriendSearch({ userId }: FriendSearchProps) {
         });
 
       if (error) throw error;
-      toast.success("Friend request sent!");
+      toast.success("Follow request sent!");
       setResults(results.filter(r => r.id !== friendId));
     } catch (error) {
       console.error("Send request error:", error);
-      toast.error("Failed to send friend request");
+      toast.error("Failed to send follow request");
     }
   };
 

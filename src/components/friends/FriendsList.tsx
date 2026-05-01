@@ -67,7 +67,7 @@ export function FriendsList({ userId }: FriendsListProps) {
       }
     } catch (error) {
       console.error("Fetch friends error:", error);
-      toast.error("Failed to load friends");
+      toast.error("Failed to load people you follow");
     } finally {
       setLoading(false);
     }
@@ -86,11 +86,11 @@ export function FriendsList({ userId }: FriendsListProps) {
         .eq("id", friendshipId);
 
       if (error) throw error;
-      toast.success("Friend removed");
+      toast.success("Unfollowed");
       fetchFriends();
     } catch (error) {
       console.error("Remove friend error:", error);
-      toast.error("Failed to remove friend");
+      toast.error("Failed to unfollow");
     }
   };
 
@@ -109,12 +109,12 @@ export function FriendsList({ userId }: FriendsListProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>My Friends</CardTitle>
-        <CardDescription>Your accepted friends list</CardDescription>
+        <CardTitle>Following</CardTitle>
+        <CardDescription>People you follow — and who follow you back</CardDescription>
       </CardHeader>
       <CardContent>
         {friends.length === 0 ? (
-          <p className="text-muted-foreground">You haven't added any friends yet</p>
+          <p className="text-muted-foreground">You're not following anyone yet</p>
         ) : (
           <div className="space-y-4">
             {friends.map((friend) => (

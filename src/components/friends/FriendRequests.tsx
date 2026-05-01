@@ -63,7 +63,7 @@ export function FriendRequests({ userId }: FriendRequestsProps) {
       setReceivedRequests(received || []);
     } catch (error) {
       console.error("Fetch requests error:", error);
-      toast.error("Failed to load friend requests");
+      toast.error("Failed to load follow requests");
     } finally {
       setLoading(false);
     }
@@ -77,7 +77,7 @@ export function FriendRequests({ userId }: FriendRequestsProps) {
         .eq("id", requestId);
 
       if (error) throw error;
-      toast.success("Friend request accepted!");
+      toast.success("Follow request accepted!");
       fetchRequests();
     } catch (error) {
       console.error("Accept error:", error);
@@ -93,7 +93,7 @@ export function FriendRequests({ userId }: FriendRequestsProps) {
         .eq("id", requestId);
 
       if (error) throw error;
-      toast.success("Friend request rejected");
+      toast.success("Follow request declined");
       fetchRequests();
     } catch (error) {
       console.error("Reject error:", error);
@@ -109,8 +109,8 @@ export function FriendRequests({ userId }: FriendRequestsProps) {
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>Received Requests</CardTitle>
-          <CardDescription>Friend requests waiting for your response</CardDescription>
+          <CardTitle>Incoming Follow Requests</CardTitle>
+          <CardDescription>People asking to follow you — accept to let them see your stuff</CardDescription>
         </CardHeader>
         <CardContent>
           {receivedRequests.length === 0 ? (
@@ -152,8 +152,8 @@ export function FriendRequests({ userId }: FriendRequestsProps) {
 
       <Card>
         <CardHeader>
-          <CardTitle>Sent Requests</CardTitle>
-          <CardDescription>Friend requests you've sent</CardDescription>
+          <CardTitle>Pending Follow Requests</CardTitle>
+          <CardDescription>People you've asked to follow — waiting for approval</CardDescription>
         </CardHeader>
         <CardContent>
           {sentRequests.length === 0 ? (

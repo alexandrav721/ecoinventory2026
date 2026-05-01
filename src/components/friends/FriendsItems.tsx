@@ -70,7 +70,7 @@ export function FriendsItems({ userId }: FriendsItemsProps) {
       setItems(friendsItems || []);
     } catch (error) {
       console.error("Fetch friends' items error:", error);
-      toast.error("Failed to load friends' items");
+      toast.error("Failed to load items from people you follow");
     } finally {
       setLoading(false);
     }
@@ -83,14 +83,14 @@ export function FriendsItems({ userId }: FriendsItemsProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Friends' Shared Items</CardTitle>
-        <CardDescription>Items your friends are willing to share</CardDescription>
+        <CardTitle>Shared Items</CardTitle>
+        <CardDescription>Items shared by people you follow</CardDescription>
       </CardHeader>
       <CardContent>
         {items.length === 0 ? (
           <div className="text-center py-8 text-muted-foreground">
             <Package className="w-12 h-12 mx-auto mb-4 opacity-50" />
-            <p>No shared items from friends yet</p>
+            <p>No shared items from people you follow yet</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

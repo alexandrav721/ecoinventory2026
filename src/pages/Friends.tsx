@@ -62,9 +62,9 @@ const Friends = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-6xl mx-auto">
           <div className="mb-8">
-            <h1 className="text-4xl font-bold mb-2">Friends</h1>
+            <h1 className="text-4xl font-bold mb-2">Followers</h1>
             <p className="text-muted-foreground">
-              Connect with friends and discover their shared items
+              Follow people to see their stuff. Some people require approval before you can follow them — anyone can also follow you back.
             </p>
           </div>
 
@@ -72,7 +72,7 @@ const Friends = () => {
             <TabsList className="grid w-full grid-cols-5">
               <TabsTrigger value="items" className="gap-2">
                 <Package className="w-4 h-4" />
-                Friends' Items
+                Their Items
               </TabsTrigger>
               <TabsTrigger value="requests-manage" className="gap-2">
                 <HandHeart className="w-4 h-4" />
@@ -80,15 +80,15 @@ const Friends = () => {
               </TabsTrigger>
               <TabsTrigger value="friends" className="gap-2">
                 <Users className="w-4 h-4" />
-                My Friends
+                Following
               </TabsTrigger>
               <TabsTrigger value="requests" className="gap-2">
                 <UserPlus className="w-4 h-4" />
-                Friend Requests
+                Follow Requests
               </TabsTrigger>
               <TabsTrigger value="search" className="gap-2">
                 <Search className="w-4 h-4" />
-                Search
+                Find People
               </TabsTrigger>
             </TabsList>
 
