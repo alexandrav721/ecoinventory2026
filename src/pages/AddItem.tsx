@@ -1377,6 +1377,15 @@ const AddItem = () => {
           </div>
         </form>
       </div>
+
+      <AddSuccessModal
+        open={successModal.open}
+        onOpenChange={(o) => setSuccessModal((s) => ({ ...s, open: o }))}
+        itemName={successModal.itemName}
+        estimatedValue={successModal.estimatedValue}
+        totalItemsAfter={successModal.totalItemsAfter}
+        onKeepAdding={handleKeepAdding}
+      />
     </div>
   );
 };
