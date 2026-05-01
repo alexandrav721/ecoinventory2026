@@ -174,8 +174,8 @@ export default function PublicProfile({ selfMode = false }: Props) {
                 </p>
               )}
               <div className="flex gap-6 text-sm pt-2">
-                <span><strong>{followerCount}</strong> <span className="text-muted-foreground">followers</span></span>
-                <span><strong>{followingCount}</strong> <span className="text-muted-foreground">following</span></span>
+                <span><strong>{followerCount}</strong> <span className="text-muted-foreground">in network</span></span>
+                <span><strong>{followingCount}</strong> <span className="text-muted-foreground">in their network</span></span>
                 <span><strong>{items.length}</strong> <span className="text-muted-foreground">shareable</span></span>
               </div>
             </div>
