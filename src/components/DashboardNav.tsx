@@ -252,6 +252,7 @@ const DashboardNav = () => {
           </Button>
         )}
       </nav>
+      <InviteNeighborsDialog open={inviteOpen} onOpenChange={setInviteOpen} />
     </div>
   );
 };
