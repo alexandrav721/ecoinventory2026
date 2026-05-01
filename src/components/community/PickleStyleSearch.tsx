@@ -349,36 +349,56 @@ export function PickleStyleSearch() {
 
   return (
     <div className="bg-background">
-      {/* Breadcrumb + Audience toggle */}
+      {/* Breadcrumb + Audience + Offer toggles */}
       <div className="container mx-auto px-4 pt-6 pb-3 flex items-center justify-between gap-4 flex-wrap">
         <nav className="flex items-center gap-1.5 text-sm text-muted-foreground">
           <Link to="/" className="hover:text-foreground">Home</Link>
           <ChevronRight className="w-3.5 h-3.5" />
           <span className="text-foreground">Search</span>
         </nav>
-        <div className="inline-flex rounded-full border border-border bg-background p-1">
-          <button
-            onClick={() => setAudience("public")}
-            className={`inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-medium transition-colors ${
-              audience === "public"
-                ? "bg-foreground text-background"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            <Globe className="w-3.5 h-3.5" />
-            Public
-          </button>
-          <button
-            onClick={() => setAudience("friends")}
-            className={`inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-medium transition-colors ${
-              audience === "friends"
-                ? "bg-foreground text-background"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            <Users className="w-3.5 h-3.5" />
-            Friends{authed && friendIds.size > 0 ? ` · ${friendIds.size}` : ""}
-          </button>
+        <div className="flex items-center gap-2 flex-wrap">
+          {/* Audience: All / Public / Friends */}
+          <div className="inline-flex rounded-full border border-border bg-background p-1">
+            {([
+              { value: "all" as Audience, label: "All", Icon: Layers },
+              { value: "public" as Audience, label: "Public", Icon: Globe },
+              { value: "friends" as Audience, label: `Friends${authed && friendIds.size > 0 ? ` · ${friendIds.size}` : ""}`, Icon: Users },
+            ]).map(({ value, label, Icon }) => (
+              <button
+                key={value}
+                onClick={() => setAudience(value)}
+                className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium transition-colors ${
+                  audience === value
+                    ? "bg-foreground text-background"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <Icon className="w-3.5 h-3.5" />
+                {label}
+              </button>
+            ))}
+          </div>
+          {/* Offer type: All / Borrow / Buy */}
+          <div className="inline-flex rounded-full border border-border bg-background p-1">
+            {([
+              { value: "all" as Offer, label: "All", Icon: Layers },
+              { value: "borrow" as Offer, label: "Borrow", Icon: HandHeart },
+              { value: "buy" as Offer, label: "Buy", Icon: ShoppingBag },
+            ]).map(({ value, label, Icon }) => (
+              <button
+                key={value}
+                onClick={() => setOffer(value)}
+                className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium transition-colors ${
+                  offer === value
+                    ? "bg-foreground text-background"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <Icon className="w-3.5 h-3.5" />
+                {label}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -387,7 +407,7 @@ export function PickleStyleSearch() {
           <p className="text-sm text-muted-foreground italic">
             You don't have any friends yet —{" "}
             <Link to="/friends" className="underline hover:text-foreground">add some</Link>{" "}
-            to see their items here.
+            to see their items here. Switch to <button onClick={() => setAudience("all")} className="underline hover:text-foreground">All</button> to browse everyone.
           </p>
         </div>
       )}
