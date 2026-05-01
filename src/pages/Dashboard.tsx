@@ -3,8 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { Button } from "@/components/ui/button";
-import { Leaf, Plus, GraduationCap, BarChart3, Package, ChevronDown, FileUp, Lightbulb, LayoutGrid, Search } from "lucide-react";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Leaf, GraduationCap, Lightbulb, LayoutGrid, Search } from "lucide-react";
 import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -13,10 +12,7 @@ import { OpportunitiesPanel } from "@/components/dashboard/OpportunitiesPanel";
 import BeforeYouBuyPanel from "@/components/dashboard/BeforeYouBuyPanel";
 
 
-import InventoryAnalytics from "@/components/dashboard/InventoryAnalytics";
 import DashboardNav from "@/components/DashboardNav";
-import { CsvUpload } from "@/components/dashboard/CsvUpload";
-import { CsvExport } from "@/components/dashboard/CsvExport";
 import { InventoryAssistant } from "@/components/dashboard/InventoryAssistant";
 import { OnboardingTour } from "@/components/dashboard/OnboardingTour";
 import AnalyticsOnboarding, { useAnalyticsOnboarding } from "@/components/dashboard/AnalyticsOnboarding";
@@ -31,7 +27,6 @@ import { WelcomeHeader } from "@/components/dashboard/WelcomeHeader";
 import { FloatingAddButton } from "@/components/dashboard/FloatingAddButton";
 import { HeaderSearch } from "@/components/HeaderSearch";
 import { QuizPrompt } from "@/components/dashboard/QuizPrompt";
-import { UpcomingEventsCard } from "@/components/dashboard/UpcomingEventsCard";
 
 const Dashboard = () => {
   const [user, setUser] = useState<User | null>(null);
