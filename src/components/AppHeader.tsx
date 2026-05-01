@@ -35,18 +35,15 @@ export const AppHeader = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center h-14 gap-4">
           {/* Left: Logo + Search (Pickle-style) */}
-          <Link to="/" className="flex items-center gap-2.5 shrink-0">
-            <div className="w-8 h-8 rounded-lg bg-gradient-eco flex items-center justify-center shadow-sm">
-              <Leaf className="w-4 h-4 text-white" />
-            </div>
-            <div className="hidden sm:flex items-center gap-2">
-              <h1 className="text-lg font-bold">{t('dashboard.title')}</h1>
-              {isDemoMode && (
-                <span className="text-xs px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium">
-                  Demo
-                </span>
-              )}
-            </div>
+          <Link to="/" className="flex items-baseline gap-2 shrink-0 group">
+            <span className="font-display italic text-2xl font-medium tracking-tight text-foreground leading-none group-hover:opacity-70 transition-opacity">
+              Loop
+            </span>
+            {isDemoMode && (
+              <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-foreground/5 text-muted-foreground font-medium uppercase tracking-wider">
+                Demo
+              </span>
+            )}
           </Link>
 
           <div className="shrink-0 w-full max-w-sm">
