@@ -20,7 +20,7 @@ import {
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { ChevronRight, SlidersHorizontal, X, Lock, Globe, Users } from "lucide-react";
+import { ChevronRight, SlidersHorizontal, X, Lock, Globe, Users, Layers, ShoppingBag, HandHeart } from "lucide-react";
 
 type Item = {
   id: string;
