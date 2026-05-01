@@ -1,39 +1,80 @@
 ## Goal
 
-When the user's My Assets gallery has **fewer than 5 items**, show a motivating full-width preview banner above the grid (instead of a sparse, discouraging layout). The grid still renders below with whatever items exist; the banner shows what insights they'll unlock.
+When a user successfully adds an item, replace the plain `toast.success("Item added successfully!")` with a celebratory **Add Success Modal** featuring confetti, the item name + estimated value, one personalized hook tied to their inventory progress, and two CTAs.
 
 ## New component
 
-Create `src/components/dashboard/LowInventoryPreviewBanner.tsx`:
+Create `src/components/dashboard/AddSuccessModal.tsx`:
 
-**Props:** `{ itemCount: number; onAddItem: () => void }`
+**Props:**
+```ts
+{
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  itemName: string;
+  estimatedValue?: number | null;
+  totalItemsAfter: number;   // user's total count AFTER this insert
+}
+```
 
-**Layout:**
-- Full-width rounded card, soft gradient background (`from-primary/5 via-accent/5 to-emerald-50/60`), matching the InsightUnlocksPanel aesthetic.
-- Header row: 
-  - Left: `✨ Your inventory is just getting started` (h3) + subtitle: `"Here's what Loop will show you when you add {5 - itemCount} more items:"` (or "a few more items" if count >= 5).
-  - Right: prominent **"Add item"** button (primary, with `Plus` icon) — wired to `onAddItem`.
-- Three preview cards (`grid-cols-1 md:grid-cols-3 gap-3`), each grayed/blurred with a `Lock` icon and "Coming soon for you" pill:
-  1. **Resale value tracker** — sample: "$1,240 in resellable items" / detail: "MacBook Pro · ~$680 · prices steady"
-  2. **Duplicate finder** — "3 cameras across your home" / "Could free up ~$420 by selling 2"
-  3. **Borrow from neighbors** — "8 items available within 0.5 mi" / "Drill, ladder, projector & more"
-- Each preview card uses muted text colors (`text-foreground/60`, `text-muted-foreground`), grayscale icon tile, and a subtle backdrop-blur veil to signal "preview / locked".
+**Layout** (uses shadcn `Dialog`):
+- Compact, centered modal (~`max-w-md`).
+- **Confetti layer**: pure CSS — ~30 absolutely-positioned `<span>` confetti pieces in a relative container at the top of the dialog, each with random `left`, `animationDelay`, and one of 4 brand colors (primary, accent, emerald, amber). Animation falls + spins for ~2.5s. Define `@keyframes loop-confetti-fall` in the component via a `<style>` tag (scoped) or inline keyframes — simplest is a small CSS block at the bottom of `index.css`. **Decision**: add keyframes to `src/index.css` (`@keyframes loop-confetti-fall { ... }`) and use Tailwind arbitrary values for animation. Keep it lightweight, no library — `canvas-confetti` is already a dep but spec asks for "simple CSS".
+- **Headline**: `🎉 {itemName} added!` (h2, font-display).
+- **Sub-line** (only if `estimatedValue` present): `Estimated worth: ${value}` in muted text with TrendingUp icon.
+- **Personalized hook card**: amber/soft tinted box with a Lightbulb icon. Hook text generated from `totalItemsAfter`:
+  - `1`: "Your first item! Add 4 more to unlock your resale value insights."
+  - `2-4`: "You're now {5 - n} items away from seeing your resale insights."
+  - `5-9`: "{10 - n} more and Loop will start spotting duplicates for you."
+  - `10-14`: "{15 - n} more items and you'll unlock borrow-from-neighbor matches."
+  - `15+`: Pick from a small rotating set, e.g., "12 neighbors near you have items like this — check the Borrow tab."
+- **CTAs** (footer):
+  - Primary: `Keep adding →` — closes modal, stays on AddItem page (resets form to blank for "select" mode).
+  - Secondary (link/ghost): `View my inventory` — navigates to `/dashboard?tab=inventory`.
+- **Auto-dismiss**: do NOT auto-close. User must click. Confetti animation runs once on open.
 
-## Integration in `InventoryPickleView.tsx`
+## Wire-up in `src/pages/AddItem.tsx`
 
-- Import the new component.
-- Render it conditionally **above the grid** (after the `DuplicateAlertBanner`, before `<div id="my-assets-grid">`) when `items.length < 5` AND `items.length > 0` (the existing `EmptyState` still handles the 0-item case — confirm with user, but keeping that empty state intact since it has its own primary CTA).
-  - Actually, simpler: render when `items.length < 5` regardless — but the empty state currently early-returns. Keep the early return for 0 items (existing UX) and show banner for 1–4 items.
-- `onAddItem` navigates to `/dashboard/add-item` (matches existing patterns in this file).
+Currently three save paths fire `toast.success` then `navigate("/dashboard")`:
+1. **Single manual save** (line ~212): replace `toast.success("Item added successfully!"); navigate("/dashboard");` with: open modal with `itemName=formData.name`, `estimatedValue=parseFloat(formData.original_price) || null`, and the freshly-fetched `totalItemsAfter` count.
+2. **Smart-AI multi-item insert** (line ~334): keep aggregate toast `"✨ Added {n} items!"` AND open the modal once with `itemName="{n} items"` (or use the first item's name + "and {n-1} more"), summed estimatedValue.
+3. **Bulk image save** (line ~500+): same pattern as #2.
 
-## Visual notes
+To get `totalItemsAfter` cheaply: after insert, run a `supabase.from("inventory_items").select("id", { count: "exact", head: true }).eq("user_id", user.id).eq("is_sold", false).eq("is_donated", false).eq("is_eliminated", false)` and use the returned `count`.
 
-- Uses existing semantic tokens (`bg-card`, `text-foreground`, `text-muted-foreground`, `border`).
-- Lucide icons: `Plus`, `TrendingUp`, `Repeat`, `Users`, `Lock`.
-- Mock data is hard-coded inside the component — no API calls.
-- Works in both demo mode and real user mode (just keys off `items.length`).
+State additions in `AddItem.tsx`:
+```ts
+const [successModal, setSuccessModal] = useState<{
+  open: boolean;
+  itemName: string;
+  estimatedValue: number | null;
+  totalItemsAfter: number;
+} | null>(null);
+```
+
+Render `<AddSuccessModal ... />` at the bottom of the page.
+
+The modal's "Keep adding" handler resets `formData` to the initial blank state and sets `mode` back to `"select"`. "View my inventory" calls `navigate("/dashboard?tab=inventory")`.
+
+## CSS additions in `src/index.css`
+
+Append:
+```css
+@keyframes loop-confetti-fall {
+  0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(220px) rotate(720deg); opacity: 0; }
+}
+.loop-confetti-piece {
+  position: absolute;
+  top: 0;
+  width: 8px;
+  height: 14px;
+  border-radius: 2px;
+  animation: loop-confetti-fall 2.4s cubic-bezier(0.2, 0.6, 0.4, 1) forwards;
+}
+```
 
 ## Out of scope
 
-- Replacing the 0-item `EmptyState` (still shows when truly empty).
-- Making preview cards clickable / wiring them to real insight pages.
+- The `AddItemModal` (email-scan / photo / "just tell me" flow) on the dashboard — that already has its own per-item milestone confetti via `canvas-confetti`. Leave it alone unless you also want the success modal there. **Confirm**: the user spec says "when item save is confirmed", which most cleanly maps to the real save in `AddItem.tsx`. Will only wire that page.
+- Real "friends nearby with this item" lookup — the personalized hook stays as static copy keyed off item count.
