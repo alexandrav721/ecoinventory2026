@@ -20,7 +20,8 @@ export const HeaderSearch = () => {
   };
 
   const handleFocusOrClick = () => {
-    if (location.pathname !== "/community") {
+    // Always send users to the public community inventory when they engage the search bar
+    if (location.pathname !== "/community" && location.pathname !== "/") {
       goToSearch();
     }
   };
