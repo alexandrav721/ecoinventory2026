@@ -186,7 +186,7 @@ export default function PublicProfile({ selfMode = false }: Props) {
                 </Button>
               ) : (
                 <Button size="sm" variant={isFollowing(profile.id) ? "outline" : "default"} onClick={handleToggle}>
-                  {isFollowing(profile.id) ? <><UserCheck className="w-4 h-4 mr-1" />Following</> : <><UserPlus className="w-4 h-4 mr-1" />Follow</>}
+                  {isFollowing(profile.id) ? <><UserCheck className="w-4 h-4 mr-1" />In your network</> : <><UserPlus className="w-4 h-4 mr-1" />Add to network</>}
                 </Button>
               )}
             </div>
