@@ -565,8 +565,16 @@ const AddItem = () => {
         );
       }
 
-      toast.success(`Successfully added ${successItems.length} items!`);
-      navigate("/dashboard");
+      const totalAfter = await fetchTotalItems(user.id);
+      const sumVal = successItems.reduce(
+        (s, img) => s + (img.result?.estimatedPrice || 0),
+        0
+      );
+      const headline =
+        successItems.length === 1
+          ? successItems[0].result?.name || "Item"
+          : `${successItems[0].result?.name || "Item"} +${successItems.length - 1} more`;
+      showSuccessCelebration(headline, sumVal > 0 ? sumVal : null, totalAfter);
     } catch (error) {
       console.error('Error saving bulk items:', error);
       toast.error("Failed to save items");
@@ -602,8 +610,16 @@ const AddItem = () => {
 
       if (error) throw error;
 
-      toast.success(`Added ${selectedProducts.length} items to your inventory!`);
-      navigate("/dashboard");
+      const totalAfter = await fetchTotalItems(user.id);
+      const sumVal = selectedProducts.reduce(
+        (s, p) => s + (p.typical_price || 0),
+        0
+      );
+      const headline =
+        selectedProducts.length === 1
+          ? selectedProducts[0].name
+          : `${selectedProducts[0].name} +${selectedProducts.length - 1} more`;
+      showSuccessCelebration(headline, sumVal > 0 ? sumVal : null, totalAfter);
     } catch (error) {
       console.error('Error adding items:', error);
       toast.error('Failed to add items to inventory');
