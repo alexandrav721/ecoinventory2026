@@ -38,14 +38,12 @@ type Item = {
   owner_state: string | null;
 };
 
-type Chip = "today" | "discounts" | "fifty";
+type Chip = "today";
 type Offer = "all" | "borrow" | "buy";
 type Audience = "public" | "friends" | "all";
 
 const CHIP_OPTIONS: { value: Chip; label: string }[] = [
   { value: "today", label: "Get it today" },
-  { value: "discounts", label: "Discounts" },
-  { value: "fifty", label: "50%+ off" },
 ];
 
 const SORT_OPTIONS = [
