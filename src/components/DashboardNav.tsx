@@ -28,16 +28,11 @@ const DashboardNav = () => {
   const { isAdmin, loading } = useUserRole();
   const { t } = useTranslation();
   
-  const mySpaceItems: NavItem[] = [
+  const myEstateItems: NavItem[] = [
+    { path: "/me", label: "My Profile", icon: User },
     { path: "/dashboard", label: t('dashboard.analytics'), icon: BarChart3, tab: "analytics" },
     { path: "/dashboard", label: t('dashboard.myInventory'), icon: Package, tab: "inventory" },
     { path: "/dashboard/before-you-buy", label: "Before you buy", icon: Search },
-  ];
-
-  const notificationItems: NavItem[] = [
-    { path: "/notifications", label: t('notifications.all'), icon: Inbox, tab: "all" },
-    { path: "/notifications", label: t('notifications.requests'), icon: Bell, tab: "requests" },
-    { path: "/notifications", label: t('notifications.activity'), icon: Activity, tab: "activity" },
   ];
 
   const friendsItems: NavItem[] = [
@@ -46,12 +41,8 @@ const DashboardNav = () => {
     { path: "/messages", label: t('nav.messages'), icon: MessageSquare },
   ];
 
-  const communityItems: NavItem[] = [
-    { path: "/community", label: t('nav.community'), icon: MapPin },
-    { path: "/events", label: "Events", icon: Calendar },
-  ];
-
   const otherItems: NavItem[] = [
+    { path: "/events", label: "Events", icon: Calendar },
     { path: "/articles", label: t('nav.articles'), icon: FileText },
     { path: "/about", label: t('nav.about'), icon: Info },
   ];
