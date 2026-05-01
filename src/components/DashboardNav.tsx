@@ -169,6 +169,21 @@ const DashboardNav = () => {
         {/* Three dropdown menus */}
         <NavDropdown label="Unlock Your Stuff" icon={LayoutDashboard} items={myEstateItems} />
         <NavDropdown label={t('nav.friends')} icon={Users} items={friendsItems} />
+        <Button
+          asChild
+          variant="ghost"
+          size="sm"
+          className={`h-8 px-2.5 gap-1.5 text-sm shrink-0 ${
+            location.pathname === "/marketplace"
+              ? "bg-primary/10 text-primary font-medium"
+              : "text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <Link to="/marketplace">
+            <ShoppingBag className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Borrow & Buy</span>
+          </Link>
+        </Button>
         <NavDropdown label="Other" icon={Compass} items={otherItems} />
 
         {/* Admin link if applicable */}
