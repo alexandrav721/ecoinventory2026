@@ -231,7 +231,7 @@ export function PickleStyleSearch() {
       else if (photos === 2) score += 35;
       else if (photos === 1) score += 15;
       if (it.brand && it.brand.trim().length > 0) score += 30;
-      if (it.condition && /like new|excellent|new/i.test(it.condition)) score += 8;
+      if (it.condition && /^(new|like-?new|excellent)$/i.test(it.condition)) score += 8;
       if (it.original_price && Number(it.original_price) >= 100) score += 5;
       return score;
     };
