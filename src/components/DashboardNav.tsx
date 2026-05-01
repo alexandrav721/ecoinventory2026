@@ -33,9 +33,9 @@ const DashboardNav = () => {
   const { isAdmin, loading } = useUserRole();
   const { t } = useTranslation();
   const { isDemoMode } = useDemo();
-  const [isAuthed, setIsAuthed] = useState<boolean | null>(null);
+  const [inviteOpen, setInviteOpen] = useState(false);
 
-  useEffect(() => {
+
     supabase.auth.getSession().then(({ data: { session } }) => {
       setIsAuthed(!!session?.user);
     });
