@@ -57,6 +57,8 @@ const EditItem = () => {
     usage_frequency: "",
     sharing_level: "private" as "private" | "friends" | "public",
     sharing_price: "",
+    is_for_borrow: true,
+    is_for_sale: false,
     tags: [] as string[],
     is_donated: false,
     is_sold: false,
