@@ -61,7 +61,7 @@ const About = () => {
             <div className="flex justify-center mb-6">
               <Logo size="lg" showText={false} />
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold">What's EcoInventory All About?</h1>
+            <h1 className="text-4xl md:text-5xl font-bold">What's Loop All About?</h1>
             <p className="text-xl text-muted-foreground">
               Helping you own less, share more, and actually use what you have
             </p>
@@ -83,7 +83,7 @@ const About = () => {
                   actually needed them.
                 </p>
                 <p>
-                  So we built EcoInventory. It helps you keep track of what you own, see what 
+                  So we built Loop. It helps you keep track of what you own, see what 
                   it's worth, and connect with people who might need what you're not using. 
                   Pretty simple, right?
                 </p>

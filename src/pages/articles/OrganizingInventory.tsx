@@ -150,7 +150,7 @@ const OrganizingInventory = () => {
               </p>
 
               <p>
-                Tools like EcoInventory make this process seamless, providing templates and reminders to help you 
+                Tools like Loop make this process seamless, providing templates and reminders to help you 
                 maintain an organized, comprehensive inventory of your possessions.
               </p>
             </CardContent>

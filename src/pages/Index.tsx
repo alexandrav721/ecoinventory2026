@@ -346,7 +346,7 @@ const Index = () => {
       {/* Footer */}
       <footer className="border-t border-border/60">
         <div className="container mx-auto px-6 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-xs uppercase tracking-[0.2em] text-muted-foreground">
-          <span className="font-display text-base normal-case tracking-normal italic">EcoInventory</span>
+          <span className="font-display text-base normal-case tracking-normal italic">Loop</span>
           <p>{t('home.footer')}</p>
         </div>
       </footer>

@@ -91,7 +91,7 @@ const Dashboard = () => {
       localStorage.setItem(`onboarding-tour-${user.id}`, 'completed');
     }
     setShowOnboarding(false);
-    toast.success("Welcome to EcoInventory! 🎉");
+    toast.success("Welcome to Loop! 🎉");
   };
 
   const handleRestartTour = () => {

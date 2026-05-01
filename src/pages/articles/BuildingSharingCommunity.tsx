@@ -77,7 +77,7 @@ const BuildingSharingCommunity = () => {
 
               <h3>3. Choose Your Platform</h3>
               <p>
-                Digital tools like EcoInventory make sharing easier by:
+                Digital tools like Loop make sharing easier by:
               </p>
               <ul>
                 <li>Creating a searchable inventory of available items</li>

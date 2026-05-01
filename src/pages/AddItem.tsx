@@ -658,7 +658,7 @@ const AddItem = () => {
               </div>
             </Card>
 
-            {/* EcoInventory Catalog removed */}
+            {/* Loop Catalog removed */}
 
             <Card 
               className="p-6 cursor-pointer hover:bg-accent transition-colors"
@@ -1012,7 +1012,7 @@ const AddItem = () => {
 
         <div className="container mx-auto px-4 py-8 max-w-6xl">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold mb-2">EcoInventory Catalog</h1>
+            <h1 className="text-3xl font-bold mb-2">Loop Catalog</h1>
             <p className="text-muted-foreground">
               Select multiple items to add to your inventory
             </p>

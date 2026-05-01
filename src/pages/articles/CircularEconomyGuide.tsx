@@ -75,7 +75,7 @@ const CircularEconomyGuide = () => {
                 Everyone can contribute to the circular economy. Here are some practical ways to get started:
               </p>
               <ol>
-                <li><strong>Share and borrow:</strong> Use platforms like EcoInventory to share items with your community instead of buying new</li>
+                <li><strong>Share and borrow:</strong> Use platforms like Loop to share items with your community instead of buying new</li>
                 <li><strong>Buy quality:</strong> Invest in durable, repairable products that last longer</li>
                 <li><strong>Repair first:</strong> Fix broken items before replacing them</li>
                 <li><strong>Donate and sell:</strong> Give items you no longer need a second life</li>
@@ -85,7 +85,7 @@ const CircularEconomyGuide = () => {
               <h2>The Role of Technology</h2>
               <p>
                 Digital platforms are making circular economy practices more accessible than ever. 
-                Apps like EcoInventory help you catalog your possessions, making it easier to share resources 
+                Apps like Loop help you catalog your possessions, making it easier to share resources 
                 with neighbors, track item lifecycles, and make informed decisions about purchases and disposals.
               </p>
 

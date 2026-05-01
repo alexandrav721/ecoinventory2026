@@ -10,7 +10,7 @@ const steps: Step[] = [
   {
     target: "body",
     placement: "center",
-    title: "Welcome to EcoInventory 🌱",
+    title: "Welcome to Loop 🌱",
     content:
       "A 60-second tour of the things that matter most. Track what you own, share with neighbors, and avoid duplicate buys.",
   },

@@ -118,7 +118,7 @@ const Events = () => {
               <Leaf className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h1 className="text-xl font-bold">EcoInventory</h1>
+              <h1 className="text-xl font-bold">Loop</h1>
               {user && <p className="text-xs text-muted-foreground">{user.email}</p>}
             </div>
           </div>

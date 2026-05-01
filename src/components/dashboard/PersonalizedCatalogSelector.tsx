@@ -142,7 +142,7 @@ export function PersonalizedCatalogSelector({ onAddItems }: PersonalizedCatalogS
         <div>
           <h3 className="text-lg font-semibold flex items-center gap-2">
             {isPersonalized && <Sparkles className="h-5 w-5 text-primary" />}
-            EcoInventory Catalog
+            Loop Catalog
           </h3>
           <p className="text-sm text-muted-foreground">
             {isPersonalized 

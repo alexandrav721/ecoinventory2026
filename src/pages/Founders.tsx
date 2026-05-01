@@ -44,7 +44,7 @@ const Founders = () => {
       borderColor: "border-green-500/20",
       description: "Best default option",
       features: [
-        "Early access to EcoInventory",
+        "Early access to Loop",
         "Lifetime discount on all paid plans",
         "Founder badge on your profile",
         "Vote on upcoming features",
@@ -150,7 +150,7 @@ const Founders = () => {
                 </div>
               </div>
               <p className="font-semibold text-lg">Your Name</p>
-              <p className="text-muted-foreground text-sm">Founder, EcoInventory</p>
+              <p className="text-muted-foreground text-sm">Founder, Loop</p>
             </div>
             
             {/* Story */}
@@ -173,7 +173,7 @@ const Founders = () => {
                 </p>
                 
                 <p>
-                  I started EcoInventory because I believe there's a better way. What if we could easily see 
+                  I started Loop because I believe there's a better way. What if we could easily see 
                   everything we own? What if we could share with our community instead of everyone buying 
                   their own ladder, their own drill, their own camping gear?
                 </p>
@@ -322,7 +322,7 @@ const Founders = () => {
       {/* Footer */}
       <footer className="border-t py-8">
         <div className="container mx-auto px-4 text-center text-muted-foreground text-sm">
-          © 2025 EcoInventory. Built for a sustainable future.
+          © 2025 Loop. Built for a sustainable future.
         </div>
       </footer>
     </div>
