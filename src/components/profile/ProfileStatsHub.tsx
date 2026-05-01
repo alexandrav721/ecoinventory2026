@@ -161,13 +161,9 @@ export const ProfileStatsHub = ({ userId }: Props) => {
 
   if (loading || !stats) {
     return (
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        {[0, 1, 2, 3].map((i) => (
-          <Card key={i}>
-            <CardContent className="p-4 h-24 animate-pulse bg-muted/30" />
-          </Card>
-        ))}
-      </div>
+      <Card className="overflow-hidden">
+        <CardContent className="p-0 h-20 animate-pulse bg-muted/30" />
+      </Card>
     );
   }
 
@@ -182,35 +178,39 @@ export const ProfileStatsHub = ({ userId }: Props) => {
             </Link>
           </Button>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <StatCard
-            label="Items tracked"
-            value={stats.totalItems}
-            sub={`${stats.shareableItems} shareable`}
-            icon={Package}
-          />
-          <StatCard
-            label="Portfolio value"
-            value={`$${stats.portfolioValue.toLocaleString(undefined, { maximumFractionDigits: 0 })}`}
-            sub="What you've paid"
-            icon={DollarSign}
-            accent="bg-amber-100 text-amber-700"
-          />
-          <StatCard
-            label="Earned"
-            value={`$${stats.earnedFromSales.toLocaleString(undefined, { maximumFractionDigits: 0 })}`}
-            sub="From items sold"
-            icon={TrendingUp}
-            accent="bg-green-100 text-green-700"
-          />
-          <StatCard
-            label="Community interest"
-            value={stats.searchesMatching}
-            sub="Searches matching your stuff (30d)"
-            icon={Eye}
-            accent="bg-blue-100 text-blue-700"
-          />
-        </div>
+        <Card className="overflow-hidden">
+          <CardContent className="p-0">
+            <div className="flex flex-wrap sm:flex-nowrap divide-y sm:divide-y-0 sm:divide-x divide-border/60">
+              <StatRow
+                label="Items"
+                value={stats.totalItems}
+                sub={`${stats.shareableItems} shareable`}
+                icon={Package}
+              />
+              <StatRow
+                label="Paid"
+                value={`$${stats.portfolioValue.toLocaleString(undefined, { maximumFractionDigits: 0 })}`}
+                sub="Portfolio value"
+                icon={DollarSign}
+                iconClass="text-amber-600"
+              />
+              <StatRow
+                label="Earned"
+                value={`$${stats.earnedFromSales.toLocaleString(undefined, { maximumFractionDigits: 0 })}`}
+                sub="From items sold"
+                icon={TrendingUp}
+                iconClass="text-emerald-600"
+              />
+              <StatRow
+                label="Interest"
+                value={stats.searchesMatching}
+                sub="Searches (30d)"
+                icon={Eye}
+                iconClass="text-blue-600"
+              />
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Hot picks: items people searched for */}
