@@ -367,65 +367,94 @@ export function PickleStyleSearch() {
 
   return (
     <div className="bg-background">
-      {/* Breadcrumb + Audience + Offer toggles */}
-      <div className="container mx-auto px-4 pt-6 pb-3 flex items-center justify-between gap-4 flex-wrap">
-        <nav className="flex items-center gap-1.5 text-sm text-muted-foreground">
-          <Link to="/" className="hover:text-foreground">Home</Link>
-          <ChevronRight className="w-3.5 h-3.5" />
-          <span className="text-foreground">Search</span>
-        </nav>
-        <div className="flex items-center gap-2 flex-wrap">
-          {/* Audience: All / Public / Friends */}
-          <div className="inline-flex rounded-full border border-border bg-background p-1">
-            {([
-              { value: "all" as Audience, label: "All", Icon: Layers },
-              { value: "public" as Audience, label: "Public", Icon: Globe },
-              { value: "friends" as Audience, label: `Friends${authed && friendIds.size > 0 ? ` · ${friendIds.size}` : ""}`, Icon: Users },
-            ]).map(({ value, label, Icon }) => (
-              <button
-                key={value}
-                onClick={() => setAudience(value)}
-                className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium transition-colors ${
-                  audience === value
-                    ? "bg-foreground text-background"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                <Icon className="w-3.5 h-3.5" />
-                {label}
-              </button>
-            ))}
-          </div>
-          {/* Offer type: All / Borrow / Buy */}
-          <div className="inline-flex rounded-full border border-border bg-background p-1">
-            {([
-              { value: "all" as Offer, label: "All", Icon: Layers },
-              { value: "borrow" as Offer, label: "Borrow", Icon: HandHeart },
-              { value: "buy" as Offer, label: "Buy", Icon: ShoppingBag },
-            ]).map(({ value, label, Icon }) => (
-              <button
-                key={value}
-                onClick={() => setOffer(value)}
-                className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium transition-colors ${
-                  offer === value
-                    ? "bg-foreground text-background"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                <Icon className="w-3.5 h-3.5" />
-                {label}
-              </button>
-            ))}
+      {/* Colorful hero strip */}
+      <div className="relative overflow-hidden border-b">
+        <div
+          className="absolute inset-0 -z-10"
+          style={{
+            background:
+              "linear-gradient(115deg, hsl(217 91% 60% / 0.12), hsl(330 85% 65% / 0.10) 35%, hsl(45 96% 60% / 0.12) 70%, hsl(160 70% 50% / 0.12))",
+          }}
+        />
+        <div
+          className="absolute -top-24 -right-24 w-72 h-72 rounded-full blur-3xl -z-10 opacity-50"
+          style={{ background: "hsl(330 85% 70%)" }}
+        />
+        <div
+          className="absolute -bottom-24 -left-24 w-72 h-72 rounded-full blur-3xl -z-10 opacity-40"
+          style={{ background: "hsl(199 89% 60%)" }}
+        />
+        <div className="container mx-auto px-4 py-8 md:py-10">
+          <nav className="flex items-center gap-1.5 text-xs text-muted-foreground mb-3">
+            <Link to="/welcome" className="hover:text-foreground">About Loop</Link>
+            <ChevronRight className="w-3.5 h-3.5" />
+            <span className="text-foreground font-medium">Community</span>
+          </nav>
+          <h1 className="font-display text-3xl md:text-5xl font-semibold tracking-tight leading-[1.05] max-w-3xl">
+            Borrow it. Buy it.{" "}
+            <span className="italic" style={{ color: "hsl(330 85% 55%)" }}>
+              Loop
+            </span>{" "}
+            it from neighbors.
+          </h1>
+          <p className="mt-3 text-sm md:text-base text-muted-foreground max-w-2xl">
+            Hand-picked finds from across NYC — Le Creuset, Aesop, vintage Eames, Patagonia and more. Less stuff, more life.
+          </p>
+
+          <div className="mt-5 flex items-center gap-2 flex-wrap">
+            {/* Audience */}
+            <div className="inline-flex rounded-full border border-border bg-background/80 backdrop-blur p-1">
+              {([
+                { value: "all" as Audience, label: "Everyone", Icon: Layers },
+                { value: "public" as Audience, label: "Public", Icon: Globe },
+                { value: "friends" as Audience, label: `Friends${authed && friendIds.size > 0 ? ` · ${friendIds.size}` : ""}`, Icon: Users },
+              ]).map(({ value, label, Icon }) => (
+                <button
+                  key={value}
+                  onClick={() => setAudience(value)}
+                  className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium transition-colors ${
+                    audience === value
+                      ? "bg-foreground text-background"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <Icon className="w-3.5 h-3.5" />
+                  {label}
+                </button>
+              ))}
+            </div>
+            {/* Offer */}
+            <div className="inline-flex rounded-full border border-border bg-background/80 backdrop-blur p-1">
+              {([
+                { value: "all" as Offer, label: "All", Icon: Layers, tone: "" },
+                { value: "borrow" as Offer, label: "Borrow", Icon: HandHeart, tone: "hsl(160 70% 40%)" },
+                { value: "buy" as Offer, label: "Buy", Icon: ShoppingBag, tone: "hsl(330 85% 55%)" },
+              ]).map(({ value, label, Icon, tone }) => (
+                <button
+                  key={value}
+                  onClick={() => setOffer(value)}
+                  className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium transition-colors ${
+                    offer === value
+                      ? "text-background"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                  style={offer === value ? { background: tone || "hsl(var(--foreground))" } : undefined}
+                >
+                  <Icon className="w-3.5 h-3.5" />
+                  {label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
 
       {audience === "friends" && friendIds.size === 0 && (
-        <div className="container mx-auto px-4 pb-2">
+        <div className="container mx-auto px-4 pt-3">
           <p className="text-sm text-muted-foreground italic">
             You don't have any friends yet —{" "}
             <Link to="/friends" className="underline hover:text-foreground">add some</Link>{" "}
-            to see their items here. Switch to <button onClick={() => setAudience("all")} className="underline hover:text-foreground">All</button> to browse everyone.
+            to see their items here. Switch to <button onClick={() => setAudience("all")} className="underline hover:text-foreground">Everyone</button> to browse all of NYC.
           </p>
         </div>
       )}
