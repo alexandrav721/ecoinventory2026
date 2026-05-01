@@ -4,12 +4,7 @@ import { User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { useDemo } from "@/contexts/DemoContext";
 import { useTranslation } from "react-i18next";
-import {
-  Camera,
-  ArrowRight,
-  Flame,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AddItemModal } from "@/components/dashboard/AddItemModal";
 import { InsightUnlocksPanel } from "@/components/dashboard/InsightUnlocksPanel";
