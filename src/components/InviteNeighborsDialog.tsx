@@ -75,7 +75,7 @@ const InviteNeighborsDialog = ({ open, onOpenChange }: InviteNeighborsDialogProp
   }, [open, isDemoMode]);
 
   const inviteUrl = `https://ecoinventory2026.lovable.app/invite/${usernameSlug}`;
-  const message = `Your neighbor ${displayName} invited you to Loop — see what's available to borrow on your street. Join and add your first item to get $5 in Loop credit to spend in the marketplace.`;
+  const message = `Your neighbor ${displayName} invited you to Loop — see what's available to borrow on your street. Join and add your first item to get $20 in Loop credit to spend in the marketplace.`;
   const displayCount = nearbyCount ?? 0;
 
   const handleCopy = async () => {
@@ -119,10 +119,10 @@ const InviteNeighborsDialog = ({ open, onOpenChange }: InviteNeighborsDialogProp
           </div>
           <div>
             <div className="text-base font-semibold text-foreground">
-              You both get $5 Loop credit
+              You both get $20 Loop credit
             </div>
             <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
-              When your neighbor joins and adds their first item, you each get $5 to spend in the marketplace.
+              When your neighbor joins and adds their first item, you each get $20 to spend in the marketplace.
             </p>
           </div>
         </div>
