@@ -123,47 +123,11 @@ const DashboardNav = () => {
   return (
     <div className="relative">
       <nav className="flex items-center gap-1 py-2 px-1">
-        {/* Home link */}
-        <Button
-          asChild
-          variant="ghost"
-          size="sm"
-          className={`h-8 px-2.5 gap-1.5 text-sm shrink-0 ${
-            location.pathname === "/" 
-              ? "bg-primary/10 text-primary font-medium" 
-              : "text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          <Link to="/">
-            <Home className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">{t('nav.home')}</span>
-          </Link>
-        </Button>
-
-        {/* Profile link */}
-        <Button
-          asChild
-          variant="ghost"
-          size="sm"
-          className={`h-8 px-2.5 gap-1.5 text-sm shrink-0 ${
-            location.pathname === "/me"
-              ? "bg-primary/10 text-primary font-medium"
-              : "text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          <Link to="/me">
-            <User className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">My Profile</span>
-          </Link>
-        </Button>
-
-        {/* Dropdown menus in requested order */}
-        <NavDropdown label="Community Inventory" icon={MapPin} items={communityItems} />
-        <NavDropdown label={t('nav.mySpace')} icon={LayoutDashboard} items={mySpaceItems} />
+        {/* Three dropdown menus */}
+        <NavDropdown label="My Estate" icon={LayoutDashboard} items={myEstateItems} />
         <NavDropdown label={t('nav.friends')} icon={Users} items={friendsItems} />
         <NavDropdown label="Other" icon={Compass} items={otherItems} />
-        <NavDropdown label={t('nav.notifications')} icon={Bell} items={notificationItems} />
-        
+
         {/* Admin link if applicable */}
         {isAdmin && !loading && (
           <Button
