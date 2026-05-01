@@ -124,8 +124,7 @@ export const WelcomeHeader = ({ user }: WelcomeHeaderProps) => {
     );
   }
 
-  const decluttered = (extra.donatedCount || 0) + (extra.eliminatedCount || 0);
-  const profitPositive = (extra.profitLoss || 0) >= 0;
+
 
   return (
     <div className="space-y-4">
