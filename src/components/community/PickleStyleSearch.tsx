@@ -406,7 +406,7 @@ export function PickleStyleSearch() {
               {([
                 { value: "all" as Audience, label: "Everyone", Icon: Layers },
                 { value: "public" as Audience, label: "Public", Icon: Globe },
-                { value: "friends" as Audience, label: `Friends${authed && friendIds.size > 0 ? ` · ${friendIds.size}` : ""}`, Icon: Users },
+                { value: "friends" as Audience, label: `Following${authed && friendIds.size > 0 ? ` · ${friendIds.size}` : ""}`, Icon: Users },
               ]).map(({ value, label, Icon }) => (
                 <button
                   key={value}
@@ -451,8 +451,8 @@ export function PickleStyleSearch() {
       {audience === "friends" && friendIds.size === 0 && (
         <div className="container mx-auto px-4 pt-3">
           <p className="text-sm text-muted-foreground italic">
-            You don't have any friends yet —{" "}
-            <Link to="/friends" className="underline hover:text-foreground">add some</Link>{" "}
+            You're not following anyone yet —{" "}
+            <Link to="/people" className="underline hover:text-foreground">find people to follow</Link>{" "}
             to see their items here. Switch to <button onClick={() => setAudience("all")} className="underline hover:text-foreground">Everyone</button> to browse all of NYC.
           </p>
         </div>
