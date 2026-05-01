@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { MapPin, HandHeart, ShoppingCart, MessageCircle, Search, Navigation, Lock, Users, Globe, Filter, X } from "lucide-react";
+import { MapPin, HandHeart, ShoppingCart, MessageCircle, Search, Navigation, Lock, Users, Globe, Filter, X, Camera } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
