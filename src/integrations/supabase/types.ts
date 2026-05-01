@@ -1136,6 +1136,56 @@ export type Database = {
           },
         ]
       }
+      swap_offers: {
+        Row: {
+          counter_of_id: string | null
+          created_at: string
+          id: string
+          message: string | null
+          offered_item_id: string
+          offerer_id: string
+          recipient_id: string
+          requested_item_id: string
+          responded_at: string | null
+          status: Database["public"]["Enums"]["swap_status"]
+          updated_at: string
+        }
+        Insert: {
+          counter_of_id?: string | null
+          created_at?: string
+          id?: string
+          message?: string | null
+          offered_item_id: string
+          offerer_id: string
+          recipient_id: string
+          requested_item_id: string
+          responded_at?: string | null
+          status?: Database["public"]["Enums"]["swap_status"]
+          updated_at?: string
+        }
+        Update: {
+          counter_of_id?: string | null
+          created_at?: string
+          id?: string
+          message?: string | null
+          offered_item_id?: string
+          offerer_id?: string
+          recipient_id?: string
+          requested_item_id?: string
+          responded_at?: string | null
+          status?: Database["public"]["Enums"]["swap_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "swap_offers_counter_of_id_fkey"
+            columns: ["counter_of_id"]
+            isOneToOne: false
+            referencedRelation: "swap_offers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string | null
@@ -1212,6 +1262,12 @@ export type Database = {
         | "lending_circle"
         | "skill_share"
       rsvp_status: "going" | "interested" | "waitlist"
+      swap_status:
+        | "pending"
+        | "accepted"
+        | "declined"
+        | "cancelled"
+        | "countered"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1350,6 +1406,13 @@ export const Constants = {
         "skill_share",
       ],
       rsvp_status: ["going", "interested", "waitlist"],
+      swap_status: [
+        "pending",
+        "accepted",
+        "declined",
+        "cancelled",
+        "countered",
+      ],
     },
   },
 } as const
