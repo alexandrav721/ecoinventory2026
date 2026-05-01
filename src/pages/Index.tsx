@@ -153,6 +153,36 @@ const Index = () => {
         </div>
       </section>
 
+      {/* DEMO VIDEO */}
+      {!isLoggedIn && (
+        <section className="border-b border-border/60 bg-secondary/30">
+          <div className="container mx-auto px-6 py-24 md:py-32">
+            <div className="grid md:grid-cols-12 gap-8 items-center">
+              <div className="md:col-span-4">
+                <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-6">§ Watch</div>
+                <h2 className="font-display text-4xl md:text-5xl leading-[1.05] font-light mb-6">
+                  {t('home.demo.title')}
+                </h2>
+                <p className="text-muted-foreground leading-relaxed">{t('home.demo.subtitle')}</p>
+              </div>
+              <div className="md:col-span-8">
+                <div className="relative aspect-video bg-foreground/5 border border-border overflow-hidden">
+                  <video
+                    src="/video/loop-demo.mp4"
+                    className="absolute inset-0 w-full h-full object-cover"
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="metadata"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* THE MATH — Big editorial numbers */}
       <section className="border-b border-border/60">
         <div className="container mx-auto px-6 py-24 md:py-32">
