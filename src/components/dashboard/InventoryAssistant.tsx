@@ -45,6 +45,12 @@ export const InventoryAssistant = () => {
     }
   }, [messages, open]);
 
+  useEffect(() => {
+    const handler = () => setOpen(true);
+    window.addEventListener("open-inventory-assistant", handler);
+    return () => window.removeEventListener("open-inventory-assistant", handler);
+  }, []);
+
   const send = async () => {
     const text = input.trim();
     if (!text || sending) return;
