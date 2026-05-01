@@ -245,10 +245,13 @@ export function CommunityMarketplace() {
   };
 
   const ItemCard = ({ item }: { item: MarketItem }) => {
-    const isFree = !item.sharing_price || Number(item.sharing_price) === 0;
     const ownerName = item.owner?.public_display_name || item.owner?.full_name || "Member";
     const ownerAvatar = item.owner?.public_avatar_url || item.owner?.avatar_url || undefined;
     const cover = item.image_urls?.[0];
+    const showBorrow = item.is_for_borrow;
+    const showBuy = item.is_for_sale;
+    const both = showBorrow && showBuy;
+    const isFreeBorrow = showBorrow && (!item.sharing_price || Number(item.sharing_price) === 0);
 
     return (
       <Card className="overflow-hidden border-border/60 hover:shadow-md transition-shadow">
@@ -267,11 +270,14 @@ export function CommunityMarketplace() {
                 {item.distance < 1 ? "<1" : item.distance.toFixed(1)} mi
               </Badge>
             )}
-            {isFree && (
-              <Badge className="absolute top-2 left-2 bg-primary text-primary-foreground">
-                Free to borrow
-              </Badge>
-            )}
+            <div className="absolute top-2 left-2 flex flex-col gap-1">
+              {both && (
+                <Badge className="bg-foreground text-background">Lend or buy</Badge>
+              )}
+              {!both && isFreeBorrow && (
+                <Badge className="bg-primary text-primary-foreground">Free to borrow</Badge>
+              )}
+            </div>
           </div>
         </Link>
         <CardContent className="p-4 space-y-3">
@@ -285,7 +291,7 @@ export function CommunityMarketplace() {
 
             <div className="flex items-center gap-2 flex-wrap mt-3">
               {item.condition && <Badge variant="outline" className="capitalize">{item.condition}</Badge>}
-              {!isFree && (
+              {showBuy && item.sharing_price != null && Number(item.sharing_price) > 0 && (
                 <Badge variant="secondary" className="bg-primary/10 text-primary">
                   ${Number(item.sharing_price).toFixed(2)}
                 </Badge>
@@ -315,11 +321,16 @@ export function CommunityMarketplace() {
               >
                 <MessageCircle className="w-4 h-4" />
               </Button>
-              {isFree ? (
-                <Button size="sm" onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleBorrow(item); }}>
+              {showBorrow && (
+                <Button
+                  size="sm"
+                  variant={both ? "outline" : "default"}
+                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleBorrow(item); }}
+                >
                   <HandHeart className="w-4 h-4 mr-1" /> Borrow
                 </Button>
-              ) : (
+              )}
+              {showBuy && (
                 <Button size="sm" onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleBuy(item); }}>
                   <ShoppingCart className="w-4 h-4 mr-1" /> Buy
                 </Button>
