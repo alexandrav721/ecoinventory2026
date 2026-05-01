@@ -9,6 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, MapPin, Package, UserCheck, UserPlus, Settings } from "lucide-react";
 import { toast } from "sonner";
 import { useFollows } from "@/hooks/useFollows";
+import { ProfileStatsHub } from "@/components/profile/ProfileStatsHub";
 
 interface Props {
   selfMode?: boolean;
