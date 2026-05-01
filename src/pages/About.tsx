@@ -61,7 +61,7 @@ const About = () => {
             <div className="flex justify-center mb-6">
               <Logo size="lg" showText={false} />
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold">What's Loop All About?</h1>
+            <h1 className="text-4xl md:text-5xl font-bold">How Loop Works</h1>
             <p className="text-xl text-muted-foreground">
               Helping you own less, share more, and actually use what you have
             </p>
