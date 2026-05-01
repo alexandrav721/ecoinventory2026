@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Camera, Receipt, PenTool, Package, Upload, Sparkles, Loader2, X } from "lucide-react";
+import { ArrowLeft, Camera, Receipt, PenTool, Package, Upload, Sparkles, Loader2, X, Mail } from "lucide-react";
 import { toast } from "sonner";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -673,11 +673,13 @@ const AddItem = () => {
     const options: {
       label: string;
       description: string;
+      icon: typeof Sparkles;
       onClick: () => void;
     }[] = [
       {
-        label: "Chat with our AI",
+        label: "Describe to our AI",
         description: "Describe what you own and we'll log it for you",
+        icon: Sparkles,
         onClick: () => {
           window.dispatchEvent(new CustomEvent("open-inventory-assistant"));
           navigate("/dashboard");
@@ -686,17 +688,16 @@ const AddItem = () => {
       {
         label: "Snap a photo",
         description: "Take or upload a photo and AI identifies the item",
+        icon: Camera,
         onClick: () => setMode("smart"),
       },
       {
-        label: "Add manually",
-        description: "Fill in the details yourself",
-        onClick: () => setMode("manual"),
-      },
-      {
-        label: "Scan a receipt",
-        description: "Upload a receipt to extract multiple items at once",
-        onClick: () => setMode("receipt"),
+        label: "Forward an email",
+        description: "Forward a purchase email and we'll extract your items automatically",
+        icon: Mail,
+        onClick: () => {
+          toast.info("Email forwarding coming soon!");
+        },
       },
     ];
 
@@ -734,13 +735,16 @@ const AddItem = () => {
                   onClick={opt.onClick}
                   className="group w-full flex items-center justify-between gap-6 py-6 md:py-7 text-left transition-colors hover:bg-stone-100/60 -mx-4 px-4 md:-mx-6 md:px-6"
                 >
-                  <div className="min-w-0">
-                    <h3 className="font-display text-2xl md:text-3xl leading-tight tracking-tight text-foreground">
-                      {opt.label}
-                    </h3>
-                    <p className="text-sm text-muted-foreground mt-1.5">
-                      {opt.description}
-                    </p>
+                  <div className="flex items-center gap-5 min-w-0">
+                    <opt.icon className="h-6 w-6 text-muted-foreground shrink-0 transition-colors group-hover:text-foreground" strokeWidth={1.5} />
+                    <div className="min-w-0">
+                      <h3 className="font-display text-2xl md:text-3xl leading-tight tracking-tight text-foreground">
+                        {opt.label}
+                      </h3>
+                      <p className="text-sm text-muted-foreground mt-1.5">
+                        {opt.description}
+                      </p>
+                    </div>
                   </div>
                   <ArrowLeft className="h-5 w-5 rotate-180 text-muted-foreground shrink-0 transition-transform group-hover:translate-x-1 group-hover:text-foreground" />
                 </button>
