@@ -42,7 +42,7 @@ export const HeaderSearch = () => {
         onChange={(e) => setQ(e.target.value)}
         onFocus={handleFocusOrClick}
         onClick={handleFocusOrClick}
-        placeholder="Search the community…"
+        placeholder="Search products…"
         className="h-9 pl-10 pr-4 rounded-full bg-secondary/60 border-transparent focus-visible:bg-background focus-visible:border-foreground/20 text-sm cursor-pointer"
       />
     </form>
