@@ -38,14 +38,12 @@ type Item = {
   owner_state: string | null;
 };
 
-type Chip = "today" | "discounts" | "fifty";
+type Chip = "today";
 type Offer = "all" | "borrow" | "buy";
 type Audience = "public" | "friends" | "all";
 
 const CHIP_OPTIONS: { value: Chip; label: string }[] = [
   { value: "today", label: "Get it today" },
-  { value: "discounts", label: "Discounts" },
-  { value: "fifty", label: "50%+ off" },
 ];
 
 const SORT_OPTIONS = [
@@ -213,20 +211,8 @@ export function PickleStyleSearch() {
 
     if (offer === "borrow") list = list.filter((it) => !it.sharing_price || Number(it.sharing_price) === 0);
     if (offer === "buy") list = list.filter((it) => it.sharing_price && Number(it.sharing_price) > 0);
-    if (chips.has("discounts"))
-      list = list.filter(
-        (it) =>
-          it.original_price &&
-          it.sharing_price &&
-          Number(it.sharing_price) < Number(it.original_price)
-      );
-    if (chips.has("fifty"))
-      list = list.filter(
-        (it) =>
-          it.original_price &&
-          it.sharing_price &&
-          Number(it.sharing_price) <= Number(it.original_price) * 0.5
-      );
+
+
 
     // Quality score: rewards multiple photos + filled-in brand so the best
     // listings rise to the top of the feed.
@@ -735,15 +721,8 @@ function ProductCard({ item, onOpen }: { item: Item; onOpen: () => void }) {
           </span>
         </div>
 
-        {/* Top-right: discount badge */}
-        {discountPct && discountPct >= 10 && (
-          <div className="absolute top-2.5 right-2.5">
-            <span className="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold text-white shadow-md"
-              style={{ background: "hsl(0 80% 55%)" }}>
-              -{discountPct}%
-            </span>
-          </div>
-        )}
+
+
 
         {/* Bottom-right: photo count */}
         {photoCount > 1 && (
@@ -777,16 +756,10 @@ function ProductCard({ item, onOpen }: { item: Item; onOpen: () => void }) {
             {isFree ? (
               <span className="text-base font-bold" style={{ color: "hsl(160 70% 38%)" }}>Free to borrow</span>
             ) : (
-              <>
-                <span className="text-base font-bold" style={{ color: "hsl(330 85% 50%)" }}>
-                  ${price!.toFixed(0)}
-                </span>
-                {orig != null && orig > (price ?? 0) && (
-                  <span className="line-through text-muted-foreground text-xs">
-                    ${orig.toFixed(0)}
-                  </span>
-                )}
-              </>
+              <span className="text-base font-bold" style={{ color: "hsl(330 85% 50%)" }}>
+                ${price!.toFixed(0)}
+              </span>
+
             )}
           </div>
         </div>
