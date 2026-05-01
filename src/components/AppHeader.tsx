@@ -54,7 +54,7 @@ export const AppHeader = () => {
           <div className="flex-1 flex items-center justify-end gap-1 min-w-0 overflow-x-auto">
             <DashboardNav />
             <div className="flex items-center gap-0.5 shrink-0 pl-1 border-l ml-1">
-              <NotificationBell userId={user?.id ?? null} />
+              {(isDemoMode || user) && <NotificationBell userId={user?.id ?? null} />}
               <ProfileDropdown user={user} />
             </div>
           </div>

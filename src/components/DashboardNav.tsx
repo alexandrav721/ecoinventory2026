@@ -12,6 +12,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useUserRole } from "@/hooks/useUserRole";
 import { useTranslation } from "react-i18next";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useDemo } from "@/contexts/DemoContext";
 
 
 interface NavItem {
@@ -27,7 +30,21 @@ const DashboardNav = () => {
   const currentTab = searchParams.get("tab") || "analytics";
   const { isAdmin, loading } = useUserRole();
   const { t } = useTranslation();
-  
+  const { isDemoMode } = useDemo();
+  const [isAuthed, setIsAuthed] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setIsAuthed(!!session?.user);
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
+      setIsAuthed(!!session?.user);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const loggedIn = isDemoMode || isAuthed === true;
+
   const myEstateItems: NavItem[] = [
     { path: "/me", label: "My Profile", icon: User },
     { path: "/dashboard", label: t('dashboard.analytics'), icon: BarChart3, tab: "analytics" },
@@ -119,6 +136,32 @@ const DashboardNav = () => {
       </DropdownMenu>
     );
   };
+
+  // Logged-out: only show "How it Works" link in the nav.
+  // Sign up / Log in CTAs are rendered by ProfileDropdown on the right.
+  if (!loggedIn) {
+    return (
+      <div className="relative">
+        <nav className="flex items-center gap-1 py-2 px-1">
+          <Button
+            asChild
+            variant="ghost"
+            size="sm"
+            className={`h-8 px-2.5 gap-1.5 text-sm shrink-0 ${
+              location.pathname === "/how-it-works"
+                ? "bg-primary/10 text-primary font-medium"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <Link to="/how-it-works">
+              <Info className="w-3.5 h-3.5" />
+              <span>How it works</span>
+            </Link>
+          </Button>
+        </nav>
+      </div>
+    );
+  }
 
   return (
     <div className="relative">
