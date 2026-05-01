@@ -262,141 +262,102 @@ export default function PublicProfile({ selfMode = false }: Props) {
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+            <div className="rounded-xl border border-border/70 bg-card divide-y divide-border/60 overflow-hidden">
               {/* Borrow request */}
-              <article className="group relative rounded-xl border border-border/70 bg-card p-5 hover:border-foreground/30 hover:shadow-sm transition-all">
-                <div className="absolute top-5 right-5 h-2 w-2 rounded-full bg-primary" />
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Inbox className="h-4 w-4 text-primary" />
-                  </div>
-                  <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-                    Borrow request
-                  </span>
+              <div className="group flex items-start gap-3 px-4 py-3 hover:bg-muted/40 transition-colors">
+                <div className="h-7 w-7 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
+                  <Inbox className="h-3.5 w-3.5 text-primary" />
                 </div>
-                <p className="font-display text-lg leading-snug text-foreground">
-                  <em className="italic">Maya R.</em> wants to borrow your <em className="italic">Dyson V11</em>
-                </p>
-                <p className="text-xs text-muted-foreground mt-2">
-                  Requested for next weekend · 2h ago
-                </p>
-                <div className="flex items-center gap-2 mt-4 pt-4 border-t border-border/60">
-                  <Button size="sm" className="h-8 text-xs flex-1">Respond</Button>
-                  <Button size="sm" variant="ghost" className="h-8 text-xs">Later</Button>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm leading-snug text-foreground truncate">
+                    <strong className="font-semibold">Maya R.</strong> wants to borrow your <strong className="font-semibold">Dyson V11</strong>
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    Requested for next weekend · 2h ago
+                  </p>
                 </div>
-              </article>
+                <Button size="sm" className="h-7 text-xs px-3 shrink-0">Respond</Button>
+              </div>
 
               {/* New follower */}
-              <article className="group relative rounded-xl border border-border/70 bg-card p-5 hover:border-foreground/30 hover:shadow-sm transition-all">
-                <div className="absolute top-5 right-5 h-2 w-2 rounded-full bg-primary" />
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="h-8 w-8 rounded-full bg-accent/10 flex items-center justify-center">
-                    <Heart className="h-4 w-4 text-accent-foreground" />
-                  </div>
-                  <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-                    New follower
-                  </span>
+              <div className="group flex items-start gap-3 px-4 py-3 hover:bg-muted/40 transition-colors">
+                <div className="h-7 w-7 rounded-full bg-accent/10 flex items-center justify-center shrink-0 mt-0.5">
+                  <Heart className="h-3.5 w-3.5 text-accent-foreground" />
                 </div>
-                <p className="font-display text-lg leading-snug text-foreground">
-                  <em className="italic">Alex K.</em> from Park Slope started following you
-                </p>
-                <p className="text-xs text-muted-foreground mt-2">
-                  3 mutual neighbors · 5h ago
-                </p>
-                <div className="flex items-center gap-2 mt-4 pt-4 border-t border-border/60">
-                  <Button size="sm" variant="outline" className="h-8 text-xs flex-1">Follow back</Button>
-                  <Button size="sm" variant="ghost" className="h-8 text-xs">View</Button>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm leading-snug text-foreground truncate">
+                    <strong className="font-semibold">Alex K.</strong> from Park Slope started following you
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    3 mutual neighbors · 5h ago
+                  </p>
                 </div>
-              </article>
+                <Button size="sm" variant="outline" className="h-7 text-xs px-3 shrink-0">Follow back</Button>
+              </div>
 
-              {/* Item interest */}
-              <article className="group relative rounded-xl border border-border/70 bg-card p-5 hover:border-foreground/30 hover:shadow-sm transition-all">
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
-                    <TrendingUp className="h-4 w-4 text-foreground/70" />
-                  </div>
-                  <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-                    Trending
-                  </span>
+              {/* Trending */}
+              <div className="group flex items-start gap-3 px-4 py-3 hover:bg-muted/40 transition-colors">
+                <div className="h-7 w-7 rounded-full bg-muted flex items-center justify-center shrink-0 mt-0.5">
+                  <TrendingUp className="h-3.5 w-3.5 text-foreground/70" />
                 </div>
-                <p className="font-display text-lg leading-snug text-foreground">
-                  <em className="italic">7 neighbors</em> searched for a <em className="italic">Peloton</em> this week
-                </p>
-                <p className="text-xs text-muted-foreground mt-2">
-                  In Brooklyn · updated daily
-                </p>
-                <div className="flex items-center gap-2 mt-4 pt-4 border-t border-border/60">
-                  <Button size="sm" variant="outline" className="h-8 text-xs flex-1">List yours</Button>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm leading-snug text-foreground truncate">
+                    <strong className="font-semibold">7 neighbors</strong> searched for a <strong className="font-semibold">Peloton</strong> this week
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    In Brooklyn · updated daily
+                  </p>
                 </div>
-              </article>
+                <Button size="sm" variant="outline" className="h-7 text-xs px-3 shrink-0">List yours</Button>
+              </div>
 
               {/* Buy interest */}
-              <article className="group relative rounded-xl border border-border/70 bg-card p-5 hover:border-foreground/30 hover:shadow-sm transition-all">
-                <div className="absolute top-5 right-5 h-2 w-2 rounded-full bg-primary" />
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Sparkles className="h-4 w-4 text-primary" />
-                  </div>
-                  <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-                    Buy interest
-                  </span>
+              <div className="group flex items-start gap-3 px-4 py-3 hover:bg-muted/40 transition-colors">
+                <div className="h-7 w-7 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
+                  <Sparkles className="h-3.5 w-3.5 text-primary" />
                 </div>
-                <p className="font-display text-lg leading-snug text-foreground">
-                  <em className="italic">3 neighbors</em> are interested in your <em className="italic">Canon EOS R</em>
-                </p>
-                <p className="text-xs text-muted-foreground mt-2">
-                  Listed at $650 · 1d ago
-                </p>
-                <div className="flex items-center gap-2 mt-4 pt-4 border-t border-border/60">
-                  <Button size="sm" className="h-8 text-xs flex-1">Review</Button>
-                  <Button size="sm" variant="ghost" className="h-8 text-xs">Later</Button>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm leading-snug text-foreground truncate">
+                    <strong className="font-semibold">3 neighbors</strong> are interested in your <strong className="font-semibold">Canon EOS R</strong>
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    Listed at $650 · 1d ago
+                  </p>
                 </div>
-              </article>
+                <Button size="sm" className="h-7 text-xs px-3 shrink-0">Review</Button>
+              </div>
 
-              {/* Declutter insight */}
-              <article className="group relative rounded-xl border border-border/70 bg-card p-5 hover:border-foreground/30 hover:shadow-sm transition-all">
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
-                    <Package className="h-4 w-4 text-foreground/70" />
-                  </div>
-                  <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-                    Declutter tip
-                  </span>
+              {/* Declutter tip */}
+              <div className="group flex items-start gap-3 px-4 py-3 hover:bg-muted/40 transition-colors">
+                <div className="h-7 w-7 rounded-full bg-muted flex items-center justify-center shrink-0 mt-0.5">
+                  <Package className="h-3.5 w-3.5 text-foreground/70" />
                 </div>
-                <p className="font-display text-lg leading-snug text-foreground">
-                  You own <em className="italic">3 similar</em> vacuum cleaners
-                </p>
-                <p className="text-xs text-muted-foreground mt-2">
-                  Consider decluttering one · est. $180 resale
-                </p>
-                <div className="flex items-center gap-2 mt-4 pt-4 border-t border-border/60">
-                  <Button size="sm" variant="outline" className="h-8 text-xs flex-1">View</Button>
-                  <Button size="sm" variant="ghost" className="h-8 text-xs">Dismiss</Button>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm leading-snug text-foreground truncate">
+                    You own <strong className="font-semibold">3 similar</strong> vacuum cleaners
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    Consider decluttering one · est. $180 resale
+                  </p>
                 </div>
-              </article>
+                <Button size="sm" variant="outline" className="h-7 text-xs px-3 shrink-0">View</Button>
+              </div>
 
-              {/* Nearby match alert — accent left border */}
-              <article className="group relative rounded-xl border border-border/70 border-l-4 border-l-primary bg-card p-5 hover:border-foreground/30 hover:border-l-primary hover:shadow-sm transition-all">
-                <div className="absolute top-5 right-5 h-2 w-2 rounded-full bg-primary" />
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                    <MapPin className="h-4 w-4 text-primary" />
-                  </div>
-                  <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-                    Nearby match
-                  </span>
+              {/* Nearby match */}
+              <div className="group flex items-start gap-3 px-4 py-3 hover:bg-muted/40 transition-colors border-l-2 border-l-primary">
+                <div className="h-7 w-7 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
+                  <MapPin className="h-3.5 w-3.5 text-primary" />
                 </div>
-                <p className="font-display text-lg leading-snug text-foreground">
-                  Someone nearby is searching for a <em className="italic">pressure washer</em>
-                </p>
-                <p className="text-xs text-muted-foreground mt-2">
-                  You own one that matches · 0.4 mi away
-                </p>
-                <div className="flex items-center gap-2 mt-4 pt-4 border-t border-border/60">
-                  <Button size="sm" className="h-8 text-xs flex-1">View</Button>
-                  <Button size="sm" variant="ghost" className="h-8 text-xs">Later</Button>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm leading-snug text-foreground truncate">
+                    Someone nearby is searching for a <strong className="font-semibold">pressure washer</strong>
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    You own one that matches · 0.4 mi away
+                  </p>
                 </div>
-              </article>
+                <Button size="sm" className="h-7 text-xs px-3 shrink-0">View</Button>
+              </div>
             </div>
           </section>
         )}
