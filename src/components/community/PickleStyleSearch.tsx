@@ -65,7 +65,9 @@ export function PickleStyleSearch() {
   const [authed, setAuthed] = useState(false);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [friendIds, setFriendIds] = useState<Set<string>>(new Set());
-  const [audience, setAudience] = useState<Audience>("all");
+  const [audience, setAudience] = useState<Audience>(
+    (searchParams.get("audience") as Audience) || "all"
+  );
   const [offer, setOffer] = useState<Offer>("all");
   const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
 
@@ -82,10 +84,14 @@ export function PickleStyleSearch() {
   const [priceMax, setPriceMax] = useState("");
   const [sort, setSort] = useState("recommended");
 
-  // Sync ?q= changes (header search) into local state
+  // Sync ?q= and ?audience= changes (header search) into local state
   useEffect(() => {
     const q = searchParams.get("q") ?? "";
     setQuery(q);
+    const a = searchParams.get("audience") as Audience | null;
+    if (a && (a === "all" || a === "public" || a === "friends")) {
+      setAudience(a);
+    }
   }, [searchParams]);
 
   useEffect(() => {
