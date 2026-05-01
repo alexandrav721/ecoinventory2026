@@ -211,20 +211,8 @@ export function PickleStyleSearch() {
 
     if (offer === "borrow") list = list.filter((it) => !it.sharing_price || Number(it.sharing_price) === 0);
     if (offer === "buy") list = list.filter((it) => it.sharing_price && Number(it.sharing_price) > 0);
-    if (chips.has("discounts"))
-      list = list.filter(
-        (it) =>
-          it.original_price &&
-          it.sharing_price &&
-          Number(it.sharing_price) < Number(it.original_price)
-      );
-    if (chips.has("fifty"))
-      list = list.filter(
-        (it) =>
-          it.original_price &&
-          it.sharing_price &&
-          Number(it.sharing_price) <= Number(it.original_price) * 0.5
-      );
+
+
 
     // Quality score: rewards multiple photos + filled-in brand so the best
     // listings rise to the top of the feed.
