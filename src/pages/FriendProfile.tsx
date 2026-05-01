@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import DashboardNav from "@/components/DashboardNav";
+import AppHeader from "@/components/AppHeader";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -210,7 +210,7 @@ export default function FriendProfile() {
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
-        <DashboardNav />
+        <AppHeader />
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-6xl mx-auto">
             <div className="text-center py-12">Loading...</div>
@@ -223,7 +223,7 @@ export default function FriendProfile() {
   if (!profile) {
     return (
       <div className="min-h-screen bg-background">
-        <DashboardNav />
+        <AppHeader />
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-6xl mx-auto">
             <div className="text-center py-12">Friend not found</div>
@@ -235,7 +235,7 @@ export default function FriendProfile() {
 
   return (
     <div className="min-h-screen bg-background">
-      <DashboardNav />
+      <AppHeader />
       
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-6xl mx-auto">

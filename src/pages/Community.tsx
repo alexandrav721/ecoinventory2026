@@ -5,7 +5,7 @@ import { User } from "@supabase/supabase-js";
 import { Button } from "@/components/ui/button";
 import { Leaf, LogOut } from "lucide-react";
 import { toast } from "sonner";
-import DashboardNav from "@/components/DashboardNav";
+import AppHeader from "@/components/AppHeader";
 import NearbySearch from "@/components/dashboard/NearbySearch";
 import SearchCommunity from "@/components/dashboard/SearchCommunity";
 import LocationSettings from "@/components/dashboard/LocationSettings";
@@ -66,7 +66,7 @@ const Community = () => {
       </header>
 
       {/* Navigation */}
-      {(user || isDemoMode) && <DashboardNav />}
+      {(user || isDemoMode) && <AppHeader />}
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8 space-y-8">

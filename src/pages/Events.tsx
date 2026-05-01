@@ -7,7 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Leaf, LogOut, Calendar, MapPin, Users as UsersIcon, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
-import DashboardNav from "@/components/DashboardNav";
+import AppHeader from "@/components/AppHeader";
 import { useDemo } from "@/contexts/DemoContext";
 import { EVENT_TYPE_META, EventType, BOROUGHS, formatEventDate, formatEventTime } from "@/lib/events";
 
@@ -130,7 +130,7 @@ const Events = () => {
           )}
         </div>
         <div className="container mx-auto px-4">
-          <DashboardNav />
+          <AppHeader />
         </div>
       </header>
 
