@@ -15,6 +15,7 @@ import Admin from "./pages/Admin";
 import Promo from "./pages/Promo";
 import Founders from "./pages/Founders";
 import Community from "./pages/Community";
+import Swap from "./pages/Swap";
 import Events from "./pages/Events";
 import Articles from "./pages/Articles";
 import Article from "./pages/Article";
