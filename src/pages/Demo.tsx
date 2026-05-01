@@ -37,7 +37,7 @@ const Demo = () => {
           Take Loop for a <span className="italic font-display-wonk text-primary">spin.</span>
         </h1>
         <p className="text-lg md:text-xl text-muted-foreground mt-8 leading-relaxed">
-          Demo mode loads a sample household — a few rooms of stuff, a handful of friends, some
+          Demo mode loads a sample household — a few rooms of stuff, a handful of people you follow, some
           neighborhood listings. Click around like you would on your own account.{" "}
           <span className="italic font-display-wonk text-foreground">Nothing saves.</span>
         </p>
@@ -45,7 +45,7 @@ const Demo = () => {
         <div className="grid sm:grid-cols-3 gap-4 mt-12">
           {[
             { icon: Package, title: "Sample inventory", desc: "Items across rooms, with values, conditions, photos." },
-            { icon: Users, title: "Mock friends", desc: "See what borrowing, lending, and following look like." },
+            { icon: Users, title: "Mock followers", desc: "See what borrowing, lending, and following look like." },
             { icon: Sparkles, title: "AI insights", desc: "Excess flags, opportunities, and Before-You-Buy checks." },
           ].map((f) => (
             <Card key={f.title} className="border-border/60">

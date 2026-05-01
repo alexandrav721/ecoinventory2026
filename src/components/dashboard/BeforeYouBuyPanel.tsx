@@ -174,7 +174,7 @@ export default function BeforeYouBuyPanel() {
           {result.borrowableItems.length > 0 && (
             <Card className="p-6">
               <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                <Users className="w-5 h-5" /> Borrow from friends ({result.borrowableItems.length})
+                <Users className="w-5 h-5" /> Borrow from people you follow ({result.borrowableItems.length})
               </h3>
               <div className="space-y-3">
                 {result.borrowableItems.map((item) => (
@@ -201,7 +201,7 @@ export default function BeforeYouBuyPanel() {
 
           {result.ownedItems.length === 0 && result.borrowableItems.length === 0 && (
             <Card className="p-6 text-center text-muted-foreground">
-              Nothing matching found in your inventory or your friends' shared items.
+              Nothing matching found in your inventory or in items shared by people you follow.
             </Card>
           )}
         </div>

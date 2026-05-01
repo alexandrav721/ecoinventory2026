@@ -148,7 +148,7 @@ const ProfileSettings = () => {
           <div className="mb-8">
             <h1 className="text-4xl font-bold mb-2">Profile Settings</h1>
             <p className="text-muted-foreground">
-              Customize how you appear to the public and your friends
+              Customize how you appear to the public and to your followers
             </p>
           </div>
 
@@ -156,7 +156,7 @@ const ProfileSettings = () => {
             <CardHeader>
               <CardTitle>Display Preferences</CardTitle>
               <CardDescription>
-                Set different display names and pictures for public viewing and friends
+                Set different display names and pictures for public viewing and for your followers
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -173,7 +173,7 @@ const ProfileSettings = () => {
                   </TabsTrigger>
                   <TabsTrigger value="friends" className="gap-2">
                     <Users className="w-4 h-4" />
-                    Friends
+                    Followers
                   </TabsTrigger>
                   <TabsTrigger value="location" className="gap-2">
                     <MapPin className="w-4 h-4" />
@@ -236,7 +236,7 @@ const ProfileSettings = () => {
                       placeholder="How you appear to the public"
                     />
                     <p className="text-sm text-muted-foreground">
-                      This is shown to users who aren't your friends
+                      This is shown to people who don't follow you
                     </p>
                   </div>
 
@@ -258,7 +258,7 @@ const ProfileSettings = () => {
                           className="max-w-xs"
                         />
                         <p className="text-sm text-muted-foreground mt-1">
-                          Shown to users who aren't your friends
+                          Shown to people who don't follow you
                         </p>
                       </div>
                     </div>
@@ -267,20 +267,20 @@ const ProfileSettings = () => {
 
                 <TabsContent value="friends" className="space-y-6 mt-6">
                   <div className="space-y-2">
-                    <Label htmlFor="friends_display_name">Friends Display Name</Label>
+                    <Label htmlFor="friends_display_name">Followers Display Name</Label>
                     <Input
                       id="friends_display_name"
                       value={profile.friends_display_name}
                       onChange={(e) => setProfile({ ...profile, friends_display_name: e.target.value })}
-                      placeholder="How you appear to friends"
+                      placeholder="How you appear to your followers"
                     />
                     <p className="text-sm text-muted-foreground">
-                      This is shown only to your friends
+                      This is shown only to people who follow you
                     </p>
                   </div>
 
                   <div className="space-y-2">
-                    <Label>Friends Avatar</Label>
+                    <Label>Followers Avatar</Label>
                     <div className="flex items-center gap-4">
                       <Avatar className="w-20 h-20">
                         <AvatarImage src={profile.friends_avatar_url || profile.avatar_url} />
@@ -297,7 +297,7 @@ const ProfileSettings = () => {
                           className="max-w-xs"
                         />
                         <p className="text-sm text-muted-foreground mt-1">
-                          Shown only to your friends
+                          Shown only to people who follow you
                         </p>
                       </div>
                     </div>
@@ -309,10 +309,10 @@ const ProfileSettings = () => {
                     <div className="flex items-center justify-between space-x-4 p-4 border rounded-lg">
                       <div className="flex-1">
                         <Label htmlFor="location-friends" className="text-base font-medium">
-                          Share Location with Friends
+                          Share Location with Followers
                         </Label>
                         <p className="text-sm text-muted-foreground mt-1">
-                          Allow your friends to see your city and state
+                          Allow people who follow you to see your city and state
                         </p>
                       </div>
                       <Switch

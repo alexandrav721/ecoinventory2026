@@ -128,7 +128,7 @@ export const AskNeighborsPanel = ({ defaultItemName = "" }: Props) => {
           <Megaphone className="w-5 h-5 text-primary" />
         </div>
         <div>
-          <h3 className="font-display text-xl font-semibold">Ask friends & neighbors</h3>
+          <h3 className="font-display text-xl font-semibold">Ask people you follow & neighbors</h3>
           <p className="text-sm text-muted-foreground">
             Before you buy, see if someone nearby has one to lend.
           </p>
@@ -170,10 +170,10 @@ export const AskNeighborsPanel = ({ defaultItemName = "" }: Props) => {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="both">Friends & neighbors</SelectItem>
+                    <SelectItem value="both">Following & neighbors</SelectItem>
                     <SelectItem value="friends">
                       <span className="flex items-center gap-2">
-                        <Users className="w-4 h-4" /> Friends only
+                        <Users className="w-4 h-4" /> People I follow only
                       </span>
                     </SelectItem>
                     <SelectItem value="neighbors">
@@ -223,7 +223,7 @@ export const AskNeighborsPanel = ({ defaultItemName = "" }: Props) => {
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="font-medium truncate">{r.item_name}</span>
                         <Badge variant="outline" className="text-[10px]">
-                          {r.audience === "both" ? "friends + neighbors" : r.audience}
+                          {r.audience === "both" ? "following + neighbors" : r.audience === "friends" ? "following" : r.audience}
                         </Badge>
                         {r.is_anonymous && (
                           <Badge variant="outline" className="text-[10px]">
