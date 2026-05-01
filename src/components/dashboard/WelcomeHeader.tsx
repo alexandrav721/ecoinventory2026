@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AddItemModal } from "@/components/dashboard/AddItemModal";
+import { InsightUnlocksPanel } from "@/components/dashboard/InsightUnlocksPanel";
 
 interface WelcomeHeaderProps {
   user: User | null;
@@ -113,9 +114,6 @@ export const WelcomeHeader = ({ user }: WelcomeHeaderProps) => {
   const firstName =
     profile?.full_name?.split(" ")[0] || user?.email?.split("@")[0] || "friend";
   const greeting = getGreeting();
-  const nextMilestone = getNextMilestone(stats.totalItems);
-  const progressToMilestone = Math.min((stats.totalItems / nextMilestone) * 100, 100);
-  const motivationalMessage = getMotivationalMessage(stats.totalItems, stats.sharedItems);
 
   if (loading) {
     return (
@@ -148,9 +146,6 @@ export const WelcomeHeader = ({ user }: WelcomeHeaderProps) => {
             <h2 className="font-display text-2xl md:text-3xl leading-[1.05] tracking-tight">
               Hey {firstName}.
             </h2>
-            <p className="text-sm text-muted-foreground mt-1.5">
-              {motivationalMessage}
-            </p>
           </div>
           <Button
             onClick={() => setAddOpen(true)}
@@ -161,6 +156,10 @@ export const WelcomeHeader = ({ user }: WelcomeHeaderProps) => {
             Add item
             <ArrowRight className="w-3.5 h-3.5" />
           </Button>
+        </div>
+
+        <div className="mt-4">
+          <InsightUnlocksPanel totalItems={stats.totalItems} />
         </div>
       </div>
 
