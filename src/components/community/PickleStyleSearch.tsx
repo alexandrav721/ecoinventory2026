@@ -20,7 +20,7 @@ import {
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { ChevronRight, SlidersHorizontal, X, Lock } from "lucide-react";
+import { ChevronRight, SlidersHorizontal, X, Lock, Globe, Users } from "lucide-react";
 
 type Item = {
   id: string;
@@ -63,6 +63,9 @@ export function PickleStyleSearch() {
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
   const [authed, setAuthed] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const [friendIds, setFriendIds] = useState<Set<string>>(new Set());
+  const [audience, setAudience] = useState<"public" | "friends">("public");
   const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
 
   // Filters
@@ -85,7 +88,23 @@ export function PickleStyleSearch() {
   }, [searchParams]);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => setAuthed(!!session));
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      const uid = session?.user?.id ?? null;
+      setAuthed(!!session);
+      setCurrentUserId(uid);
+      if (uid) {
+        const { data: fr } = await supabase
+          .from("friendships")
+          .select("user_id, friend_id, status")
+          .eq("status", "accepted")
+          .or(`user_id.eq.${uid},friend_id.eq.${uid}`);
+        const ids = new Set<string>();
+        (fr ?? []).forEach((f: any) => {
+          ids.add(f.user_id === uid ? f.friend_id : f.user_id);
+        });
+        setFriendIds(ids);
+      }
+    });
     supabase
       .from("categories")
       .select("id, name")
@@ -163,6 +182,10 @@ export function PickleStyleSearch() {
 
   const filtered = useMemo(() => {
     let list = items;
+    // Audience filter: friends-only or public (everyone, including friends)
+    if (audience === "friends") {
+      list = list.filter((it) => friendIds.has(it.user_id));
+    }
     if (query.trim()) {
       const q = query.toLowerCase();
       list = list.filter((it) =>
@@ -207,7 +230,7 @@ export function PickleStyleSearch() {
         break;
     }
     return list;
-  }, [items, query, sizes, brands, colors, cats, conditions, locations, priceMin, priceMax, chips, sort]);
+  }, [items, query, sizes, brands, colors, cats, conditions, locations, priceMin, priceMax, chips, sort, audience, friendIds]);
 
   const toggleSet = <T,>(setter: React.Dispatch<React.SetStateAction<Set<T>>>, value: T) => {
     setter((prev) => {
@@ -322,14 +345,50 @@ export function PickleStyleSearch() {
 
   return (
     <div className="bg-background">
-      {/* Breadcrumb */}
-      <div className="container mx-auto px-4 pt-6 pb-3">
+      {/* Breadcrumb + Audience toggle */}
+      <div className="container mx-auto px-4 pt-6 pb-3 flex items-center justify-between gap-4 flex-wrap">
         <nav className="flex items-center gap-1.5 text-sm text-muted-foreground">
           <Link to="/" className="hover:text-foreground">Home</Link>
           <ChevronRight className="w-3.5 h-3.5" />
           <span className="text-foreground">Search</span>
         </nav>
+        {authed && (
+          <div className="inline-flex rounded-full border border-border bg-background p-1">
+            <button
+              onClick={() => setAudience("public")}
+              className={`inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-medium transition-colors ${
+                audience === "public"
+                  ? "bg-foreground text-background"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Globe className="w-3.5 h-3.5" />
+              Public
+            </button>
+            <button
+              onClick={() => setAudience("friends")}
+              className={`inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-medium transition-colors ${
+                audience === "friends"
+                  ? "bg-foreground text-background"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Users className="w-3.5 h-3.5" />
+              Friends{friendIds.size > 0 ? ` · ${friendIds.size}` : ""}
+            </button>
+          </div>
+        )}
       </div>
+
+      {audience === "friends" && friendIds.size === 0 && (
+        <div className="container mx-auto px-4 pb-2">
+          <p className="text-sm text-muted-foreground italic">
+            You don't have any friends yet —{" "}
+            <Link to="/friends" className="underline hover:text-foreground">add some</Link>{" "}
+            to see their items here.
+          </p>
+        </div>
+      )}
 
       <div className="container mx-auto px-4 pb-16">
         <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-8">
