@@ -267,15 +267,15 @@ const ProfileSettings = () => {
 
                 <TabsContent value="friends" className="space-y-6 mt-6">
                   <div className="space-y-2">
-                    <Label htmlFor="friends_display_name">Friends Display Name</Label>
+                    <Label htmlFor="friends_display_name">Followers Display Name</Label>
                     <Input
                       id="friends_display_name"
                       value={profile.friends_display_name}
                       onChange={(e) => setProfile({ ...profile, friends_display_name: e.target.value })}
-                      placeholder="How you appear to friends"
+                      placeholder="How you appear to your followers"
                     />
                     <p className="text-sm text-muted-foreground">
-                      This is shown only to your friends
+                      This is shown only to people who follow you
                     </p>
                   </div>
 
