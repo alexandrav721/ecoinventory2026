@@ -244,42 +244,46 @@ export function CommunityMarketplace() {
 
     return (
       <Card className="overflow-hidden border-border/60 hover:shadow-md transition-shadow">
-        <div className="aspect-[4/3] relative bg-secondary/40 overflow-hidden">
-          {cover ? (
-            <img src={cover} alt={item.name} className="w-full h-full object-cover" loading="lazy" />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-muted-foreground text-sm">
-              No photo
-            </div>
-          )}
-          {item.distance != null && (
-            <Badge variant="secondary" className="absolute top-2 right-2 bg-background/90 backdrop-blur gap-1">
-              <MapPin className="w-3 h-3" />
-              {item.distance < 1 ? "<1" : item.distance.toFixed(1)} mi
-            </Badge>
-          )}
-          {isFree && (
-            <Badge className="absolute top-2 left-2 bg-primary text-primary-foreground">
-              Free to borrow
-            </Badge>
-          )}
-        </div>
-        <CardContent className="p-4 space-y-3">
-          <div>
-            <h3 className="font-semibold truncate">{item.name}</h3>
-            {item.description && (
-              <p className="text-sm text-muted-foreground line-clamp-2 mt-1">{item.description}</p>
+        <Link to={`/marketplace/item/${item.id}`} className="block group">
+          <div className="aspect-[4/3] relative bg-secondary/40 overflow-hidden">
+            {cover ? (
+              <img src={cover} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform" loading="lazy" />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-muted-foreground text-sm">
+                No photo
+              </div>
             )}
-          </div>
-
-          <div className="flex items-center gap-2 flex-wrap">
-            {item.condition && <Badge variant="outline" className="capitalize">{item.condition}</Badge>}
-            {!isFree && (
-              <Badge variant="secondary" className="bg-primary/10 text-primary">
-                ${Number(item.sharing_price).toFixed(2)}
+            {item.distance != null && (
+              <Badge variant="secondary" className="absolute top-2 right-2 bg-background/90 backdrop-blur gap-1">
+                <MapPin className="w-3 h-3" />
+                {item.distance < 1 ? "<1" : item.distance.toFixed(1)} mi
+              </Badge>
+            )}
+            {isFree && (
+              <Badge className="absolute top-2 left-2 bg-primary text-primary-foreground">
+                Free to borrow
               </Badge>
             )}
           </div>
+        </Link>
+        <CardContent className="p-4 space-y-3">
+          <Link to={`/marketplace/item/${item.id}`} className="block hover:opacity-90">
+            <div>
+              <h3 className="font-semibold truncate">{item.name}</h3>
+              {item.description && (
+                <p className="text-sm text-muted-foreground line-clamp-2 mt-1">{item.description}</p>
+              )}
+            </div>
+
+            <div className="flex items-center gap-2 flex-wrap mt-3">
+              {item.condition && <Badge variant="outline" className="capitalize">{item.condition}</Badge>}
+              {!isFree && (
+                <Badge variant="secondary" className="bg-primary/10 text-primary">
+                  ${Number(item.sharing_price).toFixed(2)}
+                </Badge>
+              )}
+            </div>
+          </Link>
 
           <div className="pt-3 border-t flex items-center justify-between gap-2">
             <div className="flex items-center gap-2 min-w-0">
@@ -298,17 +302,17 @@ export function CommunityMarketplace() {
               <Button
                 size="icon"
                 variant="ghost"
-                onClick={() => handleMessage(item)}
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleMessage(item); }}
                 title="Message owner"
               >
                 <MessageCircle className="w-4 h-4" />
               </Button>
               {isFree ? (
-                <Button size="sm" onClick={() => handleBorrow(item)}>
+                <Button size="sm" onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleBorrow(item); }}>
                   <HandHeart className="w-4 h-4 mr-1" /> Borrow
                 </Button>
               ) : (
-                <Button size="sm" onClick={() => handleBuy(item)}>
+                <Button size="sm" onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleBuy(item); }}>
                   <ShoppingCart className="w-4 h-4 mr-1" /> Buy
                 </Button>
               )}
