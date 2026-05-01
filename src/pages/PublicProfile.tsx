@@ -262,7 +262,7 @@ export default function PublicProfile({ selfMode = false }: Props) {
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
               {/* Borrow request */}
               <article className="group relative rounded-xl border border-border/70 bg-card p-5 hover:border-foreground/30 hover:shadow-sm transition-all">
                 <div className="absolute top-5 right-5 h-2 w-2 rounded-full bg-primary" />
@@ -350,6 +350,28 @@ export default function PublicProfile({ selfMode = false }: Props) {
                 <div className="flex items-center gap-2 mt-4 pt-4 border-t border-border/60">
                   <Button size="sm" className="h-8 text-xs flex-1">Review</Button>
                   <Button size="sm" variant="ghost" className="h-8 text-xs">Later</Button>
+                </div>
+              </article>
+
+              {/* Declutter insight */}
+              <article className="group relative rounded-xl border border-border/70 bg-card p-5 hover:border-foreground/30 hover:shadow-sm transition-all">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
+                    <Package className="h-4 w-4 text-foreground/70" />
+                  </div>
+                  <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+                    Declutter tip
+                  </span>
+                </div>
+                <p className="font-display text-lg leading-snug text-foreground">
+                  You own <em className="italic">3 similar</em> vacuum cleaners
+                </p>
+                <p className="text-xs text-muted-foreground mt-2">
+                  Consider decluttering one · est. $180 resale
+                </p>
+                <div className="flex items-center gap-2 mt-4 pt-4 border-t border-border/60">
+                  <Button size="sm" variant="outline" className="h-8 text-xs flex-1">View</Button>
+                  <Button size="sm" variant="ghost" className="h-8 text-xs">Dismiss</Button>
                 </div>
               </article>
             </div>
