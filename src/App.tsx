@@ -41,6 +41,25 @@ import ItemDetail from "./pages/ItemDetail";
 
 const queryClient = new QueryClient();
 
+const RootRoute = () => {
+  const { isDemoMode } = useDemo();
+  const [authState, setAuthState] = useState<"loading" | "in" | "out">("loading");
+
+  useEffect(() => {
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
+      setAuthState(session ? "in" : "out");
+    });
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setAuthState(session ? "in" : "out");
+    });
+    return () => sub.subscription.unsubscribe();
+  }, []);
+
+  if (authState === "loading") return null;
+  if (authState === "in" || isDemoMode) return <Navigate to="/dashboard" replace />;
+  return <Navigate to="/how-it-works" replace />;
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <DemoProvider>
@@ -49,7 +68,8 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Community />} />
+            <Route path="/" element={<RootRoute />} />
+            <Route path="/marketplace" element={<Community />} />
             <Route path="/welcome" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/reset-password" element={<ResetPassword />} />
