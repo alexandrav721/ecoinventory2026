@@ -280,7 +280,7 @@ const ProfileSettings = () => {
                   </div>
 
                   <div className="space-y-2">
-                    <Label>Friends Avatar</Label>
+                    <Label>Followers Avatar</Label>
                     <div className="flex items-center gap-4">
                       <Avatar className="w-20 h-20">
                         <AvatarImage src={profile.friends_avatar_url || profile.avatar_url} />
