@@ -11,7 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { formatDistanceToNow } from "date-fns";
-import DashboardNav from "@/components/DashboardNav";
+import AppHeader from "@/components/AppHeader";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import { Logo } from "@/components/Logo";
 import { useDemo } from "@/contexts/DemoContext";
@@ -242,7 +242,7 @@ const Notifications = () => {
             </div>
             <ProfileDropdown user={user} />
           </div>
-          <DashboardNav />
+          <AppHeader />
         </div>
       </header>
 

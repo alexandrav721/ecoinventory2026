@@ -167,7 +167,7 @@ export default function Messages() {
   if (!currentUserId) {
     return (
       <div className="min-h-screen bg-background">
-        <DashboardNav />
+        <AppHeader />
         <main className="container mx-auto px-4 py-8">
           <p className="text-center text-muted-foreground">Please log in to view messages.</p>
         </main>
@@ -177,7 +177,7 @@ export default function Messages() {
 
   return (
     <div className="min-h-screen bg-background">
-      <DashboardNav />
+      <AppHeader />
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-3xl font-bold mb-6">Messages</h1>

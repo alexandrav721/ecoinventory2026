@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import DashboardNav from "@/components/DashboardNav";
+import AppHeader from "@/components/AppHeader";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -185,7 +185,7 @@ export default function People() {
 
   return (
     <div className="min-h-screen bg-background">
-      <DashboardNav />
+      <AppHeader />
       <main className="container max-w-6xl mx-auto px-4 py-6 space-y-8">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div>

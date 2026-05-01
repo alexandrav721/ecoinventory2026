@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import DashboardNav from "@/components/DashboardNav";
+import AppHeader from "@/components/AppHeader";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -136,7 +136,7 @@ export default function PublicProfile({ selfMode = false }: Props) {
   if (loading || !profile) {
     return (
       <div className="min-h-screen bg-background">
-        <DashboardNav />
+        <AppHeader />
         <main className="container max-w-4xl mx-auto px-4 py-8">
           <p className="text-muted-foreground">Loading…</p>
         </main>
@@ -148,7 +148,7 @@ export default function PublicProfile({ selfMode = false }: Props) {
 
   return (
     <div className="min-h-screen bg-background">
-      <DashboardNav />
+      <AppHeader />
       <main className="container max-w-4xl mx-auto px-4 py-6 space-y-6">
         <Button variant="ghost" size="sm" onClick={() => navigate(-1)}>
           <ArrowLeft className="w-4 h-4 mr-1" />Back

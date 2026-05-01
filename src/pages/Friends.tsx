@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import DashboardNav from "@/components/DashboardNav";
+import AppHeader from "@/components/AppHeader";
 import { Search, Users, UserPlus, Package, HandHeart } from "lucide-react";
 import { FriendSearch } from "@/components/friends/FriendSearch";
 import { FriendRequests } from "@/components/friends/FriendRequests";
@@ -57,7 +57,7 @@ const Friends = () => {
   return (
     <div className="min-h-screen bg-background">
       <DemoBanner />
-      <DashboardNav />
+      <AppHeader />
       
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-6xl mx-auto">

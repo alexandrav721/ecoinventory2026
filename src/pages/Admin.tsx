@@ -5,7 +5,7 @@ import { User } from "@supabase/supabase-js";
 import { Button } from "@/components/ui/button";
 import { Leaf, LogOut, Shield } from "lucide-react";
 import { toast } from "sonner";
-import DashboardNav from "@/components/DashboardNav";
+import AppHeader from "@/components/AppHeader";
 import { CatalogManager } from "@/components/dashboard/CatalogManager";
 import { AdminManagement } from "@/components/dashboard/AdminManagement";
 import BenchmarkManager from "@/components/dashboard/BenchmarkManager";
@@ -95,7 +95,7 @@ const Admin = () => {
       </header>
 
       {/* Navigation */}
-      <DashboardNav />
+      <AppHeader />
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8 space-y-8">
