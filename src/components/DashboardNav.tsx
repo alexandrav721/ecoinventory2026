@@ -1,13 +1,14 @@
 import { Link, useLocation, useSearchParams } from "react-router-dom";
 import { 
   Home, Package, MapPin, FileText, Info, Shield, Users, MessageSquare, 
-  BarChart3, FolderTree, ChevronDown, Compass, Bell, Inbox, Activity, LayoutDashboard, Search, Calendar, User, ShoppingBag
+  BarChart3, FolderTree, ChevronDown, Compass, Bell, Inbox, Activity, LayoutDashboard, Search, Calendar, User, ShoppingBag, UserPlus
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useUserRole } from "@/hooks/useUserRole";
@@ -15,6 +16,7 @@ import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useDemo } from "@/contexts/DemoContext";
+import InviteNeighborsDialog from "./InviteNeighborsDialog";
 
 
 interface NavItem {
@@ -32,6 +34,7 @@ const DashboardNav = () => {
   const { t } = useTranslation();
   const { isDemoMode } = useDemo();
   const [isAuthed, setIsAuthed] = useState<boolean | null>(null);
+  const [inviteOpen, setInviteOpen] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -168,7 +171,51 @@ const DashboardNav = () => {
       <nav className="flex items-center gap-1 py-2 px-1">
         {/* Three dropdown menus */}
         <NavDropdown label="Unlock Your Stuff" icon={LayoutDashboard} items={myEstateItems} />
-        <NavDropdown label={t('nav.friends')} icon={Users} items={friendsItems} />
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              size="sm"
+              className={`h-8 px-2.5 gap-1.5 text-sm shrink-0 ${
+                isActiveInGroup(friendsItems)
+                  ? "bg-primary/10 text-primary font-medium"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Users className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">{t('nav.friends')}</span>
+              <ChevronDown className="w-3 h-3 opacity-50" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="w-48">
+            {friendsItems.map((item) => {
+              const ItemIcon = item.icon;
+              const active = isItemActive(item);
+              return (
+                <DropdownMenuItem key={item.path} asChild>
+                  <Link
+                    to={getItemPath(item)}
+                    className={`flex items-center gap-2 ${active ? "bg-primary/5 text-primary" : ""}`}
+                  >
+                    <ItemIcon className="w-4 h-4" />
+                    {item.label}
+                  </Link>
+                </DropdownMenuItem>
+              );
+            })}
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onSelect={(e) => {
+                e.preventDefault();
+                setInviteOpen(true);
+              }}
+              className="flex items-center gap-2 cursor-pointer"
+            >
+              <UserPlus className="w-4 h-4" />
+              Invite neighbors
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
         <Button
           asChild
           variant="ghost"
@@ -205,6 +252,7 @@ const DashboardNav = () => {
           </Button>
         )}
       </nav>
+      <InviteNeighborsDialog open={inviteOpen} onOpenChange={setInviteOpen} />
     </div>
   );
 };
