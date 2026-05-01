@@ -167,7 +167,7 @@ export default function People() {
             {isFriend && <Badge variant="secondary" className="text-xs">Friend</Badge>}
           </Link>
           <div className="flex items-center justify-between text-xs text-muted-foreground">
-            <span>{p.follower_count} {p.follower_count === 1 ? "follower" : "followers"}</span>
+            <span>{p.follower_count} in network</span>
             <span>{p.available_count} shareable</span>
           </div>
           <Button
