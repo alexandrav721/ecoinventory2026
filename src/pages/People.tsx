@@ -176,7 +176,7 @@ export default function People() {
             onClick={() => handleToggle(p)}
             className="w-full"
           >
-            {following ? <><UserCheck className="w-4 h-4 mr-1" />Following</> : <><UserPlus className="w-4 h-4 mr-1" />Follow</>}
+            {following ? <><UserCheck className="w-4 h-4 mr-1" />In your network</> : <><UserPlus className="w-4 h-4 mr-1" />Add to network</>}
           </Button>
         </CardContent>
       </Card>
