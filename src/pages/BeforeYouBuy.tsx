@@ -216,6 +216,14 @@ export default function BeforeYouBuy() {
                 Nothing matching found in your inventory or your friends' shared items.
               </Card>
             )}
+
+            <AskNeighborsPanel defaultItemName={result.product.product_name} />
+          </div>
+        )}
+
+        {!result && (
+          <div className="mt-6">
+            <AskNeighborsPanel />
           </div>
         )}
       </div>
