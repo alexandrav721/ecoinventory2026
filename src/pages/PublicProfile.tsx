@@ -223,8 +223,8 @@ export default function PublicProfile({ selfMode = false }: Props) {
                     <Button asChild size="sm" className="bg-white text-slate-900 hover:bg-white/90 shadow-md">
                       <Link to="/dashboard/add-item"><Sparkles className="w-4 h-4 mr-1.5" />Add an item</Link>
                     </Button>
-                    <Button asChild size="sm" variant="ghost" className="text-white/80 hover:bg-white/10 hover:text-white">
-                      <Link to="/profile-settings"><Settings className="w-4 h-4 mr-1.5" />Edit profile</Link>
+                    <Button asChild size="icon" variant="ghost" aria-label="Edit profile" title="Edit profile" className="text-white/80 hover:bg-white/10 hover:text-white h-9 w-9">
+                      <Link to="/profile-settings"><Settings className="w-4 h-4" /></Link>
                     </Button>
                   </>
                 ) : (
