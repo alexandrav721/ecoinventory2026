@@ -384,24 +384,17 @@ export function PickleStyleSearch() {
           className="absolute -bottom-24 -left-24 w-72 h-72 rounded-full blur-3xl -z-10 opacity-40"
           style={{ background: "hsl(199 89% 60%)" }}
         />
-        <div className="container mx-auto px-4 py-8 md:py-10">
-          <nav className="flex items-center gap-1.5 text-xs text-muted-foreground mb-3">
+        <div className="container mx-auto px-4 py-5 md:py-6">
+          <nav className="flex items-center gap-1.5 text-xs text-muted-foreground mb-2">
             <Link to="/welcome" className="hover:text-foreground">About Loop</Link>
             <ChevronRight className="w-3.5 h-3.5" />
-            <span className="text-foreground font-medium">Community</span>
+            <span className="text-foreground font-medium">Search</span>
           </nav>
-          <h1 className="font-display text-3xl md:text-5xl font-semibold tracking-tight leading-[1.05] max-w-3xl">
-            Borrow it. Buy it.{" "}
-            <span className="italic" style={{ color: "hsl(330 85% 55%)" }}>
-              Loop
-            </span>{" "}
-            it from neighbors.
+          <h1 className="font-display text-xl md:text-2xl font-semibold tracking-tight leading-tight">
+            Search
           </h1>
-          <p className="mt-3 text-sm md:text-base text-muted-foreground max-w-2xl">
-            Hand-picked finds from across NYC — Le Creuset, Aesop, vintage Eames, Patagonia and more. Less stuff, more life.
-          </p>
 
-          <div className="mt-5 flex items-center gap-2 flex-wrap">
+          <div className="mt-4 flex items-center gap-2 flex-wrap">
             {/* Audience */}
             <div className="inline-flex rounded-full border border-border bg-background/80 backdrop-blur p-1">
               {([
