@@ -118,12 +118,6 @@ const Index = () => {
         </div>
 
         <div className="relative container mx-auto px-6 pt-12 pb-24 md:pt-16 md:pb-40 min-h-[560px] md:min-h-[640px] flex flex-col">
-          <div className="max-w-xl">
-            <div className="flex items-center gap-3 text-xs uppercase tracking-[0.2em] text-muted-foreground">
-              <span className="editorial-rule" />
-              <span>Vol. 01 · A different way to own things</span>
-            </div>
-          </div>
 
           {/* Bottom-left: massive headline */}
           <div className="mt-auto pt-20 md:pt-32 max-w-4xl">
