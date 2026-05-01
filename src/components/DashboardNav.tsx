@@ -40,15 +40,18 @@ const DashboardNav = () => {
     { path: "/notifications", label: t('notifications.activity'), icon: Activity, tab: "activity" },
   ];
 
-  const socialItems: NavItem[] = [
+  const friendsItems: NavItem[] = [
     { path: "/people", label: "People", icon: Compass },
     { path: "/friends", label: t('nav.friends'), icon: Users },
     { path: "/messages", label: t('nav.messages'), icon: MessageSquare },
+  ];
+
+  const communityItems: NavItem[] = [
     { path: "/community", label: t('nav.community'), icon: MapPin },
     { path: "/events", label: "Events", icon: Calendar },
   ];
 
-  const exploreItems: NavItem[] = [
+  const otherItems: NavItem[] = [
     { path: "/articles", label: t('nav.articles'), icon: FileText },
     { path: "/about", label: t('nav.about'), icon: Info },
   ];
