@@ -137,6 +137,32 @@ const DashboardNav = () => {
     );
   };
 
+  // Logged-out: only show "How it Works" link in the nav.
+  // Sign up / Log in CTAs are rendered by ProfileDropdown on the right.
+  if (!loggedIn) {
+    return (
+      <div className="relative">
+        <nav className="flex items-center gap-1 py-2 px-1">
+          <Button
+            asChild
+            variant="ghost"
+            size="sm"
+            className={`h-8 px-2.5 gap-1.5 text-sm shrink-0 ${
+              location.pathname === "/how-it-works"
+                ? "bg-primary/10 text-primary font-medium"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <Link to="/how-it-works">
+              <Info className="w-3.5 h-3.5" />
+              <span>How it works</span>
+            </Link>
+          </Button>
+        </nav>
+      </div>
+    );
+  }
+
   return (
     <div className="relative">
       <nav className="flex items-center gap-1 py-2 px-1">
