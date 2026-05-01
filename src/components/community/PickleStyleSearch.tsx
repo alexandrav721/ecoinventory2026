@@ -222,6 +222,20 @@ export function PickleStyleSearch() {
           Number(it.sharing_price) <= Number(it.original_price) * 0.5
       );
 
+    // Quality score: rewards multiple photos + filled-in brand so the best
+    // listings rise to the top of the feed.
+    const qualityScore = (it: Item) => {
+      const photos = it.image_urls?.length ?? 0;
+      let score = 0;
+      if (photos >= 3) score += 50;
+      else if (photos === 2) score += 35;
+      else if (photos === 1) score += 15;
+      if (it.brand && it.brand.trim().length > 0) score += 30;
+      if (it.condition && /^(new|like-?new|excellent)$/i.test(it.condition)) score += 8;
+      if (it.original_price && Number(it.original_price) >= 100) score += 5;
+      return score;
+    };
+
     switch (sort) {
       case "price-low":
         list = [...list].sort((a, b) => Number(a.sharing_price ?? 0) - Number(b.sharing_price ?? 0));
@@ -231,6 +245,10 @@ export function PickleStyleSearch() {
         break;
       case "newest":
         // already sorted desc by created_at from query
+        break;
+      case "recommended":
+      default:
+        list = [...list].sort((a, b) => qualityScore(b) - qualityScore(a));
         break;
     }
     return list;
