@@ -126,8 +126,8 @@ export const QuizPrompt = () => {
       <div className="flex items-center gap-2 text-sm">
         <Sparkles className="w-4 h-4 text-primary shrink-0" />
         <span>
-          <strong>Tip:</strong> the quiz can quickly add the high-value items
-          you probably haven't logged yet.
+          <strong>Tip:</strong> Take a 2-min quiz so we can show you items your
+          friends are offering that match your taste.
         </span>
       </div>
       <div className="flex items-center gap-2">
