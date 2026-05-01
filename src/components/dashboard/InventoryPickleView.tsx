@@ -99,12 +99,19 @@ const InventoryPickleView = () => {
           return;
         }
 
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+          setItems([]);
+          return;
+        }
+
         const [{ data: rows }, { data: cats }] = await Promise.all([
           supabase
             .from("inventory_items")
             .select(
               "id, name, category_id, original_price, quantity, condition, brand, image_urls, created_at, is_donated, is_sold, is_eliminated"
             )
+            .eq("user_id", user.id)
             .eq("is_donated", false)
             .eq("is_sold", false)
             .eq("is_eliminated", false)
