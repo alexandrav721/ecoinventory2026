@@ -232,9 +232,9 @@ export default function People() {
             </section>
 
             <section>
-              <h2 className="text-xl font-display mb-3">Following ({followingList.length})</h2>
+              <h2 className="text-xl font-display mb-3">In your network ({followingList.length})</h2>
               {followingList.length === 0 ? (
-                <p className="text-sm text-muted-foreground">You're not following anyone yet.</p>
+                <p className="text-sm text-muted-foreground">No one in your network yet.</p>
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {followingList.map((p) => <PersonCard key={p.id} p={p} />)}
