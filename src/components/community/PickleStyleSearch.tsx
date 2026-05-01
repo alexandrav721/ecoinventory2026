@@ -345,14 +345,50 @@ export function PickleStyleSearch() {
 
   return (
     <div className="bg-background">
-      {/* Breadcrumb */}
-      <div className="container mx-auto px-4 pt-6 pb-3">
+      {/* Breadcrumb + Audience toggle */}
+      <div className="container mx-auto px-4 pt-6 pb-3 flex items-center justify-between gap-4 flex-wrap">
         <nav className="flex items-center gap-1.5 text-sm text-muted-foreground">
           <Link to="/" className="hover:text-foreground">Home</Link>
           <ChevronRight className="w-3.5 h-3.5" />
           <span className="text-foreground">Search</span>
         </nav>
+        {authed && (
+          <div className="inline-flex rounded-full border border-border bg-background p-1">
+            <button
+              onClick={() => setAudience("public")}
+              className={`inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-medium transition-colors ${
+                audience === "public"
+                  ? "bg-foreground text-background"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Globe className="w-3.5 h-3.5" />
+              Public
+            </button>
+            <button
+              onClick={() => setAudience("friends")}
+              className={`inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-medium transition-colors ${
+                audience === "friends"
+                  ? "bg-foreground text-background"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Users className="w-3.5 h-3.5" />
+              Friends{friendIds.size > 0 ? ` · ${friendIds.size}` : ""}
+            </button>
+          </div>
+        )}
       </div>
+
+      {audience === "friends" && friendIds.size === 0 && (
+        <div className="container mx-auto px-4 pb-2">
+          <p className="text-sm text-muted-foreground italic">
+            You don't have any friends yet —{" "}
+            <Link to="/friends" className="underline hover:text-foreground">add some</Link>{" "}
+            to see their items here.
+          </p>
+        </div>
+      )}
 
       <div className="container mx-auto px-4 pb-16">
         <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-8">
