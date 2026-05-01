@@ -721,15 +721,8 @@ function ProductCard({ item, onOpen }: { item: Item; onOpen: () => void }) {
           </span>
         </div>
 
-        {/* Top-right: discount badge */}
-        {discountPct && discountPct >= 10 && (
-          <div className="absolute top-2.5 right-2.5">
-            <span className="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold text-white shadow-md"
-              style={{ background: "hsl(0 80% 55%)" }}>
-              -{discountPct}%
-            </span>
-          </div>
-        )}
+
+
 
         {/* Bottom-right: photo count */}
         {photoCount > 1 && (
