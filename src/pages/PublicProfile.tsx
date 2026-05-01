@@ -148,98 +148,170 @@ export default function PublicProfile({ selfMode = false }: Props) {
   const isSelf = meId === profile.id;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-stone-50">
       <AppHeader />
-      <main className="container max-w-4xl mx-auto px-4 py-6 space-y-6">
-        <Button variant="ghost" size="sm" onClick={() => navigate(-1)}>
+      <main className="container max-w-5xl mx-auto px-4 py-6 space-y-10">
+        <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="text-muted-foreground hover:text-foreground -ml-2">
           <ArrowLeft className="w-4 h-4 mr-1" />Back
         </Button>
 
-        <Card className="border-0 bg-slate-900 text-white shadow-xl overflow-hidden">
-          <CardContent className="p-6 flex flex-col sm:flex-row gap-6 items-start">
-            <Avatar className="h-24 w-24 ring-2 ring-accent/70 ring-offset-2 ring-offset-slate-900 shadow-lg">
-              <AvatarImage src={profile.avatar_url ?? undefined} />
-              <AvatarFallback className="text-2xl font-display font-semibold text-white bg-gradient-to-br from-primary via-primary/80 to-accent">
-                {(profile.display_name ?? "")
-                  .split(" ")
-                  .filter(Boolean)
-                  .slice(0, 2)
-                  .map((w: string) => w[0])
-                  .join("")
-                  .toUpperCase() || "?"}
-              </AvatarFallback>
-            </Avatar>
-            <div className="flex-1 space-y-2">
-              <div className="flex items-center gap-2 flex-wrap">
-                <h1 className="text-2xl font-display font-semibold text-white">{profile.display_name}</h1>
-                {isFriend && <Badge className="bg-white/15 text-white hover:bg-white/20 border-0">Friend</Badge>}
-                {isSelf && <Badge variant="outline" className="border-white/30 text-white">You</Badge>}
+        {/* Premium hero */}
+        <section className="relative overflow-hidden rounded-3xl bg-slate-950 text-white shadow-2xl animate-fade-in">
+          {/* Decorative gradient + grain */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,hsl(var(--primary)/0.35),transparent_55%),radial-gradient(ellipse_at_bottom_right,hsl(var(--accent)/0.30),transparent_60%)]" />
+          <div className="absolute inset-0 opacity-[0.04] mix-blend-overlay [background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22120%22 height=%22120%22><filter id=%22n%22><feTurbulence baseFrequency=%220.9%22/></filter><rect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22/></svg>')]" />
+          <div className="absolute -top-24 -right-24 w-72 h-72 rounded-full bg-accent/20 blur-3xl" />
+
+          <div className="relative px-6 sm:px-10 py-10 sm:py-14">
+            {/* Eyebrow */}
+            <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.28em] text-white/60 mb-6">
+              <span className="h-px w-8 bg-white/30" />
+              {isSelf ? "Your Loop" : "Member profile"}
+              {isFriend && <Badge className="ml-2 bg-white/15 text-white hover:bg-white/20 border-0 tracking-normal">Connected</Badge>}
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-8 items-start">
+              <Avatar className="h-28 w-28 ring-2 ring-white/30 ring-offset-4 ring-offset-slate-950 shadow-2xl">
+                <AvatarImage src={profile.avatar_url ?? undefined} />
+                <AvatarFallback className="text-3xl font-display font-semibold text-white bg-gradient-to-br from-primary via-primary/80 to-accent">
+                  {(profile.display_name ?? "")
+                    .split(" ")
+                    .filter(Boolean)
+                    .slice(0, 2)
+                    .map((w: string) => w[0])
+                    .join("")
+                    .toUpperCase() || "?"}
+                </AvatarFallback>
+              </Avatar>
+
+              <div className="flex-1 min-w-0 space-y-4">
+                <div>
+                  <h1 className="font-display text-4xl sm:text-5xl font-semibold leading-[1.05] tracking-tight">
+                    {isSelf ? <>Hello, <em className="italic text-white/95">{profile.display_name?.split(" ")[0]}</em>.</> : <em className="italic">{profile.display_name}</em>}
+                  </h1>
+                  {(profile.city || profile.state) && (
+                    <p className="text-sm text-white/60 flex items-center gap-1.5 mt-3">
+                      <MapPin className="w-3.5 h-3.5" />
+                      {[profile.city, profile.state].filter(Boolean).join(", ")}
+                    </p>
+                  )}
+                </div>
+
+                {/* Inline stat ribbon */}
+                <div className="flex flex-wrap gap-x-8 gap-y-3 pt-2">
+                  <div>
+                    <div className="font-display text-2xl font-semibold tabular-nums">{items.length}</div>
+                    <div className="text-[11px] uppercase tracking-[0.18em] text-white/50">Shareable</div>
+                  </div>
+                  <div className="hidden sm:block w-px bg-white/15 self-stretch" />
+                  <div>
+                    <div className="font-display text-2xl font-semibold tabular-nums">{followerCount}</div>
+                    <div className="text-[11px] uppercase tracking-[0.18em] text-white/50">In network</div>
+                  </div>
+                  <div className="hidden sm:block w-px bg-white/15 self-stretch" />
+                  <div>
+                    <div className="font-display text-2xl font-semibold tabular-nums">{followingCount}</div>
+                    <div className="text-[11px] uppercase tracking-[0.18em] text-white/50">Following</div>
+                  </div>
+                </div>
               </div>
-              {(profile.city || profile.state) && (
-                <p className="text-sm text-white/60 flex items-center gap-1">
-                  <MapPin className="w-3.5 h-3.5" />
-                  {[profile.city, profile.state].filter(Boolean).join(", ")}
-                </p>
-              )}
-              <div className="flex gap-6 text-sm pt-2 text-white/80">
-                <span><strong className="text-white">{followerCount}</strong> <span className="text-white/60">in network</span></span>
-                <span><strong className="text-white">{followingCount}</strong> <span className="text-white/60">in their network</span></span>
-                <span><strong className="text-white">{items.length}</strong> <span className="text-white/60">shareable</span></span>
+
+              <div className="flex flex-col gap-2 sm:items-end">
+                {isSelf ? (
+                  <>
+                    <Button asChild size="sm" className="bg-white text-slate-900 hover:bg-white/90 shadow-md">
+                      <Link to="/dashboard/add-item"><Sparkles className="w-4 h-4 mr-1.5" />Add an item</Link>
+                    </Button>
+                    <Button asChild size="sm" variant="ghost" className="text-white/80 hover:bg-white/10 hover:text-white">
+                      <Link to="/profile-settings"><Settings className="w-4 h-4 mr-1.5" />Edit profile</Link>
+                    </Button>
+                  </>
+                ) : (
+                  <Button
+                    size="sm"
+                    onClick={handleToggle}
+                    className={isFollowing(profile.id)
+                      ? "bg-transparent border border-white/30 text-white hover:bg-white/10"
+                      : "bg-white text-slate-900 hover:bg-white/90 shadow-md"}
+                  >
+                    {isFollowing(profile.id) ? <><UserCheck className="w-4 h-4 mr-1.5" />In your network</> : <><UserPlus className="w-4 h-4 mr-1.5" />Add to network</>}
+                  </Button>
+                )}
               </div>
             </div>
-            <div className="flex gap-2">
-              {isSelf ? (
-                <Button asChild variant="outline" size="sm" className="bg-transparent border-white/30 text-white hover:bg-white/10 hover:text-white">
-                  <Link to="/profile-settings"><Settings className="w-4 h-4 mr-1" />Edit profile</Link>
-                </Button>
-              ) : (
-                <Button
-                  size="sm"
-                  onClick={handleToggle}
-                  className={isFollowing(profile.id)
-                    ? "bg-transparent border border-white/30 text-white hover:bg-white/10"
-                    : "bg-white text-slate-900 hover:bg-white/90"}
-                >
-                  {isFollowing(profile.id) ? <><UserCheck className="w-4 h-4 mr-1" />In your network</> : <><UserPlus className="w-4 h-4 mr-1" />Add to network</>}
-                </Button>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+          </div>
+        </section>
 
         {isSelf && <ProfileStatsHub userId={profile.id} />}
 
-        <section>
-          <h2 className="text-xl font-display mb-3">
-            {isSelf ? "Items you've made shareable" : "Available to borrow or buy"}
-          </h2>
+        {/* Items: editorial gallery */}
+        <section className="space-y-5 animate-fade-in">
+          <div className="flex items-end justify-between gap-4 border-b border-border/60 pb-3">
+            <div>
+              <div className="text-[10px] uppercase tracking-[0.28em] text-muted-foreground mb-1">
+                {isSelf ? "Your collection" : "Available now"}
+              </div>
+              <h2 className="font-display text-2xl sm:text-3xl font-semibold tracking-tight">
+                {isSelf ? <>Things you've made <em className="italic">shareable</em></> : <>Available to <em className="italic">borrow or buy</em></>}
+              </h2>
+            </div>
+            {items.length > 0 && (
+              <span className="text-sm text-muted-foreground tabular-nums hidden sm:block">
+                {items.length} {items.length === 1 ? "item" : "items"}
+              </span>
+            )}
+          </div>
+
           {items.length === 0 ? (
-            <p className="text-sm text-muted-foreground">
-              {isSelf
-                ? "You haven't made any items publicly available yet."
-                : "Nothing publicly available right now."}
-            </p>
+            <Card className="border-dashed border-2 bg-transparent">
+              <CardContent className="p-10 text-center space-y-3">
+                <Package className="w-10 h-10 mx-auto text-muted-foreground/60" />
+                <p className="font-display text-lg italic text-muted-foreground">
+                  {isSelf
+                    ? "Nothing shareable yet — your collection is waiting."
+                    : "Nothing publicly available right now."}
+                </p>
+                {isSelf && (
+                  <Button asChild size="sm" className="mt-2">
+                    <Link to="/dashboard/add-item"><Sparkles className="w-4 h-4 mr-1.5" />Add your first</Link>
+                  </Button>
+                )}
+              </CardContent>
+            </Card>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
               {items.map((it) => (
-                <Card key={it.id} className="overflow-hidden">
-                  <div className="aspect-square bg-muted">
+                <Card
+                  key={it.id}
+                  className="group overflow-hidden border-border/60 bg-white hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 rounded-2xl"
+                >
+                  <div className="aspect-square bg-stone-100 overflow-hidden relative">
                     {it.image_urls?.[0] ? (
-                      <img src={it.image_urls[0]} alt={it.name} className="w-full h-full object-cover" />
+                      <img
+                        src={it.image_urls[0]}
+                        alt={it.name}
+                        className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-500"
+                      />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-                        <Package className="w-8 h-8" />
+                      <div className="w-full h-full flex items-center justify-center text-muted-foreground/50">
+                        <Package className="w-10 h-10" />
                       </div>
                     )}
-                  </div>
-                  <CardContent className="p-3 space-y-1">
-                    <div className="font-medium text-sm truncate">{it.name}</div>
-                    {it.brand && <div className="text-xs text-muted-foreground truncate">{it.brand}</div>}
-                    {typeof it.sharing_price === "number" && it.sharing_price > 0 && (
-                      <Badge variant="outline" className="text-xs">${it.sharing_price}/borrow</Badge>
-                    )}
                     {(it.sharing_price === 0 || it.sharing_price === null) && it.is_available_for_sharing && (
-                      <Badge variant="secondary" className="text-xs">Free to borrow</Badge>
+                      <Badge className="absolute top-2 left-2 bg-white/95 text-slate-900 hover:bg-white border-0 text-[10px] uppercase tracking-wider shadow-sm">
+                        Free
+                      </Badge>
+                    )}
+                  </div>
+                  <CardContent className="p-3.5 space-y-1">
+                    <div className="font-display font-semibold text-[15px] truncate leading-tight">{it.name}</div>
+                    {it.brand && (
+                      <div className="text-xs text-muted-foreground truncate italic">{it.brand}</div>
+                    )}
+                    {typeof it.sharing_price === "number" && it.sharing_price > 0 && (
+                      <div className="text-xs font-medium text-primary pt-0.5 tabular-nums">
+                        ${it.sharing_price}<span className="text-muted-foreground font-normal"> / borrow</span>
+                      </div>
                     )}
                   </CardContent>
                 </Card>
