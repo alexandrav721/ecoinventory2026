@@ -42,6 +42,7 @@ interface MarketItem {
 
 const PAGE_SIZE = 24;
 type Mode = "all" | "borrow" | "buy";
+type SortBy = "distance" | "price_high" | "price_low" | "newest";
 
 export function CommunityMarketplace() {
   const navigate = useNavigate();
