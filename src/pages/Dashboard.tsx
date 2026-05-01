@@ -195,27 +195,6 @@ const Dashboard = () => {
               </TabsContent>
             </Tabs>
 
-            {/* Upcoming community events */}
-            <div data-tour="events-widget">
-              <UpcomingEventsCard />
-            </div>
-
-            {/* Impact & Achievements (collapsible) */}
-            <InventoryAnalytics />
-
-            <div className="flex flex-wrap items-center gap-3 pt-2" data-tour="export-import">
-              <CsvExport />
-              <Collapsible className="flex-1 min-w-0">
-                <CollapsibleTrigger className="group flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
-                  <FileUp className="w-4 h-4" />
-                  <span>Bulk import from CSV</span>
-                  <ChevronDown className="w-4 h-4 transition-transform group-data-[state=open]:rotate-180" />
-                </CollapsibleTrigger>
-                <CollapsibleContent className="pt-4">
-                  <CsvUpload />
-                </CollapsibleContent>
-              </Collapsible>
-            </div>
           </section>
         </div>
       </main>
