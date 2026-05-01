@@ -375,53 +375,139 @@ export function CommunityMarketplace() {
     );
   };
 
-  return (
-    <section id="marketplace" className="border-b border-border/60 bg-secondary/20 scroll-mt-20">
-      <div className="container mx-auto px-6 py-20 md:py-28">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-end gap-6 mb-10">
-          {!location && !locLoading && (
-            <Button variant="outline" onClick={requestBrowserLocation} className="rounded-full gap-2 self-start">
-              <Navigation className="w-4 h-4" />
-              {denied ? "Location blocked" : "Use my location"}
-            </Button>
-          )}
-          {location && (
-            <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2 self-start md:self-end">
-              <Navigation className="w-3 h-3" />
-              Sorted by distance
+  const FiltersPanel = () => (
+    <div className="space-y-7">
+      {/* Mode: All / Borrow / Buy */}
+      <div>
+        <Label className="text-xs uppercase tracking-[0.15em] text-muted-foreground mb-3 block">
+          Browse
+        </Label>
+        <RadioGroup
+          value={mode}
+          onValueChange={(v) => setMode(v as Mode)}
+          className="space-y-2"
+        >
+          <label
+            htmlFor="mode-all"
+            className="flex items-center justify-between gap-2 rounded-md px-3 py-2 hover:bg-secondary/60 cursor-pointer"
+          >
+            <div className="flex items-center gap-2">
+              <RadioGroupItem id="mode-all" value="all" />
+              <span className="text-sm">All</span>
             </div>
+            <span className="text-xs text-muted-foreground">{items.length}</span>
+          </label>
+          <label
+            htmlFor="mode-borrow"
+            className="flex items-center justify-between gap-2 rounded-md px-3 py-2 hover:bg-secondary/60 cursor-pointer"
+          >
+            <div className="flex items-center gap-2">
+              <RadioGroupItem id="mode-borrow" value="borrow" />
+              <HandHeart className="w-3.5 h-3.5 text-muted-foreground" />
+              <span className="text-sm">Borrow</span>
+            </div>
+            <span className="text-xs text-muted-foreground">{borrowCount}</span>
+          </label>
+          <label
+            htmlFor="mode-buy"
+            className="flex items-center justify-between gap-2 rounded-md px-3 py-2 hover:bg-secondary/60 cursor-pointer"
+          >
+            <div className="flex items-center gap-2">
+              <RadioGroupItem id="mode-buy" value="buy" />
+              <ShoppingCart className="w-3.5 h-3.5 text-muted-foreground" />
+              <span className="text-sm">Buy</span>
+            </div>
+            <span className="text-xs text-muted-foreground">{buyCount}</span>
+          </label>
+        </RadioGroup>
+      </div>
+
+      {/* Distance */}
+      <div>
+        <Label className="text-xs uppercase tracking-[0.15em] text-muted-foreground mb-3 block">
+          Distance
+        </Label>
+        <Select value={distanceFilter} onValueChange={setDistanceFilter}>
+          <SelectTrigger className="bg-background">
+            <SelectValue placeholder="Distance" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Any distance</SelectItem>
+            <SelectItem value="1">Within 1 mi</SelectItem>
+            <SelectItem value="5">Within 5 mi</SelectItem>
+            <SelectItem value="15">Within 15 mi</SelectItem>
+            <SelectItem value="50">Within 50 mi</SelectItem>
+          </SelectContent>
+        </Select>
+        {!location && !locLoading && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={requestBrowserLocation}
+            className="w-full mt-2 gap-2"
+          >
+            <Navigation className="w-3.5 h-3.5" />
+            {denied ? "Location blocked" : "Use my location"}
+          </Button>
+        )}
+      </div>
+
+      {/* Audience (signed-in only) */}
+      {authed && (
+        <div>
+          <Label className="text-xs uppercase tracking-[0.15em] text-muted-foreground mb-3 block">
+            From
+          </Label>
+          <RadioGroup
+            value={audience}
+            onValueChange={(v) => setAudience(v as typeof audience)}
+            className="space-y-2"
+          >
+            <label htmlFor="aud-all" className="flex items-center gap-2 rounded-md px-3 py-2 hover:bg-secondary/60 cursor-pointer">
+              <RadioGroupItem id="aud-all" value="all" />
+              <span className="text-sm">Everyone</span>
+            </label>
+            <label htmlFor="aud-friends" className="flex items-center gap-2 rounded-md px-3 py-2 hover:bg-secondary/60 cursor-pointer">
+              <RadioGroupItem id="aud-friends" value="friends" />
+              <Users className="w-3.5 h-3.5 text-muted-foreground" />
+              <span className="text-sm">Friends only</span>
+            </label>
+            <label htmlFor="aud-community" className="flex items-center gap-2 rounded-md px-3 py-2 hover:bg-secondary/60 cursor-pointer">
+              <RadioGroupItem id="aud-community" value="community" />
+              <Globe className="w-3.5 h-3.5 text-muted-foreground" />
+              <span className="text-sm">Wider community</span>
+            </label>
+          </RadioGroup>
+          {audience === "friends" && friendIds.size === 0 && (
+            <p className="text-xs text-muted-foreground mt-2 italic">
+              No friends yet — <Link to="/friends" className="underline hover:text-foreground">add some</Link>.
+            </p>
           )}
         </div>
+      )}
 
-        {/* Audience toggle */}
-        {authed && (
-          <div className="mb-4">
-            <ToggleGroup
-              type="single"
-              value={audience}
-              onValueChange={(v) => v && setAudience(v as typeof audience)}
-              className="inline-flex rounded-full border border-border bg-background p-1"
-            >
-              <ToggleGroupItem value="all" className="rounded-full px-4 text-xs uppercase tracking-[0.15em] data-[state=on]:bg-foreground data-[state=on]:text-background">
-                Both
-              </ToggleGroupItem>
-              <ToggleGroupItem value="friends" className="rounded-full px-4 text-xs uppercase tracking-[0.15em] gap-1.5 data-[state=on]:bg-foreground data-[state=on]:text-background">
-                <Users className="w-3.5 h-3.5" /> Friends
-              </ToggleGroupItem>
-              <ToggleGroupItem value="community" className="rounded-full px-4 text-xs uppercase tracking-[0.15em] gap-1.5 data-[state=on]:bg-foreground data-[state=on]:text-background">
-                <Globe className="w-3.5 h-3.5" /> Community
-              </ToggleGroupItem>
-            </ToggleGroup>
-            {audience === "friends" && friendIds.size === 0 && (
-              <p className="text-xs text-muted-foreground mt-2 italic">
-                No friends yet — <Link to="/friends" className="underline hover:text-foreground">add some</Link> to see their items here.
-              </p>
-            )}
-          </div>
-        )}
+      {(mode !== "all" || distanceFilter !== "all" || audience !== "all") && (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => {
+            setMode("all");
+            setDistanceFilter("all");
+            setAudience("all");
+          }}
+          className="w-full gap-2"
+        >
+          <X className="w-3.5 h-3.5" /> Clear filters
+        </Button>
+      )}
+    </div>
+  );
 
-        {/* Search + filter */}
-        <div className="flex flex-col sm:flex-row gap-3 mb-6">
+  return (
+    <section id="marketplace" className="border-b border-border/60 bg-secondary/20 scroll-mt-20">
+      <div className="container mx-auto px-6 py-12 md:py-16">
+        {/* Top bar: search + mobile filter trigger + sort note */}
+        <div className="flex items-center gap-3 mb-6">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
@@ -431,18 +517,25 @@ export function CommunityMarketplace() {
               className="pl-9 rounded-full bg-background"
             />
           </div>
-          <Select value={distanceFilter} onValueChange={setDistanceFilter}>
-            <SelectTrigger className="w-full sm:w-[180px] rounded-full bg-background">
-              <SelectValue placeholder="Distance" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Any distance</SelectItem>
-              <SelectItem value="1">Within 1 mi</SelectItem>
-              <SelectItem value="5">Within 5 mi</SelectItem>
-              <SelectItem value="15">Within 15 mi</SelectItem>
-              <SelectItem value="50">Within 50 mi</SelectItem>
-            </SelectContent>
-          </Select>
+          <Sheet open={filtersOpen} onOpenChange={setFiltersOpen}>
+            <SheetTrigger asChild>
+              <Button variant="outline" className="md:hidden gap-2 rounded-full">
+                <Filter className="w-4 h-4" /> Filters
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-[300px] overflow-y-auto">
+              <SheetHeader className="mb-4">
+                <SheetTitle>Filters</SheetTitle>
+              </SheetHeader>
+              <FiltersPanel />
+            </SheetContent>
+          </Sheet>
+          {location && (
+            <div className="hidden md:flex text-xs uppercase tracking-[0.2em] text-muted-foreground items-center gap-2">
+              <Navigation className="w-3 h-3" />
+              Sorted by distance
+            </div>
+          )}
         </div>
 
         {!authed && (
@@ -456,20 +549,26 @@ export function CommunityMarketplace() {
           </div>
         )}
 
-        <Tabs defaultValue="all" className="w-full">
-          <TabsList className="mb-6">
-            <TabsTrigger value="all">All ({filtered.length})</TabsTrigger>
-            <TabsTrigger value="borrow" className="gap-1">
-              <HandHeart className="w-3.5 h-3.5" /> Borrow ({borrowList.length})
-            </TabsTrigger>
-            <TabsTrigger value="buy" className="gap-1">
-              <ShoppingCart className="w-3.5 h-3.5" /> Buy ({buyList.length})
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value="all">{renderGrid(filtered)}</TabsContent>
-          <TabsContent value="borrow">{renderGrid(borrowList)}</TabsContent>
-          <TabsContent value="buy">{renderGrid(buyList)}</TabsContent>
-        </Tabs>
+        <div className="flex gap-8">
+          {/* Sidebar (desktop) */}
+          <aside className="hidden md:block w-60 flex-shrink-0">
+            <div className="sticky top-24 bg-background border border-border/60 rounded-lg p-5">
+              <FiltersPanel />
+            </div>
+          </aside>
+
+          {/* Results */}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-baseline justify-between mb-4">
+              <h2 className="text-sm text-muted-foreground">
+                {filtered.length} {filtered.length === 1 ? "item" : "items"}
+                {mode === "borrow" && " to borrow"}
+                {mode === "buy" && " to buy"}
+              </h2>
+            </div>
+            {renderGrid(filtered)}
+          </div>
+        </div>
       </div>
 
       <BorrowRequestDialog
