@@ -756,16 +756,10 @@ function ProductCard({ item, onOpen }: { item: Item; onOpen: () => void }) {
             {isFree ? (
               <span className="text-base font-bold" style={{ color: "hsl(160 70% 38%)" }}>Free to borrow</span>
             ) : (
-              <>
-                <span className="text-base font-bold" style={{ color: "hsl(330 85% 50%)" }}>
-                  ${price!.toFixed(0)}
-                </span>
-                {orig != null && orig > (price ?? 0) && (
-                  <span className="line-through text-muted-foreground text-xs">
-                    ${orig.toFixed(0)}
-                  </span>
-                )}
-              </>
+              <span className="text-base font-bold" style={{ color: "hsl(330 85% 50%)" }}>
+                ${price!.toFixed(0)}
+              </span>
+
             )}
           </div>
         </div>
