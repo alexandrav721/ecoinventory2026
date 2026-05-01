@@ -223,7 +223,7 @@ export const AskNeighborsPanel = ({ defaultItemName = "" }: Props) => {
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="font-medium truncate">{r.item_name}</span>
                         <Badge variant="outline" className="text-[10px]">
-                          {r.audience === "both" ? "friends + neighbors" : r.audience}
+                          {r.audience === "both" ? "following + neighbors" : r.audience === "friends" ? "following" : r.audience}
                         </Badge>
                         {r.is_anonymous && (
                           <Badge variant="outline" className="text-[10px]">
