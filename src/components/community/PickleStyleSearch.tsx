@@ -367,65 +367,94 @@ export function PickleStyleSearch() {
 
   return (
     <div className="bg-background">
-      {/* Breadcrumb + Audience + Offer toggles */}
-      <div className="container mx-auto px-4 pt-6 pb-3 flex items-center justify-between gap-4 flex-wrap">
-        <nav className="flex items-center gap-1.5 text-sm text-muted-foreground">
-          <Link to="/" className="hover:text-foreground">Home</Link>
-          <ChevronRight className="w-3.5 h-3.5" />
-          <span className="text-foreground">Search</span>
-        </nav>
-        <div className="flex items-center gap-2 flex-wrap">
-          {/* Audience: All / Public / Friends */}
-          <div className="inline-flex rounded-full border border-border bg-background p-1">
-            {([
-              { value: "all" as Audience, label: "All", Icon: Layers },
-              { value: "public" as Audience, label: "Public", Icon: Globe },
-              { value: "friends" as Audience, label: `Friends${authed && friendIds.size > 0 ? ` · ${friendIds.size}` : ""}`, Icon: Users },
-            ]).map(({ value, label, Icon }) => (
-              <button
-                key={value}
-                onClick={() => setAudience(value)}
-                className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium transition-colors ${
-                  audience === value
-                    ? "bg-foreground text-background"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                <Icon className="w-3.5 h-3.5" />
-                {label}
-              </button>
-            ))}
-          </div>
-          {/* Offer type: All / Borrow / Buy */}
-          <div className="inline-flex rounded-full border border-border bg-background p-1">
-            {([
-              { value: "all" as Offer, label: "All", Icon: Layers },
-              { value: "borrow" as Offer, label: "Borrow", Icon: HandHeart },
-              { value: "buy" as Offer, label: "Buy", Icon: ShoppingBag },
-            ]).map(({ value, label, Icon }) => (
-              <button
-                key={value}
-                onClick={() => setOffer(value)}
-                className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium transition-colors ${
-                  offer === value
-                    ? "bg-foreground text-background"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                <Icon className="w-3.5 h-3.5" />
-                {label}
-              </button>
-            ))}
+      {/* Colorful hero strip */}
+      <div className="relative overflow-hidden border-b">
+        <div
+          className="absolute inset-0 -z-10"
+          style={{
+            background:
+              "linear-gradient(115deg, hsl(217 91% 60% / 0.12), hsl(330 85% 65% / 0.10) 35%, hsl(45 96% 60% / 0.12) 70%, hsl(160 70% 50% / 0.12))",
+          }}
+        />
+        <div
+          className="absolute -top-24 -right-24 w-72 h-72 rounded-full blur-3xl -z-10 opacity-50"
+          style={{ background: "hsl(330 85% 70%)" }}
+        />
+        <div
+          className="absolute -bottom-24 -left-24 w-72 h-72 rounded-full blur-3xl -z-10 opacity-40"
+          style={{ background: "hsl(199 89% 60%)" }}
+        />
+        <div className="container mx-auto px-4 py-8 md:py-10">
+          <nav className="flex items-center gap-1.5 text-xs text-muted-foreground mb-3">
+            <Link to="/welcome" className="hover:text-foreground">About Loop</Link>
+            <ChevronRight className="w-3.5 h-3.5" />
+            <span className="text-foreground font-medium">Community</span>
+          </nav>
+          <h1 className="font-display text-3xl md:text-5xl font-semibold tracking-tight leading-[1.05] max-w-3xl">
+            Borrow it. Buy it.{" "}
+            <span className="italic" style={{ color: "hsl(330 85% 55%)" }}>
+              Loop
+            </span>{" "}
+            it from neighbors.
+          </h1>
+          <p className="mt-3 text-sm md:text-base text-muted-foreground max-w-2xl">
+            Hand-picked finds from across NYC — Le Creuset, Aesop, vintage Eames, Patagonia and more. Less stuff, more life.
+          </p>
+
+          <div className="mt-5 flex items-center gap-2 flex-wrap">
+            {/* Audience */}
+            <div className="inline-flex rounded-full border border-border bg-background/80 backdrop-blur p-1">
+              {([
+                { value: "all" as Audience, label: "Everyone", Icon: Layers },
+                { value: "public" as Audience, label: "Public", Icon: Globe },
+                { value: "friends" as Audience, label: `Friends${authed && friendIds.size > 0 ? ` · ${friendIds.size}` : ""}`, Icon: Users },
+              ]).map(({ value, label, Icon }) => (
+                <button
+                  key={value}
+                  onClick={() => setAudience(value)}
+                  className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium transition-colors ${
+                    audience === value
+                      ? "bg-foreground text-background"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <Icon className="w-3.5 h-3.5" />
+                  {label}
+                </button>
+              ))}
+            </div>
+            {/* Offer */}
+            <div className="inline-flex rounded-full border border-border bg-background/80 backdrop-blur p-1">
+              {([
+                { value: "all" as Offer, label: "All", Icon: Layers, tone: "" },
+                { value: "borrow" as Offer, label: "Borrow", Icon: HandHeart, tone: "hsl(160 70% 40%)" },
+                { value: "buy" as Offer, label: "Buy", Icon: ShoppingBag, tone: "hsl(330 85% 55%)" },
+              ]).map(({ value, label, Icon, tone }) => (
+                <button
+                  key={value}
+                  onClick={() => setOffer(value)}
+                  className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium transition-colors ${
+                    offer === value
+                      ? "text-background"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                  style={offer === value ? { background: tone || "hsl(var(--foreground))" } : undefined}
+                >
+                  <Icon className="w-3.5 h-3.5" />
+                  {label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
 
       {audience === "friends" && friendIds.size === 0 && (
-        <div className="container mx-auto px-4 pb-2">
+        <div className="container mx-auto px-4 pt-3">
           <p className="text-sm text-muted-foreground italic">
             You don't have any friends yet —{" "}
             <Link to="/friends" className="underline hover:text-foreground">add some</Link>{" "}
-            to see their items here. Switch to <button onClick={() => setAudience("all")} className="underline hover:text-foreground">All</button> to browse everyone.
+            to see their items here. Switch to <button onClick={() => setAudience("all")} className="underline hover:text-foreground">Everyone</button> to browse all of NYC.
           </p>
         </div>
       )}
@@ -672,47 +701,94 @@ function ProductCard({ item, onOpen }: { item: Item; onOpen: () => void }) {
   const orig = item.original_price ? Number(item.original_price) : null;
   const price = item.sharing_price ? Number(item.sharing_price) : null;
   const locText = [item.owner_city, item.owner_state].filter(Boolean).join(", ");
+  const photoCount = item.image_urls?.length ?? 0;
+  const discountPct =
+    orig && price && orig > price ? Math.round(((orig - price) / orig) * 100) : null;
 
   return (
     <Link to={`/profile/${item.user_id}`} onClick={onOpen} className="group block">
-      <div className="aspect-[3/4] bg-secondary/40 overflow-hidden rounded-sm mb-3">
+      <div className="relative aspect-[3/4] overflow-hidden rounded-xl mb-3 bg-secondary/40 ring-1 ring-border/60 group-hover:ring-foreground/20 group-hover:shadow-xl transition-all duration-300">
         {cover ? (
           <img
             src={cover}
             alt={item.name}
             loading="lazy"
-            className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-xs text-muted-foreground">
             No photo
           </div>
         )}
+
+        {/* Top-left: Borrow / Buy chip */}
+        <div className="absolute top-2.5 left-2.5">
+          <span
+            className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-white shadow-md backdrop-blur"
+            style={{
+              background: isFree
+                ? "linear-gradient(135deg, hsl(160 70% 42%), hsl(180 65% 40%))"
+                : "linear-gradient(135deg, hsl(330 85% 55%), hsl(15 90% 60%))",
+            }}
+          >
+            {isFree ? <HandHeart className="w-3 h-3" /> : <ShoppingBag className="w-3 h-3" />}
+            {isFree ? "Borrow" : "Buy"}
+          </span>
+        </div>
+
+        {/* Top-right: discount badge */}
+        {discountPct && discountPct >= 10 && (
+          <div className="absolute top-2.5 right-2.5">
+            <span className="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold text-white shadow-md"
+              style={{ background: "hsl(0 80% 55%)" }}>
+              -{discountPct}%
+            </span>
+          </div>
+        )}
+
+        {/* Bottom-right: photo count */}
+        {photoCount > 1 && (
+          <div className="absolute bottom-2.5 right-2.5">
+            <span className="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium bg-black/60 text-white backdrop-blur">
+              📷 {photoCount}
+            </span>
+          </div>
+        )}
+
+        {/* Hover gradient overlay */}
+        <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/40 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
       </div>
-      <div className="space-y-0.5">
+
+      <div className="space-y-1 px-0.5">
+        {item.brand && (
+          <p className="text-[10px] uppercase tracking-[0.14em] font-semibold" style={{ color: "hsl(217 91% 50%)" }}>
+            {item.brand}
+          </p>
+        )}
         <h3 className="text-sm font-medium leading-snug line-clamp-2 group-hover:underline">
-          {item.brand ? `${item.brand} ` : ""}
           {item.name}
         </h3>
         <p className="text-xs text-muted-foreground">
-          {item.size ? `Size: ${item.size}` : null}
+          {item.size ? `Size ${item.size}` : null}
           {item.size && locText ? " · " : null}
-          {locText || (!item.size && "Location not set")}
+          {locText || (!item.size && "NYC")}
         </p>
-        <div className="flex items-baseline justify-between pt-1.5 text-sm">
-          <div className="flex items-baseline gap-2">
-            {orig != null && (
+        <div className="flex items-baseline justify-between pt-1.5">
+          <div className="flex items-baseline gap-1.5">
+            {isFree ? (
+              <span className="text-base font-bold" style={{ color: "hsl(160 70% 38%)" }}>Free to borrow</span>
+            ) : (
               <>
-                <span className="text-muted-foreground text-xs">Orig. Retail</span>
-                <span className={price != null && orig > price ? "line-through text-muted-foreground text-xs" : "text-xs"}>
-                  ${orig.toFixed(0)}
+                <span className="text-base font-bold" style={{ color: "hsl(330 85% 50%)" }}>
+                  ${price!.toFixed(0)}
                 </span>
+                {orig != null && orig > (price ?? 0) && (
+                  <span className="line-through text-muted-foreground text-xs">
+                    ${orig.toFixed(0)}
+                  </span>
+                )}
               </>
             )}
-          </div>
-          <div className="flex items-baseline gap-1.5">
-            <span className="text-muted-foreground text-xs">{isFree ? "Borrow" : "Rent"}</span>
-            <span className="font-semibold">{isFree ? "Free" : `$${price!.toFixed(0)}`}</span>
           </div>
         </div>
       </div>
