@@ -172,7 +172,7 @@ const Dashboard = () => {
               <TabsList className="h-10 p-1 bg-muted/50 rounded-lg gap-1 w-fit flex-wrap">
                 <TabsTrigger value="gallery" className="h-8 px-4 gap-2 rounded-md text-sm data-[state=active]:bg-background data-[state=active]:shadow-sm">
                   <LayoutGrid className="w-4 h-4" />
-                  <span className="hidden sm:inline">Gallery</span>
+                  <span className="hidden sm:inline">My Assets</span>
                 </TabsTrigger>
                 <TabsTrigger value="opportunities" className="h-8 px-4 gap-2 rounded-md text-sm data-[state=active]:bg-background data-[state=active]:shadow-sm">
                   <Lightbulb className="w-4 h-4" />
