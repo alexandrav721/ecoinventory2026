@@ -227,7 +227,13 @@ export default function MarketplaceItem() {
     );
   }
 
-  const isFree = !item.sharing_price || Number(item.sharing_price) === 0;
+  // Default to legacy inferred values for items that haven't been migrated to explicit toggles.
+  const showBorrow = item.is_for_borrow ?? true;
+  const showBuy =
+    item.is_for_sale ??
+    (item.sharing_price != null && Number(item.sharing_price) > 0);
+  const hasPrice = item.sharing_price != null && Number(item.sharing_price) > 0;
+  const isFreeBorrow = showBorrow && !hasPrice;
   const ownerName =
     item.owner?.public_display_name || item.owner?.full_name || "Member";
   const ownerAvatar =
