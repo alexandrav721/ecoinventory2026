@@ -299,11 +299,15 @@ const InventoryPickleView = () => {
 
   // Quick chips at top of sidebar
   const chips: { label: string; active: boolean; onClick: () => void }[] = [
-    {
-      label: "With photo",
-      active: withImagesOnly,
-      onClick: () => setWithImagesOnly((v) => !v),
-    },
+    ...(showAdvancedFilters
+      ? [
+          {
+            label: "With photo",
+            active: withImagesOnly,
+            onClick: () => setWithImagesOnly((v) => !v),
+          },
+        ]
+      : []),
     ...(excessCount > 0
       ? [
           {
