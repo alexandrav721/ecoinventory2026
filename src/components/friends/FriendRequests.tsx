@@ -77,7 +77,7 @@ export function FriendRequests({ userId }: FriendRequestsProps) {
         .eq("id", requestId);
 
       if (error) throw error;
-      toast.success("Follow request accepted!");
+      toast.success("Network request accepted!");
       fetchRequests();
     } catch (error) {
       console.error("Accept error:", error);
@@ -93,7 +93,7 @@ export function FriendRequests({ userId }: FriendRequestsProps) {
         .eq("id", requestId);
 
       if (error) throw error;
-      toast.success("Follow request declined");
+      toast.success("Network request declined");
       fetchRequests();
     } catch (error) {
       console.error("Reject error:", error);
@@ -109,7 +109,7 @@ export function FriendRequests({ userId }: FriendRequestsProps) {
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>Incoming Follow Requests</CardTitle>
+          <CardTitle>Incoming Network Requests</CardTitle>
           <CardDescription>People asking to follow you — accept to let them see your stuff</CardDescription>
         </CardHeader>
         <CardContent>
@@ -152,7 +152,7 @@ export function FriendRequests({ userId }: FriendRequestsProps) {
 
       <Card>
         <CardHeader>
-          <CardTitle>Pending Follow Requests</CardTitle>
+          <CardTitle>Pending Network Requests</CardTitle>
           <CardDescription>People you've asked to follow — waiting for approval</CardDescription>
         </CardHeader>
         <CardContent>

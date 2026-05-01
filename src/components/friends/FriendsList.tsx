@@ -86,7 +86,7 @@ export function FriendsList({ userId }: FriendsListProps) {
         .eq("id", friendshipId);
 
       if (error) throw error;
-      toast.success("Unfollowed");
+      toast.success("Removed from your network");
       fetchFriends();
     } catch (error) {
       console.error("Remove friend error:", error);
@@ -109,7 +109,7 @@ export function FriendsList({ userId }: FriendsListProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Following</CardTitle>
+        <CardTitle>In your network</CardTitle>
         <CardDescription>People you follow — and who follow you back</CardDescription>
       </CardHeader>
       <CardContent>
