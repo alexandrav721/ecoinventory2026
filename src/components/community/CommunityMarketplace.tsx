@@ -169,6 +169,9 @@ export function CommunityMarketplace() {
       } else if (audience === "community") {
         if (currentUserId && friendIds.has(it.user_id)) return false;
       }
+      // Mode filter (All / Borrow / Buy)
+      if (mode === "borrow" && !it.is_for_borrow) return false;
+      if (mode === "buy" && !it.is_for_sale) return false;
       if (search) {
         const q = search.toLowerCase();
         const hay = `${it.name} ${it.description ?? ""}`.toLowerCase();
@@ -183,13 +186,10 @@ export function CommunityMarketplace() {
       }
       return true;
     });
-  }, [items, search, distanceFilter, location, audience, friendIds, currentUserId]);
+  }, [items, search, distanceFilter, location, audience, friendIds, currentUserId, mode]);
 
-  const borrowItems = filtered.filter((it) => !it.sharing_price || it.sharing_price === 0 || (it.sharing_price && it.sharing_price > 0 && it.sharing_price <= 0));
-  // Treat sharing_price null/0 → free borrow; >0 → both borrow (paid) and buy unclear.
-  // Simpler split: borrow = price null OR 0, buy = price > 0.
-  const borrowList = filtered.filter((it) => !it.sharing_price || Number(it.sharing_price) === 0);
-  const buyList = filtered.filter((it) => it.sharing_price != null && Number(it.sharing_price) > 0);
+  const borrowCount = items.filter((it) => it.is_for_borrow).length;
+  const buyCount = items.filter((it) => it.is_for_sale).length;
 
   const requireAuth = (action: string) => {
     toast.info(`Sign in to ${action}`);
