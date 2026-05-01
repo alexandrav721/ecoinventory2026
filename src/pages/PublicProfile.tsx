@@ -329,6 +329,29 @@ export default function PublicProfile({ selfMode = false }: Props) {
                   <Button size="sm" variant="outline" className="h-8 text-xs flex-1">List yours</Button>
                 </div>
               </article>
+
+              {/* Buy interest */}
+              <article className="group relative rounded-xl border border-border/70 bg-card p-5 hover:border-foreground/30 hover:shadow-sm transition-all">
+                <div className="absolute top-5 right-5 h-2 w-2 rounded-full bg-primary" />
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Sparkles className="h-4 w-4 text-primary" />
+                  </div>
+                  <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+                    Buy interest
+                  </span>
+                </div>
+                <p className="font-display text-lg leading-snug text-foreground">
+                  <em className="italic">3 neighbors</em> are interested in your <em className="italic">Canon EOS R</em>
+                </p>
+                <p className="text-xs text-muted-foreground mt-2">
+                  Listed at $650 · 1d ago
+                </p>
+                <div className="flex items-center gap-2 mt-4 pt-4 border-t border-border/60">
+                  <Button size="sm" className="h-8 text-xs flex-1">Review</Button>
+                  <Button size="sm" variant="ghost" className="h-8 text-xs">Later</Button>
+                </div>
+              </article>
             </div>
           </section>
         )}
