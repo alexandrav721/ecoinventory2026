@@ -128,7 +128,7 @@ export const AskNeighborsPanel = ({ defaultItemName = "" }: Props) => {
           <Megaphone className="w-5 h-5 text-primary" />
         </div>
         <div>
-          <h3 className="font-display text-xl font-semibold">Ask friends & neighbors</h3>
+          <h3 className="font-display text-xl font-semibold">Ask people you follow & neighbors</h3>
           <p className="text-sm text-muted-foreground">
             Before you buy, see if someone nearby has one to lend.
           </p>
