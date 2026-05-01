@@ -309,10 +309,10 @@ const ProfileSettings = () => {
                     <div className="flex items-center justify-between space-x-4 p-4 border rounded-lg">
                       <div className="flex-1">
                         <Label htmlFor="location-friends" className="text-base font-medium">
-                          Share Location with Friends
+                          Share Location with Followers
                         </Label>
                         <p className="text-sm text-muted-foreground mt-1">
-                          Allow your friends to see your city and state
+                          Allow people who follow you to see your city and state
                         </p>
                       </div>
                       <Switch
