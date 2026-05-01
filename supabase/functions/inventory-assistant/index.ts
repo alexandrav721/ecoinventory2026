@@ -319,6 +319,11 @@ Deno.serve(async (req) => {
         ? `Known user defaults: ${ctx.prefs.map((p: any) => `${p.key}=${p.value}`).join(", ")}.`
         : "No saved user defaults yet.";
 
+    const onboardingLine =
+      ctx.itemCount === 0
+        ? `IMPORTANT: This user has 0 items in their inventory. If the conversation has just started, greet them with EXACTLY: "Hi! Let's build your home inventory together. What room should we start with — kitchen, bedroom, living room, or somewhere else?" Then walk them through their home room by room, asking about a few key items per room before moving to the next.`
+        : `User has ${ctx.itemCount} items already logged.`;
+
     const systemPrompt = `You are an inventory assistant for a personal home-inventory app.
 Your job: help the user add, edit, query, and reason about the items they own.
 
@@ -327,6 +332,8 @@ Style:
 - Confirm assumptions before destructive actions (delete, big bulk edits).
 - Prefer using saved defaults instead of re-asking. ${prefsLine}
 ${ctx.profile?.full_name ? `User's name: ${ctx.profile.full_name}.` : ""}
+
+${onboardingLine}
 
 Workflow:
 - When the user mentions items they own, gather: name, brand, quantity, size/color (if relevant), and approximate price. Don't demand every field — guess sensibly.
