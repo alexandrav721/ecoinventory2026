@@ -81,6 +81,9 @@ const AddItem = () => {
     condition: "good",
     usage_frequency: "",
     sharing_level: "private" as "private" | "friends" | "public",
+    is_for_borrow: true,
+    is_for_sale: false,
+    sharing_price: "",
     tags: [] as string[],
   });
 
@@ -189,6 +192,11 @@ const AddItem = () => {
           usage_frequency: formData.usage_frequency || null,
           sharing_level: formData.sharing_level,
           is_available_for_sharing: formData.sharing_level !== "private",
+          is_for_borrow: formData.sharing_level !== "private" ? formData.is_for_borrow : false,
+          is_for_sale: formData.sharing_level !== "private" ? formData.is_for_sale : false,
+          sharing_price: formData.is_for_sale && formData.sharing_price
+            ? parseFloat(formData.sharing_price)
+            : null,
         },
       ]).select("id, name");
 
@@ -1210,6 +1218,59 @@ const AddItem = () => {
                   </SelectContent>
                 </Select>
               </div>
+
+              {formData.sharing_level !== "private" && (
+                <div className="space-y-3 rounded-lg border border-border/60 p-4 bg-secondary/30">
+                  <Label className="text-xs uppercase tracking-wide text-muted-foreground">
+                    How is this item offered?
+                  </Label>
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <p className="text-sm font-medium">Available to lend</p>
+                      <p className="text-xs text-muted-foreground">Neighbors can request to borrow it.</p>
+                    </div>
+                    <Switch
+                      checked={formData.is_for_borrow}
+                      onCheckedChange={(v) =>
+                        setFormData({ ...formData, is_for_borrow: v })
+                      }
+                    />
+                  </div>
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <p className="text-sm font-medium">For sale</p>
+                      <p className="text-xs text-muted-foreground">Set a price and let neighbors buy it.</p>
+                    </div>
+                    <Switch
+                      checked={formData.is_for_sale}
+                      onCheckedChange={(v) =>
+                        setFormData({ ...formData, is_for_sale: v })
+                      }
+                    />
+                  </div>
+                  {formData.is_for_sale && (
+                    <div className="space-y-1.5">
+                      <Label htmlFor="sharing_price" className="text-sm">Asking price (USD)</Label>
+                      <Input
+                        id="sharing_price"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        placeholder="e.g. 25"
+                        value={formData.sharing_price}
+                        onChange={(e) =>
+                          setFormData({ ...formData, sharing_price: e.target.value })
+                        }
+                      />
+                    </div>
+                  )}
+                  {!formData.is_for_borrow && !formData.is_for_sale && (
+                    <p className="text-xs text-amber-600">
+                      Pick at least one — otherwise the item won't appear in the marketplace.
+                    </p>
+                  )}
+                </div>
+              )}
             </div>
           </div>
 

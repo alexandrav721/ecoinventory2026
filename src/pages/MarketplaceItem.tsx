@@ -27,6 +27,8 @@ interface Item {
   image_urls: string[] | null;
   condition: string | null;
   sharing_price: number | null;
+  is_for_borrow?: boolean | null;
+  is_for_sale?: boolean | null;
   brand: string | null;
   tags: string[] | null;
   category_id: string | null;
@@ -63,7 +65,7 @@ export default function MarketplaceItem() {
       const { data, error } = await supabase
         .from("inventory_items")
         .select(
-          "id, user_id, name, description, image_urls, condition, sharing_price, brand, tags, category_id"
+          "id, user_id, name, description, image_urls, condition, sharing_price, brand, tags, category_id, is_for_borrow, is_for_sale"
         )
         .eq("id", id)
         .eq("is_available_for_sharing", true)
@@ -121,7 +123,7 @@ export default function MarketplaceItem() {
         const { data: rows } = await supabase
           .from("inventory_items")
           .select(
-            "id, user_id, name, description, image_urls, condition, sharing_price, brand, tags, category_id"
+            "id, user_id, name, description, image_urls, condition, sharing_price, brand, tags, category_id, is_for_borrow, is_for_sale"
           )
           .in("id", ids)
           .eq("is_available_for_sharing", true);
@@ -225,7 +227,13 @@ export default function MarketplaceItem() {
     );
   }
 
-  const isFree = !item.sharing_price || Number(item.sharing_price) === 0;
+  // Default to legacy inferred values for items that haven't been migrated to explicit toggles.
+  const showBorrow = item.is_for_borrow ?? true;
+  const showBuy =
+    item.is_for_sale ??
+    (item.sharing_price != null && Number(item.sharing_price) > 0);
+  const hasPrice = item.sharing_price != null && Number(item.sharing_price) > 0;
+  const isFreeBorrow = showBorrow && !hasPrice;
   const ownerName =
     item.owner?.public_display_name || item.owner?.full_name || "Member";
   const ownerAvatar =
@@ -287,15 +295,21 @@ export default function MarketplaceItem() {
             )}
           </div>
 
-          <div className="flex items-baseline gap-3">
-            {isFree ? (
-              <Badge className="bg-primary text-primary-foreground text-base px-3 py-1">
-                Free to borrow
-              </Badge>
-            ) : (
+          <div className="flex items-baseline gap-3 flex-wrap">
+            {hasPrice && showBuy && (
               <span className="text-3xl font-semibold">
                 ${Number(item.sharing_price).toFixed(2)}
               </span>
+            )}
+            {isFreeBorrow && (
+              <Badge className="bg-primary text-primary-foreground text-base px-3 py-1">
+                Free to borrow
+              </Badge>
+            )}
+            {showBorrow && showBuy && (
+              <Badge variant="outline" className="text-sm">
+                Lend or buy
+              </Badge>
             )}
           </div>
 
@@ -349,9 +363,10 @@ export default function MarketplaceItem() {
           </Card>
 
           <div className="flex gap-3">
-            {isFree ? (
+            {showBorrow && (
               <Button
                 size="lg"
+                variant={showBorrow && showBuy ? "outline" : "default"}
                 className="flex-1"
                 onClick={() =>
                   authed ? setBorrowOpen(true) : requireAuth("borrow this item")
@@ -359,7 +374,8 @@ export default function MarketplaceItem() {
               >
                 <HandHeart className="w-5 h-5 mr-2" /> Request to borrow
               </Button>
-            ) : (
+            )}
+            {showBuy && (
               <Button
                 size="lg"
                 className="flex-1"

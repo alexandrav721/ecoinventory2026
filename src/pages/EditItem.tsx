@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
 import {
   Select,
   SelectContent,
@@ -57,6 +58,8 @@ const EditItem = () => {
     usage_frequency: "",
     sharing_level: "private" as "private" | "friends" | "public",
     sharing_price: "",
+    is_for_borrow: true,
+    is_for_sale: false,
     tags: [] as string[],
     is_donated: false,
     is_sold: false,
@@ -113,6 +116,8 @@ const EditItem = () => {
           usage_frequency: data.usage_frequency || "",
           sharing_level: (data.sharing_level as "private" | "friends" | "public") || "private",
           sharing_price: data.sharing_price?.toString() || "",
+          is_for_borrow: data.is_for_borrow ?? true,
+          is_for_sale: data.is_for_sale ?? false,
           tags: data.tags || [],
           is_donated: data.is_donated || false,
           is_sold: data.is_sold || false,
@@ -186,8 +191,12 @@ const EditItem = () => {
           condition: formData.condition,
           usage_frequency: formData.usage_frequency || null,
           sharing_level: formData.sharing_level,
-          sharing_price: formData.sharing_price ? parseFloat(formData.sharing_price) : null,
+          sharing_price: formData.is_for_sale && formData.sharing_price
+            ? parseFloat(formData.sharing_price)
+            : null,
           is_available_for_sharing: formData.sharing_level !== "private",
+          is_for_borrow: formData.sharing_level !== "private" ? formData.is_for_borrow : false,
+          is_for_sale: formData.sharing_level !== "private" ? formData.is_for_sale : false,
           is_donated: formData.is_donated,
           is_sold: formData.is_sold,
           donated_price: formData.donated_price ? parseFloat(formData.donated_price) : null,
@@ -420,14 +429,49 @@ const EditItem = () => {
               </div>
 
               {formData.sharing_level !== "private" && (
-                <div className="space-y-2">
-                  <Label htmlFor="sharing_price">Sharing Price (optional)</Label>
-                  <Input
-                    id="sharing_price"
-                    value={formData.sharing_price}
-                    onChange={(e) => setFormData({ ...formData, sharing_price: e.target.value })}
-                    placeholder="0.00"
-                  />
+                <div className="space-y-3 rounded-lg border border-border/60 p-4 bg-secondary/30">
+                  <Label className="text-xs uppercase tracking-wide text-muted-foreground">
+                    How is this item offered?
+                  </Label>
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <p className="text-sm font-medium">Available to lend</p>
+                      <p className="text-xs text-muted-foreground">Neighbors can request to borrow it.</p>
+                    </div>
+                    <Switch
+                      checked={formData.is_for_borrow}
+                      onCheckedChange={(v) => setFormData({ ...formData, is_for_borrow: v })}
+                    />
+                  </div>
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <p className="text-sm font-medium">For sale</p>
+                      <p className="text-xs text-muted-foreground">Set a price and let neighbors buy it.</p>
+                    </div>
+                    <Switch
+                      checked={formData.is_for_sale}
+                      onCheckedChange={(v) => setFormData({ ...formData, is_for_sale: v })}
+                    />
+                  </div>
+                  {formData.is_for_sale && (
+                    <div className="space-y-1.5">
+                      <Label htmlFor="sharing_price" className="text-sm">Asking price (USD)</Label>
+                      <Input
+                        id="sharing_price"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        placeholder="0.00"
+                        value={formData.sharing_price}
+                        onChange={(e) => setFormData({ ...formData, sharing_price: e.target.value })}
+                      />
+                    </div>
+                  )}
+                  {!formData.is_for_borrow && !formData.is_for_sale && (
+                    <p className="text-xs text-amber-600">
+                      Pick at least one — otherwise the item won't appear in the marketplace.
+                    </p>
+                  )}
                 </div>
               )}
             </div>
