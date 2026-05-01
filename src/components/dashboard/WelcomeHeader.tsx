@@ -5,22 +5,12 @@ import { supabase } from "@/integrations/supabase/client";
 import { useDemo } from "@/contexts/DemoContext";
 import { useTranslation } from "react-i18next";
 import {
-  Package,
-  TrendingUp,
-  Heart,
   Camera,
-  Trophy,
   ArrowRight,
   Flame,
-  ShoppingBag,
-  Gift,
-  DollarSign,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Progress } from "@/components/ui/progress";
-import { cn, formatCurrency } from "@/lib/utils";
-import { useInventoryStats } from "@/hooks/useInventoryStats";
 
 interface WelcomeHeaderProps {
   user: User | null;
