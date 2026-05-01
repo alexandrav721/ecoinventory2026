@@ -81,6 +81,9 @@ const AddItem = () => {
     condition: "good",
     usage_frequency: "",
     sharing_level: "private" as "private" | "friends" | "public",
+    is_for_borrow: true,
+    is_for_sale: false,
+    sharing_price: "",
     tags: [] as string[],
   });
 
