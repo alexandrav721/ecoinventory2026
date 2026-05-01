@@ -125,12 +125,12 @@ export default function PublicProfile({ selfMode = false }: Props) {
     if (!profile) return;
     if (isFollowing(profile.id)) {
       const err = await unfollow(profile.id);
-      if (err) toast.error("Could not unfollow");
-      else { toast.success("Unfollowed"); setFollowerCount((c) => c - 1); }
+      if (err) toast.error("Could not remove from network");
+      else { toast.success("Removed from your network"); setFollowerCount((c) => c - 1); }
     } else {
       const err = await follow(profile.id);
-      if (err) toast.error("Could not follow");
-      else { toast.success("Following"); setFollowerCount((c) => c + 1); }
+      if (err) toast.error("Could not add to network");
+      else { toast.success("Added to your network"); setFollowerCount((c) => c + 1); }
     }
   };
 
