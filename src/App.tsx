@@ -15,6 +15,7 @@ import Admin from "./pages/Admin";
 import Promo from "./pages/Promo";
 import Founders from "./pages/Founders";
 import Community from "./pages/Community";
+import Swap from "./pages/Swap";
 import Events from "./pages/Events";
 import Articles from "./pages/Articles";
 import Article from "./pages/Article";
@@ -77,6 +78,7 @@ const App = () => (
             <Route path="/how-it-works" element={<About />} />
             <Route path="/about" element={<Navigate to="/how-it-works" replace />} />
             <Route path="/marketplace/item/:id" element={<MarketplaceItem />} />
+            <Route path="/swap" element={<Swap />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
