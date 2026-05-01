@@ -670,14 +670,44 @@ const AddItem = () => {
 
   // Mode selection screen
   if (mode === "select") {
+    const options: {
+      label: string;
+      description: string;
+      onClick: () => void;
+    }[] = [
+      {
+        label: "Chat with our AI",
+        description: "Describe what you own and we'll log it for you",
+        onClick: () => {
+          window.dispatchEvent(new CustomEvent("open-inventory-assistant"));
+          navigate("/dashboard");
+        },
+      },
+      {
+        label: "Snap a photo",
+        description: "Take or upload a photo and AI identifies the item",
+        onClick: () => setMode("smart"),
+      },
+      {
+        label: "Add manually",
+        description: "Fill in the details yourself",
+        onClick: () => setMode("manual"),
+      },
+      {
+        label: "Scan a receipt",
+        description: "Upload a receipt to extract multiple items at once",
+        onClick: () => setMode("receipt"),
+      },
+    ];
+
     return (
-      <div className="min-h-screen bg-gradient-subtle">
-        <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-10">
+      <div className="min-h-screen bg-stone-50">
+        <header className="border-b border-border/60 bg-stone-50/80 backdrop-blur-sm sticky top-0 z-10">
           <div className="container mx-auto px-4 py-4">
             <Button
               variant="ghost"
               onClick={() => navigate("/dashboard")}
-              className="gap-2"
+              className="gap-2 text-muted-foreground hover:text-foreground"
             >
               <ArrowLeft className="h-4 w-4" />
               Back to Dashboard
@@ -685,79 +715,38 @@ const AddItem = () => {
           </div>
         </header>
 
-        <div className="container mx-auto px-4 py-8 max-w-4xl">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold mb-2">Add New Item</h1>
-            <p className="text-muted-foreground">Choose how you'd like to add your item</p>
+        <div className="container mx-auto px-4 py-12 md:py-16 max-w-2xl">
+          <div className="mb-10 md:mb-14">
+            <p className="text-[11px] uppercase tracking-[0.22em] text-muted-foreground mb-3">
+              Add to inventory
+            </p>
+            <h1 className="font-display text-4xl md:text-5xl leading-[1.05] tracking-tight text-foreground">
+              How would you like to{" "}
+              <em className="font-display-wonk">add an item?</em>
+            </h1>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Card 
-              className="p-6 cursor-pointer hover:bg-accent transition-colors border-2 border-primary"
-              onClick={() => setMode("bulk")}
-            >
-              <div className="flex flex-col items-center text-center space-y-3">
-                <div className="relative">
-                  <Upload className="h-12 w-12 text-primary" />
-                  <div className="absolute -top-1 -right-1 bg-primary text-primary-foreground rounded-full p-1">
-                    ✨
+          <ul className="border-t border-border/70">
+            {options.map((opt) => (
+              <li key={opt.label} className="border-b border-border/70">
+                <button
+                  type="button"
+                  onClick={opt.onClick}
+                  className="group w-full flex items-center justify-between gap-6 py-6 md:py-7 text-left transition-colors hover:bg-stone-100/60 -mx-4 px-4 md:-mx-6 md:px-6"
+                >
+                  <div className="min-w-0">
+                    <h3 className="font-display text-2xl md:text-3xl leading-tight tracking-tight text-foreground">
+                      {opt.label}
+                    </h3>
+                    <p className="text-sm text-muted-foreground mt-1.5">
+                      {opt.description}
+                    </p>
                   </div>
-                </div>
-                <h3 className="font-semibold">Bulk Upload</h3>
-                <p className="text-sm text-muted-foreground">
-                  Add 5-10 items at once with photos
-                </p>
-                <span className="text-xs font-medium text-primary">Fast & Easy</span>
-              </div>
-            </Card>
-
-            <Card 
-              className="p-6 cursor-pointer hover:bg-accent transition-colors border-2 border-primary"
-              onClick={() => setMode("smart")}
-            >
-              <div className="flex flex-col items-center text-center space-y-3">
-                <div className="relative">
-                  <Camera className="h-12 w-12 text-primary" />
-                  <div className="absolute -top-1 -right-1 bg-primary text-primary-foreground rounded-full p-1">
-                    ✨
-                  </div>
-                </div>
-                <h3 className="font-semibold">Smart Add (AI)</h3>
-                <p className="text-sm text-muted-foreground">
-                  Snap a photo or describe it - AI does the rest
-                </p>
-                <span className="text-xs font-medium text-primary">Recommended</span>
-              </div>
-            </Card>
-
-            <Card 
-              className="p-6 cursor-pointer hover:bg-accent transition-colors"
-              onClick={() => setMode("manual")}
-            >
-              <div className="flex flex-col items-center text-center space-y-3">
-                <PenTool className="h-12 w-12 text-primary" />
-                <h3 className="font-semibold">Manual Add</h3>
-                <p className="text-sm text-muted-foreground">
-                  Enter item details manually
-                </p>
-              </div>
-            </Card>
-
-            {/* Loop Catalog removed */}
-
-            <Card 
-              className="p-6 cursor-pointer hover:bg-accent transition-colors"
-              onClick={() => setMode("receipt")}
-            >
-              <div className="flex flex-col items-center text-center space-y-3">
-                <Receipt className="h-12 w-12 text-primary" />
-                <h3 className="font-semibold">Upload Receipt</h3>
-                <p className="text-sm text-muted-foreground">
-                  Scan a receipt to extract items
-                </p>
-              </div>
-            </Card>
-          </div>
+                  <ArrowLeft className="h-5 w-5 rotate-180 text-muted-foreground shrink-0 transition-transform group-hover:translate-x-1 group-hover:text-foreground" />
+                </button>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     );
