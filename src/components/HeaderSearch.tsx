@@ -10,8 +10,10 @@ export const HeaderSearch = () => {
 
   const goToSearch = (term?: string) => {
     const t = (term ?? q).trim();
-    const target = t ? `/community?q=${encodeURIComponent(t)}` : "/community";
-    navigate(target);
+    // Always land on the public community inventory
+    const params = new URLSearchParams({ audience: "public" });
+    if (t) params.set("q", t);
+    navigate(`/community?${params.toString()}`);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -20,6 +22,7 @@ export const HeaderSearch = () => {
   };
 
   const handleFocusOrClick = () => {
+    // Always send users to the public community inventory when they engage the search bar
     if (location.pathname !== "/community") {
       goToSearch();
     }

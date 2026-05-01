@@ -65,7 +65,9 @@ export function PickleStyleSearch() {
   const [authed, setAuthed] = useState(false);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [friendIds, setFriendIds] = useState<Set<string>>(new Set());
-  const [audience, setAudience] = useState<Audience>("all");
+  const [audience, setAudience] = useState<Audience>(
+    (searchParams.get("audience") as Audience) || "all"
+  );
   const [offer, setOffer] = useState<Offer>("all");
   const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
 
@@ -82,10 +84,14 @@ export function PickleStyleSearch() {
   const [priceMax, setPriceMax] = useState("");
   const [sort, setSort] = useState("recommended");
 
-  // Sync ?q= changes (header search) into local state
+  // Sync ?q= and ?audience= changes (header search) into local state
   useEffect(() => {
     const q = searchParams.get("q") ?? "";
     setQuery(q);
+    const a = searchParams.get("audience") as Audience | null;
+    if (a && (a === "all" || a === "public" || a === "friends")) {
+      setAudience(a);
+    }
   }, [searchParams]);
 
   useEffect(() => {
@@ -400,7 +406,7 @@ export function PickleStyleSearch() {
               {([
                 { value: "all" as Audience, label: "Everyone", Icon: Layers },
                 { value: "public" as Audience, label: "Public", Icon: Globe },
-                { value: "friends" as Audience, label: `Friends${authed && friendIds.size > 0 ? ` · ${friendIds.size}` : ""}`, Icon: Users },
+                { value: "friends" as Audience, label: `Following${authed && friendIds.size > 0 ? ` · ${friendIds.size}` : ""}`, Icon: Users },
               ]).map(({ value, label, Icon }) => (
                 <button
                   key={value}
@@ -445,8 +451,8 @@ export function PickleStyleSearch() {
       {audience === "friends" && friendIds.size === 0 && (
         <div className="container mx-auto px-4 pt-3">
           <p className="text-sm text-muted-foreground italic">
-            You don't have any friends yet —{" "}
-            <Link to="/friends" className="underline hover:text-foreground">add some</Link>{" "}
+            You're not following anyone yet —{" "}
+            <Link to="/people" className="underline hover:text-foreground">find people to follow</Link>{" "}
             to see their items here. Switch to <button onClick={() => setAudience("all")} className="underline hover:text-foreground">Everyone</button> to browse all of NYC.
           </p>
         </div>
