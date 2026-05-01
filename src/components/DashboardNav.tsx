@@ -107,10 +107,10 @@ const DashboardNav = () => {
           <Button
             variant="ghost"
             size="sm"
-            className={`h-8 px-2.5 gap-1.5 text-sm shrink-0 ${
+            className={`h-8 px-1 gap-1.5 text-[13px] font-normal tracking-wide shrink-0 hover:bg-transparent ${
               isActive 
-                ? "bg-primary/10 text-primary font-medium" 
-                : "text-muted-foreground hover:text-foreground"
+                ? "text-foreground font-medium border-b border-foreground/80 rounded-none" 
+                : "text-muted-foreground hover:text-foreground border-b border-transparent rounded-none"
             }`}
           >
             <Icon className="w-3.5 h-3.5" />
@@ -145,15 +145,15 @@ const DashboardNav = () => {
   if (!loggedIn) {
     return (
       <div className="relative">
-        <nav className="flex items-center gap-1 py-2 px-1">
+        <nav className="flex items-center gap-5 py-2 px-1">
           <Button
             asChild
             variant="ghost"
             size="sm"
-            className={`h-8 px-2.5 gap-1.5 text-sm shrink-0 ${
+            className={`h-8 px-1 gap-1.5 text-[13px] font-normal tracking-wide shrink-0 hover:bg-transparent ${
               location.pathname === "/how-it-works"
-                ? "bg-primary/10 text-primary font-medium"
-                : "text-muted-foreground hover:text-foreground"
+                ? "text-foreground font-medium border-b border-foreground/80 rounded-none"
+                : "text-muted-foreground hover:text-foreground border-b border-transparent rounded-none"
             }`}
           >
             <Link to="/how-it-works">
@@ -168,7 +168,7 @@ const DashboardNav = () => {
 
   return (
     <div className="relative">
-      <nav className="flex items-center gap-1 py-2 px-1">
+      <nav className="flex items-center gap-5 py-2 px-1">
         {/* Three dropdown menus */}
         <NavDropdown label="Unlock Your Stuff" icon={LayoutDashboard} items={myEstateItems} />
         <DropdownMenu>
@@ -176,10 +176,10 @@ const DashboardNav = () => {
             <Button
               variant="ghost"
               size="sm"
-              className={`h-8 px-2.5 gap-1.5 text-sm shrink-0 ${
+              className={`h-8 px-1 gap-1.5 text-[13px] font-normal tracking-wide shrink-0 hover:bg-transparent ${
                 isActiveInGroup(friendsItems)
-                  ? "bg-primary/10 text-primary font-medium"
-                  : "text-muted-foreground hover:text-foreground"
+                  ? "text-foreground font-medium border-b border-foreground/80 rounded-none"
+                  : "text-muted-foreground hover:text-foreground border-b border-transparent rounded-none"
               }`}
             >
               <Users className="w-3.5 h-3.5" />
@@ -220,10 +220,10 @@ const DashboardNav = () => {
           asChild
           variant="ghost"
           size="sm"
-          className={`h-8 px-2.5 gap-1.5 text-sm shrink-0 ${
+          className={`h-8 px-1 gap-1.5 text-[13px] font-normal tracking-wide shrink-0 hover:bg-transparent ${
             location.pathname === "/marketplace"
-              ? "bg-primary/10 text-primary font-medium"
-              : "text-muted-foreground hover:text-foreground"
+              ? "text-foreground font-medium border-b border-foreground/80 rounded-none"
+              : "text-muted-foreground hover:text-foreground border-b border-transparent rounded-none"
           }`}
         >
           <Link to="/marketplace">
@@ -239,10 +239,10 @@ const DashboardNav = () => {
             asChild
             variant="ghost"
             size="sm"
-            className={`h-8 px-2.5 gap-1.5 text-sm shrink-0 ${
+            className={`h-8 px-1 gap-1.5 text-[13px] font-normal tracking-wide shrink-0 hover:bg-transparent ${
               location.pathname === "/admin" 
-                ? "bg-primary/10 text-primary font-medium" 
-                : "text-muted-foreground hover:text-foreground"
+                ? "text-foreground font-medium border-b border-foreground/80 rounded-none" 
+                : "text-muted-foreground hover:text-foreground border-b border-transparent rounded-none"
             }`}
           >
             <Link to="/admin">

@@ -107,7 +107,7 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-subtle">
+    <div className="min-h-screen bg-stone-50">
       {/* Demo Banner */}
       <DemoBanner />
 

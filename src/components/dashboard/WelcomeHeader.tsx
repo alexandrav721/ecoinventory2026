@@ -143,8 +143,8 @@ export const WelcomeHeader = ({ user }: WelcomeHeaderProps) => {
         </div>
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
           <div>
-            <h2 className="font-display text-2xl md:text-3xl leading-[1.05] tracking-tight">
-              Hey {firstName}.
+            <h2 className="font-display text-5xl md:text-6xl font-light leading-[0.95] tracking-tight text-foreground">
+              Hey <span className="italic font-display-wonk text-primary">{firstName}.</span>
             </h2>
           </div>
           <Button
