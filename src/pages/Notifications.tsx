@@ -83,7 +83,7 @@ const Notifications = () => {
         setNotifications([
           {
             id: "demo-1",
-            message: "Welcome to EcoInventory! Start by adding your first item.",
+            message: "Welcome to Loop! Start by adding your first item.",
             is_read: false,
             created_at: new Date().toISOString(),
             item_id: null,

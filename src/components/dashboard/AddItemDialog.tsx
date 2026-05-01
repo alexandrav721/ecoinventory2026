@@ -881,7 +881,7 @@ const AddItemDialog = ({ open, onOpenChange }: AddItemDialogProps) => {
             >
               <div className="flex flex-col items-center text-center space-y-3">
                 <Package className="h-12 w-12 text-primary" />
-                <h3 className="font-semibold">EcoInventory Catalog</h3>
+                <h3 className="font-semibold">Loop Catalog</h3>
                 <p className="text-sm text-muted-foreground">
                   Browse personalized recommendations
                 </p>
@@ -1245,7 +1245,7 @@ const AddItemDialog = ({ open, onOpenChange }: AddItemDialogProps) => {
           <DialogHeader>
             <div className="flex items-center justify-between">
               <div>
-                <DialogTitle>EcoInventory Catalog</DialogTitle>
+                <DialogTitle>Loop Catalog</DialogTitle>
                 <DialogDescription>
                   Select multiple items to add to your inventory
                 </DialogDescription>

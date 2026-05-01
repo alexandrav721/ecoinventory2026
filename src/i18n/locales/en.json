@@ -132,10 +132,10 @@
       "subtitle": "Find out what your things are worth. Start lending. Stop buying what you don't need.",
       "button": "Start for free"
     },
-    "footer": "© 2025 EcoInventory. A quieter way to own things."
+    "footer": "© 2025 Loop. A quieter way to own things."
   },
   "dashboard": {
-    "title": "EcoInventory",
+    "title": "Loop",
     "analytics": "Impact & Achievements",
     "myInventory": "My Stuff",
     "categories": "Categories",
@@ -176,7 +176,7 @@
     "password": "Password",
     "fullName": "Full Name",
     "welcomeBack": "Hey, Welcome Back! 👋",
-    "joinEco": "Join EcoInventory",
+    "joinEco": "Join Loop",
     "signInDesc": "Sign in to see your stuff",
     "createAccountDesc": "Let's get you set up",
     "pleaseWait": "One sec...",

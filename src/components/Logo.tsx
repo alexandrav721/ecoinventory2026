@@ -58,7 +58,7 @@ export const Logo = ({ size = "md", showText = true, className }: LogoProps) => 
       
       {showText && (
         <span className={cn("font-bold transition-colors duration-300 group-hover:gradient-text", sizes[size].text)}>
-          EcoInventory
+          Loop
         </span>
       )}
     </Link>

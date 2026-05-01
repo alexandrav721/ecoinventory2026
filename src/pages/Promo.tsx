@@ -70,7 +70,7 @@ const Promo = () => {
             </div>
             
             <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-foreground to-primary bg-clip-text text-transparent leading-tight">
-              EcoInventory
+              Loop
             </h1>
             
             <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto">
@@ -88,13 +88,13 @@ const Promo = () => {
       <section className="py-12 border-y bg-card/50">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold mb-6 text-center">What is EcoInventory?</h2>
+            <h2 className="text-3xl font-bold mb-6 text-center">What is Loop?</h2>
             <div className="space-y-4 text-lg text-muted-foreground">
               <p>
-                EcoInventory is a comprehensive web application that helps you organize, track, and share your belongings while building a sustainable community network.
+                Loop is a comprehensive web application that helps you organize, track, and share your belongings while building a sustainable community network.
               </p>
               <p>
-                Whether you want to keep track of your personal items, monitor their value over time, or participate in a local sharing economy, EcoInventory provides all the tools you need in one intuitive platform.
+                Whether you want to keep track of your personal items, monitor their value over time, or participate in a local sharing economy, Loop provides all the tools you need in one intuitive platform.
               </p>
             </div>
           </div>
@@ -109,7 +109,7 @@ const Promo = () => {
               Key Features & Screenshots
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              A visual tour of what EcoInventory can do for you
+              A visual tour of what Loop can do for you
             </p>
           </div>
 
@@ -153,7 +153,7 @@ const Promo = () => {
       <section className="py-12 bg-card/50 border-y">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold mb-8 text-center">Why Choose EcoInventory?</h2>
+            <h2 className="text-3xl font-bold mb-8 text-center">Why Choose Loop?</h2>
             <div className="grid md:grid-cols-3 gap-6">
               <Card>
                 <CardContent className="p-6 text-center">
@@ -200,7 +200,7 @@ const Promo = () => {
             </h2>
             
             <p className="text-lg text-muted-foreground">
-              Join EcoInventory and start building a more organized, sustainable lifestyle
+              Join Loop and start building a more organized, sustainable lifestyle
             </p>
             
             <div className="pt-4 print:hidden">
@@ -228,7 +228,7 @@ const Promo = () => {
               <div className="w-8 h-8 rounded-full bg-gradient-eco flex items-center justify-center">
                 <Leaf className="w-4 h-4 text-white" />
               </div>
-              <span className="font-bold">EcoInventory</span>
+              <span className="font-bold">Loop</span>
             </div>
             
             <div className="flex gap-6 text-sm text-muted-foreground">
@@ -244,7 +244,7 @@ const Promo = () => {
             </div>
             
             <p className="text-sm text-muted-foreground">
-              EcoInventory - Building sustainable communities through smart sharing
+              Loop - Building sustainable communities through smart sharing
             </p>
           </div>
         </div>

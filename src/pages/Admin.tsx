@@ -79,7 +79,7 @@ const Admin = () => {
             </div>
             <div>
               <h1 className="text-xl font-bold flex items-center gap-2">
-                EcoInventory
+                Loop
                 <Shield className="w-4 h-4 text-primary" />
               </h1>
               <p className="text-xs text-muted-foreground">
