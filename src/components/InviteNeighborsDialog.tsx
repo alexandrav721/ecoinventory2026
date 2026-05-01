@@ -38,7 +38,7 @@ const InviteNeighborsDialog = ({ open, onOpenChange }: InviteNeighborsDialogProp
 
       setInviteCode(user.id.slice(0, 8));
 
-      const { data: profile } = await supabase
+      const { data: profile } = await (supabase as any)
         .from("profiles")
         .select("display_name, full_name, username")
         .eq("user_id", user.id)
