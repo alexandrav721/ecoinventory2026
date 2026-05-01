@@ -607,6 +607,8 @@ export type Database = {
           is_available_for_sharing: boolean | null
           is_donated: boolean | null
           is_eliminated: boolean | null
+          is_for_borrow: boolean
+          is_for_sale: boolean
           is_sold: boolean | null
           name: string
           original_price: number | null
@@ -638,6 +640,8 @@ export type Database = {
           is_available_for_sharing?: boolean | null
           is_donated?: boolean | null
           is_eliminated?: boolean | null
+          is_for_borrow?: boolean
+          is_for_sale?: boolean
           is_sold?: boolean | null
           name: string
           original_price?: number | null
@@ -669,6 +673,8 @@ export type Database = {
           is_available_for_sharing?: boolean | null
           is_donated?: boolean | null
           is_eliminated?: boolean | null
+          is_for_borrow?: boolean
+          is_for_sale?: boolean
           is_sold?: boolean | null
           name?: string
           original_price?: number | null
