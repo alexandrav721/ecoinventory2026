@@ -363,9 +363,10 @@ export default function MarketplaceItem() {
           </Card>
 
           <div className="flex gap-3">
-            {isFree ? (
+            {showBorrow && (
               <Button
                 size="lg"
+                variant={showBorrow && showBuy ? "outline" : "default"}
                 className="flex-1"
                 onClick={() =>
                   authed ? setBorrowOpen(true) : requireAuth("borrow this item")
@@ -373,7 +374,8 @@ export default function MarketplaceItem() {
               >
                 <HandHeart className="w-5 h-5 mr-2" /> Request to borrow
               </Button>
-            ) : (
+            )}
+            {showBuy && (
               <Button
                 size="lg"
                 className="flex-1"
