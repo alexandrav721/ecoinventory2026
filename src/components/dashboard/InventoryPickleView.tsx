@@ -504,31 +504,59 @@ const InventoryPickleView = () => {
           </div>
         </div>
 
+        {/* Insight chip row */}
+        <InsightChipRow
+          duplicateGroups={insightSummary.duplicateGroups}
+          demandCount={insightSummary.demandCount}
+          duplicateValue={insightSummary.duplicateValue}
+          onClickDuplicates={() => highlightAndScroll(insightSummary.allDupTerms)}
+          onClickDemand={() =>
+            highlightAndScroll(
+              items
+                .filter((i) => !!findDemandSignal(i.name))
+                .map((i) => i.name.toLowerCase())
+            )
+          }
+        />
+
+        {/* Duplicate alert banner */}
+        <DuplicateAlertBanner
+          itemNames={itemNames}
+          onViewItems={highlightAndScroll}
+        />
+
         {/* Grid */}
-        {filtered.length === 0 ? (
-          <div className="py-20 text-center text-muted-foreground text-sm">
-            No items match your filters.
-            {hasFilters && (
-              <Button
-                variant="link"
-                onClick={clearAll}
-                className="ml-2 h-auto p-0 text-sm"
-              >
-                Clear filters
-              </Button>
-            )}
-          </div>
-        ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-2 gap-y-6">
-            {filtered.map((it) => (
-              <ItemCard
-                key={it.id}
-                item={it}
-                onClick={() => setOpenItemId(it.id)}
-              />
-            ))}
-          </div>
-        )}
+        <div id="my-assets-grid">
+          {filtered.length === 0 ? (
+            <div className="py-20 text-center text-muted-foreground text-sm">
+              No items match your filters.
+              {hasFilters && (
+                <Button
+                  variant="link"
+                  onClick={clearAll}
+                  className="ml-2 h-auto p-0 text-sm"
+                >
+                  Clear filters
+                </Button>
+              )}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-2 gap-y-6">
+              {filtered.map((it) => {
+                const lname = it.name.toLowerCase();
+                const highlighted = highlightTerms.some((t) => lname.includes(t));
+                return (
+                  <ItemCard
+                    key={it.id}
+                    item={it}
+                    highlighted={highlighted}
+                    onClick={() => setOpenItemId(it.id)}
+                  />
+                );
+              })}
+            </div>
+          )}
+        </div>
       </div>
       <ItemDetailSheet
         itemId={openItemId}
