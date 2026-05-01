@@ -288,13 +288,9 @@ const InventoryPickleView = () => {
 
   if (items.length === 0) {
     return (
-      <EmptyState
-        title="Your estate is empty"
-        description="Add your first item to start building your inventory."
-        action={{
-          label: "Add an item",
-          onClick: () => navigate("/dashboard/add-item"),
-        }}
+      <LowInventoryPreviewBanner
+        itemCount={0}
+        onAddItem={() => navigate("/dashboard/add-item")}
       />
     );
   }
