@@ -530,7 +530,7 @@ export function CommunityMarketplace() {
           </RadioGroup>
           {audience === "friends" && friendIds.size === 0 && (
             <p className="text-xs text-muted-foreground mt-2 italic">
-              No friends yet — <Link to="/friends" className="underline hover:text-foreground">add some</Link>.
+              Not following anyone yet — <Link to="/people" className="underline hover:text-foreground">find people to follow</Link>.
             </p>
           )}
         </div>
