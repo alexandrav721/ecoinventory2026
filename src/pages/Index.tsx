@@ -118,12 +118,6 @@ const Index = () => {
         </div>
 
         <div className="relative container mx-auto px-6 pt-12 pb-24 md:pt-16 md:pb-40 min-h-[560px] md:min-h-[640px] flex flex-col">
-          <div className="max-w-xl">
-            <div className="flex items-center gap-3 text-xs uppercase tracking-[0.2em] text-muted-foreground">
-              <span className="editorial-rule" />
-              <span>Vol. 01 · A different way to own things</span>
-            </div>
-          </div>
 
           {/* Bottom-left: massive headline */}
           <div className="mt-auto pt-20 md:pt-32 max-w-4xl">
@@ -339,8 +333,25 @@ const Index = () => {
           <p>{t('home.footer')}</p>
         </div>
       </footer>
+
+      {/* Floating sticky sign-up CTA for logged-out visitors */}
+      {!isLoggedIn && (
+        <div className="fixed bottom-6 right-6 z-40 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <Button
+            asChild
+            size="lg"
+            className="rounded-full bg-foreground text-background hover:bg-primary hover:text-primary-foreground shadow-2xl gap-2 h-14 px-7 text-base"
+          >
+            <Link to="/auth">
+              Sign up — it's free
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
 
 export default Index;
+
