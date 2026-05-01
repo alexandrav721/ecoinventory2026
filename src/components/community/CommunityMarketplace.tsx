@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { MapPin, HandHeart, ShoppingCart, MessageCircle, Search, Navigation, Lock, Users, Globe, Filter, X } from "lucide-react";
+import { MapPin, HandHeart, ShoppingCart, MessageCircle, Search, Navigation, Lock, Users, Globe, Filter, X, Camera } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -268,6 +268,8 @@ export function CommunityMarketplace() {
     const ownerName = item.owner?.public_display_name || item.owner?.full_name || "Member";
     const ownerAvatar = item.owner?.public_avatar_url || item.owner?.avatar_url || undefined;
     const cover = item.image_urls?.[0];
+    const isEmojiCover = typeof cover === "string" && cover.startsWith("emoji:");
+    const photoCover = cover && !isEmojiCover ? cover : null;
     const showBorrow = item.is_for_borrow;
     const showBuy = item.is_for_sale;
     const both = showBorrow && showBuy;
@@ -276,12 +278,17 @@ export function CommunityMarketplace() {
     return (
       <Card className="overflow-hidden border-border/60 hover:shadow-md transition-shadow">
         <Link to={`/marketplace/item/${item.id}`} className="block group">
-          <div className="aspect-[4/3] relative bg-secondary/40 overflow-hidden">
-            {cover ? (
-              <img src={cover} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform" loading="lazy" />
+          <div className="aspect-[4/3] relative bg-muted overflow-hidden">
+            {photoCover ? (
+              <img src={photoCover} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform" loading="lazy" />
+            ) : isEmojiCover ? (
+              <div className="w-full h-full flex items-center justify-center bg-muted">
+                <span className="text-6xl">{cover!.slice(6)}</span>
+              </div>
             ) : (
-              <div className="w-full h-full flex items-center justify-center text-muted-foreground text-sm">
-                No photo
+              <div className="w-full h-full flex flex-col items-center justify-center bg-muted text-muted-foreground gap-1.5">
+                <Camera className="w-8 h-8 opacity-50" />
+                <span className="text-xs">No photo</span>
               </div>
             )}
             {item.distance != null && (
