@@ -263,12 +263,15 @@ const Index = () => {
               </div>
               <div className="md:col-span-8">
                 <div className="relative aspect-video bg-foreground/5 border border-border overflow-hidden">
-                  <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <div className="w-20 h-20 rounded-full bg-foreground flex items-center justify-center mb-4 cursor-pointer hover:bg-primary transition-colors">
-                      <Play className="w-7 h-7 text-background ml-1" />
-                    </div>
-                    <p className="text-sm text-muted-foreground italic font-display">{t('home.demo.placeholder')}</p>
-                  </div>
+                  <video
+                    src="/video/loop-demo.mp4"
+                    className="absolute inset-0 w-full h-full object-cover"
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="metadata"
+                  />
                 </div>
               </div>
             </div>
