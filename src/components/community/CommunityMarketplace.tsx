@@ -162,7 +162,7 @@ export function CommunityMarketplace() {
   }, [location]);
 
   const filtered = useMemo(() => {
-    return items.filter((it) => {
+    const list = items.filter((it) => {
       // Audience filter
       if (audience === "friends") {
         if (!currentUserId || !friendIds.has(it.user_id)) return false;
@@ -186,7 +186,27 @@ export function CommunityMarketplace() {
       }
       return true;
     });
-  }, [items, search, distanceFilter, location, audience, friendIds, currentUserId, mode]);
+
+    const priceOf = (it: MarketItem) => (it.sharing_price != null ? Number(it.sharing_price) : -1);
+    const sorted = [...list];
+    if (sortBy === "price_high") {
+      sorted.sort((a, b) => priceOf(b) - priceOf(a));
+    } else if (sortBy === "price_low") {
+      // Lowest first, but push items with no price to the end
+      sorted.sort((a, b) => {
+        const pa = priceOf(a);
+        const pb = priceOf(b);
+        if (pa < 0 && pb < 0) return 0;
+        if (pa < 0) return 1;
+        if (pb < 0) return -1;
+        return pa - pb;
+      });
+    } else if (sortBy === "newest") {
+      // Already roughly newest from query; keep as-is fallback
+    }
+    // "distance" => keep distance-sorted order from items state
+    return sorted;
+  }, [items, search, distanceFilter, location, audience, friendIds, currentUserId, mode, sortBy]);
 
   const borrowCount = items.filter((it) => it.is_for_borrow).length;
   const buyCount = items.filter((it) => it.is_for_sale).length;
