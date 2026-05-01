@@ -37,7 +37,7 @@ const DashboardNav = () => {
   const [inviteOpen, setInviteOpen] = useState(false);
 
   useEffect(() => {
-
+    supabase.auth.getSession().then(({ data: { session } }) => {
       setIsAuthed(!!session?.user);
     });
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
