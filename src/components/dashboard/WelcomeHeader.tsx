@@ -47,7 +47,6 @@ export const WelcomeHeader = ({ user }: WelcomeHeaderProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { isDemoMode } = useDemo();
-  const { stats: extra, loading: extraLoading } = useInventoryStats();
   const [profile, setProfile] = useState<{ full_name: string | null } | null>(null);
   const [stats, setStats] = useState<QuickStats>({
     totalItems: 0,
