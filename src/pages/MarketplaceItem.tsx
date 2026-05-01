@@ -27,6 +27,8 @@ interface Item {
   image_urls: string[] | null;
   condition: string | null;
   sharing_price: number | null;
+  is_for_borrow?: boolean | null;
+  is_for_sale?: boolean | null;
   brand: string | null;
   tags: string[] | null;
   category_id: string | null;
