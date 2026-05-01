@@ -117,10 +117,10 @@ const Index = () => {
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/40" />
         </div>
 
-        <div className="relative container mx-auto px-6 pt-12 pb-24 md:pt-16 md:pb-40 min-h-[560px] md:min-h-[640px] flex flex-col">
+        <div className="relative container mx-auto px-6 pt-10 pb-24 md:pt-14 md:pb-40 min-h-[480px] md:min-h-[560px] flex flex-col">
 
-          {/* Bottom-left: massive headline */}
-          <div className="mt-auto pt-20 md:pt-32 max-w-4xl">
+          {/* Top-left: massive headline */}
+          <div className="max-w-4xl">
             <h1 className="font-display text-[clamp(3rem,9vw,7.5rem)] leading-[0.92] font-light text-foreground">
               Buy less.
               <br />
