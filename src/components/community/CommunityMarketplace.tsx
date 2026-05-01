@@ -42,6 +42,7 @@ interface MarketItem {
 
 const PAGE_SIZE = 24;
 type Mode = "all" | "borrow" | "buy";
+type SortBy = "distance" | "price_high" | "price_low" | "newest";
 
 export function CommunityMarketplace() {
   const navigate = useNavigate();
@@ -56,6 +57,7 @@ export function CommunityMarketplace() {
   const [distanceFilter, setDistanceFilter] = useState<string>("all");
   const [borrowItem, setBorrowItem] = useState<MarketItem | null>(null);
   const [mode, setMode] = useState<Mode>("all");
+  const [sortBy, setSortBy] = useState<SortBy>("distance");
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   useEffect(() => {
@@ -142,7 +144,7 @@ export function CommunityMarketplace() {
         return { ...r, owner, distance };
       });
 
-      // Sort: items with distance first (nearest), then the rest
+      // Default ordering by distance (re-sorted later by sortBy)
       enriched.sort((a, b) => {
         if (a.distance == null && b.distance == null) return 0;
         if (a.distance == null) return 1;
@@ -160,7 +162,7 @@ export function CommunityMarketplace() {
   }, [location]);
 
   const filtered = useMemo(() => {
-    return items.filter((it) => {
+    const list = items.filter((it) => {
       // Audience filter
       if (audience === "friends") {
         if (!currentUserId || !friendIds.has(it.user_id)) return false;
@@ -184,7 +186,27 @@ export function CommunityMarketplace() {
       }
       return true;
     });
-  }, [items, search, distanceFilter, location, audience, friendIds, currentUserId, mode]);
+
+    const priceOf = (it: MarketItem) => (it.sharing_price != null ? Number(it.sharing_price) : -1);
+    const sorted = [...list];
+    if (sortBy === "price_high") {
+      sorted.sort((a, b) => priceOf(b) - priceOf(a));
+    } else if (sortBy === "price_low") {
+      // Lowest first, but push items with no price to the end
+      sorted.sort((a, b) => {
+        const pa = priceOf(a);
+        const pb = priceOf(b);
+        if (pa < 0 && pb < 0) return 0;
+        if (pa < 0) return 1;
+        if (pb < 0) return -1;
+        return pa - pb;
+      });
+    } else if (sortBy === "newest") {
+      // Already roughly newest from query; keep as-is fallback
+    }
+    // "distance" => keep distance-sorted order from items state
+    return sorted;
+  }, [items, search, distanceFilter, location, audience, friendIds, currentUserId, mode, sortBy]);
 
   const borrowCount = items.filter((it) => it.is_for_borrow).length;
   const buyCount = items.filter((it) => it.is_for_sale).length;
@@ -357,10 +379,22 @@ export function CommunityMarketplace() {
       );
     }
     if (list.length === 0) {
+      const noItemsAtAll = items.length === 0;
       return (
         <div className="text-center py-16 text-muted-foreground">
-          <p>No items match your filters yet.</p>
-          <p className="text-sm mt-1">Be the first to share — your community starts with you.</p>
+          {noItemsAtAll ? (
+            <>
+              <p>No one in your area has shared items yet.</p>
+              <p className="text-sm mt-1">
+                Be the first — <Link to="/dashboard/inventory" className="underline hover:text-foreground">share something from your inventory</Link>.
+              </p>
+            </>
+          ) : (
+            <>
+              <p>No items match your filters.</p>
+              <p className="text-sm mt-1">Try widening the distance or clearing filters.</p>
+            </>
+          )}
         </div>
       );
     }
@@ -450,6 +484,24 @@ export function CommunityMarketplace() {
         )}
       </div>
 
+      {/* Sort */}
+      <div>
+        <Label className="text-xs uppercase tracking-[0.15em] text-muted-foreground mb-3 block">
+          Sort by
+        </Label>
+        <Select value={sortBy} onValueChange={(v) => setSortBy(v as SortBy)}>
+          <SelectTrigger className="bg-background">
+            <SelectValue placeholder="Sort" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="distance">Nearest first</SelectItem>
+            <SelectItem value="price_high">Price: high to low</SelectItem>
+            <SelectItem value="price_low">Price: low to high</SelectItem>
+            <SelectItem value="newest">Newest</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
       {/* Audience (signed-in only) */}
       {authed && (
         <div>
@@ -478,7 +530,7 @@ export function CommunityMarketplace() {
           </RadioGroup>
           {audience === "friends" && friendIds.size === 0 && (
             <p className="text-xs text-muted-foreground mt-2 italic">
-              No friends yet — <Link to="/friends" className="underline hover:text-foreground">add some</Link>.
+              Not following anyone yet — <Link to="/people" className="underline hover:text-foreground">find people to follow</Link>.
             </p>
           )}
         </div>
@@ -528,10 +580,20 @@ export function CommunityMarketplace() {
               <FiltersPanel />
             </SheetContent>
           </Sheet>
-          {location && (
+          {(sortBy === "distance" && location) && (
             <div className="hidden md:flex text-xs uppercase tracking-[0.2em] text-muted-foreground items-center gap-2">
               <Navigation className="w-3 h-3" />
               Sorted by distance
+            </div>
+          )}
+          {sortBy === "price_high" && (
+            <div className="hidden md:flex text-xs uppercase tracking-[0.2em] text-muted-foreground items-center gap-2">
+              Sorted by price · high to low
+            </div>
+          )}
+          {sortBy === "price_low" && (
+            <div className="hidden md:flex text-xs uppercase tracking-[0.2em] text-muted-foreground items-center gap-2">
+              Sorted by price · low to high
             </div>
           )}
         </div>
