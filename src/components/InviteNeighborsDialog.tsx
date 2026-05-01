@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Copy, Check, Share2 } from "lucide-react";
+import { Copy, Check, Share2, Gift } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -75,7 +75,7 @@ const InviteNeighborsDialog = ({ open, onOpenChange }: InviteNeighborsDialogProp
   }, [open, isDemoMode]);
 
   const inviteUrl = `https://ecoinventory2026.lovable.app/invite/${usernameSlug}`;
-  const message = `Your neighbor ${displayName} invited you to Loop — see what's available to borrow on your street.`;
+  const message = `Your neighbor ${displayName} invited you to Loop — see what's available to borrow on your street. Join and add your first item to get $5 in Loop credit to spend in the marketplace.`;
   const displayCount = nearbyCount ?? 0;
 
   const handleCopy = async () => {
@@ -111,6 +111,21 @@ const InviteNeighborsDialog = ({ open, onOpenChange }: InviteNeighborsDialogProp
         <DialogHeader>
           <DialogTitle>Invite neighbors to Loop</DialogTitle>
         </DialogHeader>
+
+        {/* Reward banner */}
+        <div className="rounded-lg border border-primary/30 bg-gradient-to-br from-primary/10 to-accent/10 p-4 flex items-start gap-3">
+          <div className="shrink-0 w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center">
+            <Gift className="w-5 h-5" />
+          </div>
+          <div>
+            <div className="text-base font-semibold text-foreground">
+              You both get $5 Loop credit
+            </div>
+            <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
+              When your neighbor joins and adds their first item, you each get $5 to spend in the marketplace.
+            </p>
+          </div>
+        </div>
 
         {/* Headline stat */}
         <div className="rounded-lg border bg-primary/5 p-4">
