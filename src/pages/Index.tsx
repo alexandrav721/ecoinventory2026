@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowRight, Eye, Heart, Play, Search } from "lucide-react";
+import { ArrowRight, Heart, Play, Search } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import DashboardNav from "@/components/DashboardNav";
 import { useTranslation } from "react-i18next";
 import { Logo } from "@/components/Logo";
-import { useDemo } from "@/contexts/DemoContext";
 import heroBg from "@/assets/hero-community.jpg";
 
 const Index = () => {
@@ -15,13 +14,7 @@ const Index = () => {
   const [stats, setStats] = useState({ totalItems: 0, totalUsers: 0, itemsShared: 0 });
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { enterDemoMode } = useDemo();
   const [heroSearch, setHeroSearch] = useState("");
-
-  const handleTryDemo = () => {
-    enterDemoMode();
-    navigate("/dashboard");
-  };
 
   const handleHeroSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -147,30 +140,26 @@ const Index = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row flex-wrap gap-3 mt-10">
-              <Button asChild size="lg" variant="outline" className="rounded-full border-foreground/30 hover:bg-foreground hover:text-background gap-2">
-                <Link to="/community">
-                  <Search className="w-4 h-4" />
-                  Browse public inventory
-                </Link>
-              </Button>
               {isLoggedIn ? (
-                <Button asChild size="lg" className="rounded-full bg-foreground text-background hover:bg-foreground/90 gap-2">
+                <Button asChild size="lg" className="rounded-full bg-foreground text-background hover:bg-foreground/90 gap-2 h-14 px-8 text-base">
                   <Link to="/dashboard">
                     {t('home.hero.goToDashboard')}
                     <ArrowRight className="w-4 h-4" />
                   </Link>
                 </Button>
               ) : (
-                <Button asChild size="lg" className="rounded-full bg-foreground text-background hover:bg-foreground/90 gap-2">
+                <Button asChild size="lg" className="rounded-full bg-foreground text-background hover:bg-foreground/90 gap-2 h-14 px-8 text-base">
                   <Link to="/auth">
-                    Sign up for free
+                    Sign up — it's free
                     <ArrowRight className="w-4 h-4" />
                   </Link>
                 </Button>
               )}
-              <Button size="lg" variant="ghost" onClick={handleTryDemo} className="rounded-full gap-2 hover:bg-secondary/60">
-                <Eye className="w-4 h-4" />
-                Try demo
+              <Button asChild size="lg" variant="outline" className="rounded-full border-foreground/30 hover:bg-foreground hover:text-background gap-2 h-14 px-8 text-base">
+                <Link to="/demo">
+                  <Play className="w-4 h-4" />
+                  Try the demo
+                </Link>
               </Button>
             </div>
           </div>

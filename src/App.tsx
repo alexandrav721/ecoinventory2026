@@ -19,7 +19,7 @@ import Swap from "./pages/Swap";
 import Events from "./pages/Events";
 import Articles from "./pages/Articles";
 import Article from "./pages/Article";
-import About from "./pages/About";
+import Demo from "./pages/Demo";
 import Messages from "./pages/Messages";
 import Notifications from "./pages/Notifications";
 import NotFound from "./pages/NotFound";
@@ -75,8 +75,9 @@ const App = () => (
             <Route path="/articles/organizing-inventory" element={<OrganizingInventory />} />
             <Route path="/articles/item-depreciation" element={<ItemDepreciation />} />
             <Route path="/articles/building-community" element={<BuildingSharingCommunity />} />
-            <Route path="/how-it-works" element={<About />} />
+            <Route path="/how-it-works" element={<Index />} />
             <Route path="/about" element={<Navigate to="/how-it-works" replace />} />
+            <Route path="/demo" element={<Demo />} />
             <Route path="/marketplace/item/:id" element={<MarketplaceItem />} />
             <Route path="/swap" element={<Swap />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
