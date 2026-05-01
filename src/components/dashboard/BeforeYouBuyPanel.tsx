@@ -201,7 +201,7 @@ export default function BeforeYouBuyPanel() {
 
           {result.ownedItems.length === 0 && result.borrowableItems.length === 0 && (
             <Card className="p-6 text-center text-muted-foreground">
-              Nothing matching found in your inventory or your friends' shared items.
+              Nothing matching found in your inventory or in items shared by people you follow.
             </Card>
           )}
         </div>
