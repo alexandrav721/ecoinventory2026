@@ -190,8 +190,12 @@ const EditItem = () => {
           condition: formData.condition,
           usage_frequency: formData.usage_frequency || null,
           sharing_level: formData.sharing_level,
-          sharing_price: formData.sharing_price ? parseFloat(formData.sharing_price) : null,
+          sharing_price: formData.is_for_sale && formData.sharing_price
+            ? parseFloat(formData.sharing_price)
+            : null,
           is_available_for_sharing: formData.sharing_level !== "private",
+          is_for_borrow: formData.sharing_level !== "private" ? formData.is_for_borrow : false,
+          is_for_sale: formData.sharing_level !== "private" ? formData.is_for_sale : false,
           is_donated: formData.is_donated,
           is_sold: formData.is_sold,
           donated_price: formData.donated_price ? parseFloat(formData.donated_price) : null,
