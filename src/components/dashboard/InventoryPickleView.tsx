@@ -16,12 +16,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Search, X, Image as ImageIcon } from "lucide-react";
+import { Search, X, Image as ImageIcon, Flame } from "lucide-react";
 import { QuirkyLoader } from "@/components/QuirkyLoader";
 import { EmptyState } from "@/components/EmptyState";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, cn } from "@/lib/utils";
 import { useDemo } from "@/contexts/DemoContext";
 import { ItemDetailSheet } from "@/components/dashboard/ItemDetailSheet";
+import { DuplicateAlertBanner } from "@/components/dashboard/DuplicateAlertBanner";
+import { InsightChipRow } from "@/components/dashboard/InsightChipRow";
+import { MOCK_DUPLICATE_GROUPS, findDemandSignal } from "@/lib/mockInsights";
 import {
   categoryToGroup,
   TOP_LEVEL_GROUPS,
