@@ -115,6 +115,8 @@ const EditItem = () => {
           usage_frequency: data.usage_frequency || "",
           sharing_level: (data.sharing_level as "private" | "friends" | "public") || "private",
           sharing_price: data.sharing_price?.toString() || "",
+          is_for_borrow: data.is_for_borrow ?? true,
+          is_for_sale: data.is_for_sale ?? false,
           tags: data.tags || [],
           is_donated: data.is_donated || false,
           is_sold: data.is_sold || false,
