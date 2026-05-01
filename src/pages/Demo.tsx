@@ -45,7 +45,7 @@ const Demo = () => {
         <div className="grid sm:grid-cols-3 gap-4 mt-12">
           {[
             { icon: Package, title: "Sample inventory", desc: "Items across rooms, with values, conditions, photos." },
-            { icon: Users, title: "Mock friends", desc: "See what borrowing, lending, and following look like." },
+            { icon: Users, title: "Mock followers", desc: "See what borrowing, lending, and following look like." },
             { icon: Sparkles, title: "AI insights", desc: "Excess flags, opportunities, and Before-You-Buy checks." },
           ].map((f) => (
             <Card key={f.title} className="border-border/60">
