@@ -157,9 +157,17 @@ export default function PublicProfile({ selfMode = false }: Props) {
 
         <Card>
           <CardContent className="p-6 flex flex-col sm:flex-row gap-6 items-start">
-            <Avatar className="h-24 w-24">
+            <Avatar className="h-24 w-24 ring-2 ring-accent/60 ring-offset-2 ring-offset-background shadow-md">
               <AvatarImage src={profile.avatar_url ?? undefined} />
-              <AvatarFallback className="text-2xl">{profile.display_name?.[0]}</AvatarFallback>
+              <AvatarFallback className="text-2xl font-display font-semibold text-white bg-gradient-to-br from-primary via-primary/80 to-accent">
+                {(profile.display_name ?? "")
+                  .split(" ")
+                  .filter(Boolean)
+                  .slice(0, 2)
+                  .map((w: string) => w[0])
+                  .join("")
+                  .toUpperCase() || "?"}
+              </AvatarFallback>
             </Avatar>
             <div className="flex-1 space-y-2">
               <div className="flex items-center gap-2 flex-wrap">
