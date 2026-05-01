@@ -126,13 +126,19 @@ export const QuizPrompt = () => {
       <div className="flex items-center gap-2 text-sm">
         <Sparkles className="w-4 h-4 text-primary shrink-0" />
         <span>
-          <strong>Tip:</strong> Take a 2-min quiz so we can show you items your
-          friends are offering that match your taste.
+          <strong>Tip:</strong> Let our AI help you build your inventory — just
+          chat naturally.
         </span>
       </div>
       <div className="flex items-center gap-2">
-        <Button asChild size="sm" variant="default">
-          <Link to="/dashboard/quiz">Take the quiz</Link>
+        <Button
+          size="sm"
+          variant="default"
+          onClick={() =>
+            window.dispatchEvent(new CustomEvent("open-inventory-assistant"))
+          }
+        >
+          Start chatting →
         </Button>
         <Button
           size="sm"
