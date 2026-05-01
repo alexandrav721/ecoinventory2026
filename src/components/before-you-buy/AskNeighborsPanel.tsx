@@ -170,10 +170,10 @@ export const AskNeighborsPanel = ({ defaultItemName = "" }: Props) => {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="both">Friends & neighbors</SelectItem>
+                    <SelectItem value="both">Following & neighbors</SelectItem>
                     <SelectItem value="friends">
                       <span className="flex items-center gap-2">
-                        <Users className="w-4 h-4" /> Friends only
+                        <Users className="w-4 h-4" /> People I follow only
                       </span>
                     </SelectItem>
                     <SelectItem value="neighbors">
