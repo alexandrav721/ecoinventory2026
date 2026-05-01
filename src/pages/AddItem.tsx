@@ -264,8 +264,9 @@ const AddItem = () => {
         );
       }
 
-      toast.success("Item added successfully!");
-      navigate("/dashboard");
+      const totalAfter = await fetchTotalItems(user.id);
+      const estVal = formData.original_price ? parseFloat(formData.original_price) : null;
+      showSuccessCelebration(formData.name.trim(), estVal, totalAfter);
     } catch (error: any) {
       toast.error(error.message || "Failed to add item");
     } finally {
