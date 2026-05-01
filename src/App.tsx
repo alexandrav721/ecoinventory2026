@@ -19,7 +19,7 @@ import Swap from "./pages/Swap";
 import Events from "./pages/Events";
 import Articles from "./pages/Articles";
 import Article from "./pages/Article";
-import About from "./pages/About";
+import Demo from "./pages/Demo";
 import Messages from "./pages/Messages";
 import Notifications from "./pages/Notifications";
 import NotFound from "./pages/NotFound";
