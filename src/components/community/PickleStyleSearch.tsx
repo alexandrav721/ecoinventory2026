@@ -574,7 +574,6 @@ function FacetGroup({
   selected: Set<string>;
   onToggle: (value: string) => void;
 }) {
-  if (options.length === 0) return null;
   return (
     <AccordionItem value={id} className="border-b">
       <AccordionTrigger className="py-3 text-sm font-medium hover:no-underline">
@@ -586,26 +585,30 @@ function FacetGroup({
         )}
       </AccordionTrigger>
       <AccordionContent>
-        <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
-          {options.map((opt) => {
-            const checked = selected.has(opt);
-            return (
-              <div key={opt} className="flex items-center gap-2">
-                <Checkbox
-                  id={`${id}-${opt}`}
-                  checked={checked}
-                  onCheckedChange={() => onToggle(opt)}
-                />
-                <Label
-                  htmlFor={`${id}-${opt}`}
-                  className="text-sm font-normal capitalize cursor-pointer"
-                >
-                  {opt}
-                </Label>
-              </div>
-            );
-          })}
-        </div>
+        {options.length === 0 ? (
+          <p className="text-xs text-muted-foreground italic pb-1">No options yet</p>
+        ) : (
+          <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
+            {options.map((opt) => {
+              const checked = selected.has(opt);
+              return (
+                <div key={opt} className="flex items-center gap-2">
+                  <Checkbox
+                    id={`${id}-${opt}`}
+                    checked={checked}
+                    onCheckedChange={() => onToggle(opt)}
+                  />
+                  <Label
+                    htmlFor={`${id}-${opt}`}
+                    className="text-sm font-normal capitalize cursor-pointer"
+                  >
+                    {opt}
+                  </Label>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </AccordionContent>
     </AccordionItem>
   );
