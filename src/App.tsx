@@ -57,6 +57,7 @@ const App = () => (
             <Route path="/dashboard/declutter" element={<Declutter />} />
             <Route path="/dashboard/before-you-buy" element={<BeforeYouBuy />} />
             <Route path="/dashboard/edit-item/:id" element={<EditItem />} />
+            <Route path="/dashboard/item/:id" element={<ItemDetail />} />
             <Route path="/friends" element={<Friends />} />
             <Route path="/friends/:friendId" element={<FriendProfile />} />
             <Route path="/profile-settings" element={<ProfileSettings />} />
