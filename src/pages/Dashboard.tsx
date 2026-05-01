@@ -48,7 +48,6 @@ const Dashboard = () => {
     // If in demo mode, skip auth check
     if (isDemoMode) {
       setLoading(false);
-      setTimeout(() => setShowOnboarding(true), 1000);
       return;
     }
 
@@ -59,15 +58,6 @@ const Dashboard = () => {
         navigate("/auth");
       }
       setLoading(false);
-
-      // Check if user has seen the onboarding tour
-      if (session?.user) {
-        const hasSeenTour = localStorage.getItem(`onboarding-tour-${session.user.id}`);
-        if (!hasSeenTour) {
-          // Small delay to let the page load
-          setTimeout(() => setShowOnboarding(true), 1000);
-        }
-      }
     });
 
     // Listen for auth changes
