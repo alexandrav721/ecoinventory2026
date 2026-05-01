@@ -182,6 +182,10 @@ export function PickleStyleSearch() {
 
   const filtered = useMemo(() => {
     let list = items;
+    // Audience filter: friends-only or public (everyone, including friends)
+    if (audience === "friends") {
+      list = list.filter((it) => friendIds.has(it.user_id));
+    }
     if (query.trim()) {
       const q = query.toLowerCase();
       list = list.filter((it) =>
