@@ -295,6 +295,8 @@ const InventoryPickleView = () => {
     );
   }
 
+  const showAdvancedFilters = items.length >= 5;
+
   // Quick chips at top of sidebar
   const chips: { label: string; active: boolean; onClick: () => void }[] = [
     {
@@ -311,12 +313,14 @@ const InventoryPickleView = () => {
           },
         ]
       : []),
-    ...PRICE_BUCKETS.map((b) => ({
-      label: b.label,
-      active: activePrice === b.label,
-      onClick: () =>
-        setActivePrice((p) => (p === b.label ? null : b.label)),
-    })),
+    ...(showAdvancedFilters
+      ? PRICE_BUCKETS.map((b) => ({
+          label: b.label,
+          active: activePrice === b.label,
+          onClick: () =>
+            setActivePrice((p) => (p === b.label ? null : b.label)),
+        }))
+      : []),
   ];
 
   return (
@@ -349,6 +353,7 @@ const InventoryPickleView = () => {
             )}
           </div>
 
+          {showAdvancedFilters && (
           <Accordion
             type="multiple"
             defaultValue={["category"]}
@@ -464,6 +469,7 @@ const InventoryPickleView = () => {
               </AccordionContent>
             </AccordionItem>
           </Accordion>
+          )}
         </div>
       </aside>
 
