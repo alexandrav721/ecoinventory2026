@@ -387,8 +387,13 @@ const AddItem = () => {
           autoCategorizeItems(inserted).catch(e => console.warn("Auto-categorize failed:", e));
         }
 
-        toast.success(`✨ Added ${items.length} items!`);
-        navigate("/dashboard");
+        const totalAfter = await fetchTotalItems(user.id);
+        const sumVal = items.reduce((s: number, it: any) => s + (it.estimatedPrice || 0), 0);
+        const headline =
+          items.length === 1
+            ? items[0].name
+            : `${items[0].name} +${items.length - 1} more`;
+        showSuccessCelebration(headline, sumVal > 0 ? sumVal : null, totalAfter);
         return;
       }
 
