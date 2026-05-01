@@ -21,6 +21,7 @@ import { QuirkyLoader } from "@/components/QuirkyLoader";
 import { EmptyState } from "@/components/EmptyState";
 import { formatCurrency } from "@/lib/utils";
 import { useDemo } from "@/contexts/DemoContext";
+import { ItemDetailSheet } from "@/components/dashboard/ItemDetailSheet";
 import {
   categoryToGroup,
   TOP_LEVEL_GROUPS,
