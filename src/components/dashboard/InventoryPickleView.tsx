@@ -469,6 +469,7 @@ const InventoryPickleView = () => {
               </AccordionContent>
             </AccordionItem>
           </Accordion>
+          )}
         </div>
       </aside>
 
