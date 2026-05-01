@@ -10,34 +10,101 @@ import { useDemo } from "@/contexts/DemoContext";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
-const STORAGE_KEY = "inventory-assistant-history";
+const DEMO_GREETING: Msg = {
+  role: "assistant",
+  content:
+    "Hi! I'm your inventory assistant. Tell me what you bought (e.g. *\"5 Nike sneakers, size 8.5\"*) and I'll add them. You can also ask things like *\"how many Patagonia jackets do I have?\"*",
+};
+
+const NEW_USER_GREETING: Msg = {
+  role: "assistant",
+  content:
+    "Hi! Let's build your home inventory together. What room should we start with — kitchen, bedroom, living room, or somewhere else?",
+};
+
+const RETURNING_GREETING: Msg = {
+  role: "assistant",
+  content:
+    "Welcome back! Tell me what you'd like to add, edit, or look up — e.g. *\"5 Nike sneakers, size 8.5\"* or *\"how many Patagonia jackets do I have?\"*",
+};
 
 export const InventoryAssistant = () => {
   const { isDemoMode } = useDemo();
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
-  const [messages, setMessages] = useState<Msg[]>(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) return JSON.parse(raw);
-    } catch (_e) { /* ignore */ }
-    return [
-      {
-        role: "assistant",
-        content:
-          "Hi! I'm your inventory assistant. Tell me what you bought (e.g. *\"5 Nike sneakers, size 8.5\"*) and I'll add them. You can also ask things like *\"how many Patagonia jackets do I have?\"*",
-      },
-    ];
-  });
+  const [hydrated, setHydrated] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [messages, setMessages] = useState<Msg[]>([]);
 
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  // Track current auth user
   useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(messages.slice(-30)));
-    } catch (_e) { /* ignore */ }
-  }, [messages]);
+    if (isDemoMode) {
+      setUserId(null);
+      return;
+    }
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setUserId(user?.id ?? null);
+    });
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
+      setUserId(session?.user?.id ?? null);
+      setHydrated(false); // re-load on user change
+    });
+    return () => sub.subscription.unsubscribe();
+  }, [isDemoMode]);
+
+  // Load persisted history when chat is opened (or user changes)
+  useEffect(() => {
+    if (!open || hydrated) return;
+
+    const load = async () => {
+      if (isDemoMode || !userId) {
+        setMessages([DEMO_GREETING]);
+        setHydrated(true);
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("ai_chat_history")
+        .select("role, content")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: true })
+        .limit(200);
+
+      if (error) {
+        console.error("Failed to load chat history", error);
+        setMessages([RETURNING_GREETING]);
+        setHydrated(true);
+        return;
+      }
+
+      if (data && data.length > 0) {
+        setMessages(
+          data.map((d) => ({ role: d.role as Msg["role"], content: d.content }))
+        );
+        setHydrated(true);
+        return;
+      }
+
+      // No history → check inventory to pick the right greeting
+      const { count } = await supabase
+        .from("inventory_items")
+        .select("id", { count: "exact", head: true })
+        .eq("user_id", userId);
+
+      const greeting = (count ?? 0) === 0 ? NEW_USER_GREETING : RETURNING_GREETING;
+      setMessages([greeting]);
+      // Persist greeting so it's the same next session
+      await supabase
+        .from("ai_chat_history")
+        .insert({ user_id: userId, role: greeting.role, content: greeting.content });
+      setHydrated(true);
+    };
+
+    load();
+  }, [open, hydrated, isDemoMode, userId]);
 
   useEffect(() => {
     if (open && scrollRef.current) {
@@ -51,6 +118,14 @@ export const InventoryAssistant = () => {
     return () => window.removeEventListener("open-inventory-assistant", handler);
   }, []);
 
+  const persistMessage = async (msg: Msg) => {
+    if (isDemoMode || !userId) return;
+    const { error } = await supabase
+      .from("ai_chat_history")
+      .insert({ user_id: userId, role: msg.role, content: msg.content });
+    if (error) console.error("Failed to persist message", error);
+  };
+
   const send = async () => {
     const text = input.trim();
     if (!text || sending) return;
@@ -60,28 +135,33 @@ export const InventoryAssistant = () => {
       return;
     }
 
-    const next: Msg[] = [...messages, { role: "user", content: text }];
+    const userMsg: Msg = { role: "user", content: text };
+    const next: Msg[] = [...messages, userMsg];
     setMessages(next);
     setInput("");
     setSending(true);
+    persistMessage(userMsg);
 
     try {
       const { data, error } = await supabase.functions.invoke("inventory-assistant", {
         body: { messages: next },
       });
 
+      let reply: Msg;
       if (error) {
         const status = (error as any)?.context?.status;
         if (status === 429) toast.error("Rate limit reached. Please wait a moment.");
         else if (status === 402) toast.error("AI credits exhausted. Add credits in workspace settings.");
         else toast.error("The assistant hit a snag. Try again.");
-        setMessages((m) => [...m, { role: "assistant", content: "Sorry — I couldn't process that. Try again?" }]);
+        reply = { role: "assistant", content: "Sorry — I couldn't process that. Try again?" };
       } else if (data?.error) {
         toast.error(data.error);
-        setMessages((m) => [...m, { role: "assistant", content: data.error }]);
+        reply = { role: "assistant", content: data.error };
       } else {
-        setMessages((m) => [...m, { role: "assistant", content: data?.reply ?? "" }]);
+        reply = { role: "assistant", content: data?.reply ?? "" };
       }
+      setMessages((m) => [...m, reply]);
+      persistMessage(reply);
     } catch (e) {
       console.error(e);
       toast.error("Network error. Please try again.");
@@ -90,13 +170,18 @@ export const InventoryAssistant = () => {
     }
   };
 
-  const reset = () => {
-    setMessages([
-      {
-        role: "assistant",
-        content: "Fresh start! What would you like to do?",
-      },
-    ]);
+  const reset = async () => {
+    const fresh: Msg = {
+      role: "assistant",
+      content: "Fresh start! What would you like to do?",
+    };
+    setMessages([fresh]);
+    if (!isDemoMode && userId) {
+      await supabase.from("ai_chat_history").delete().eq("user_id", userId);
+      await supabase
+        .from("ai_chat_history")
+        .insert({ user_id: userId, role: fresh.role, content: fresh.content });
+    }
   };
 
   return (
@@ -137,6 +222,12 @@ export const InventoryAssistant = () => {
           </div>
 
           <div ref={scrollRef} className="flex-1 overflow-y-auto p-3 space-y-3">
+            {!hydrated && (
+              <div className="mr-auto bg-muted rounded-2xl rounded-bl-sm px-3 py-2 text-sm text-muted-foreground flex items-center gap-2">
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                Loading your conversation…
+              </div>
+            )}
             {messages.map((m, i) => (
               <div
                 key={i}
@@ -172,10 +263,10 @@ export const InventoryAssistant = () => {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Tell me what you bought…"
-              disabled={sending}
+              disabled={sending || !hydrated}
               className="text-sm"
             />
-            <Button type="submit" size="icon" disabled={!input.trim() || sending} className="shrink-0">
+            <Button type="submit" size="icon" disabled={!input.trim() || sending || !hydrated} className="shrink-0">
               <Send className="w-4 h-4" />
             </Button>
           </form>
