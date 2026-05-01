@@ -352,32 +352,30 @@ export function PickleStyleSearch() {
           <ChevronRight className="w-3.5 h-3.5" />
           <span className="text-foreground">Search</span>
         </nav>
-        {authed && (
-          <div className="inline-flex rounded-full border border-border bg-background p-1">
-            <button
-              onClick={() => setAudience("public")}
-              className={`inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-medium transition-colors ${
-                audience === "public"
-                  ? "bg-foreground text-background"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              <Globe className="w-3.5 h-3.5" />
-              Public
-            </button>
-            <button
-              onClick={() => setAudience("friends")}
-              className={`inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-medium transition-colors ${
-                audience === "friends"
-                  ? "bg-foreground text-background"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              <Users className="w-3.5 h-3.5" />
-              Friends{friendIds.size > 0 ? ` · ${friendIds.size}` : ""}
-            </button>
-          </div>
-        )}
+        <div className="inline-flex rounded-full border border-border bg-background p-1">
+          <button
+            onClick={() => setAudience("public")}
+            className={`inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-medium transition-colors ${
+              audience === "public"
+                ? "bg-foreground text-background"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <Globe className="w-3.5 h-3.5" />
+            Public
+          </button>
+          <button
+            onClick={() => setAudience("friends")}
+            className={`inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-medium transition-colors ${
+              audience === "friends"
+                ? "bg-foreground text-background"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <Users className="w-3.5 h-3.5" />
+            Friends{authed && friendIds.size > 0 ? ` · ${friendIds.size}` : ""}
+          </button>
+        </div>
       </div>
 
       {audience === "friends" && friendIds.size === 0 && (
