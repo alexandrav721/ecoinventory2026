@@ -35,6 +35,7 @@ import OrganizingInventory from "./pages/articles/OrganizingInventory";
 import ItemDepreciation from "./pages/articles/ItemDepreciation";
 import BuildingSharingCommunity from "./pages/articles/BuildingSharingCommunity";
 import MarketplaceItem from "./pages/MarketplaceItem";
+import ItemDetail from "./pages/ItemDetail";
 
 const queryClient = new QueryClient();
 
