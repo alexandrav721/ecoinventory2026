@@ -145,7 +145,7 @@ const DashboardNav = () => {
   if (!loggedIn) {
     return (
       <div className="relative">
-        <nav className="flex items-center gap-1 py-2 px-1">
+        <nav className="flex items-center gap-5 py-2 px-1">
           <Button
             asChild
             variant="ghost"
@@ -168,7 +168,7 @@ const DashboardNav = () => {
 
   return (
     <div className="relative">
-      <nav className="flex items-center gap-1 py-2 px-1">
+      <nav className="flex items-center gap-5 py-2 px-1">
         {/* Three dropdown menus */}
         <NavDropdown label="Unlock Your Stuff" icon={LayoutDashboard} items={myEstateItems} />
         <DropdownMenu>
