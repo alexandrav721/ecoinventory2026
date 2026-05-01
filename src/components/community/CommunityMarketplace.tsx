@@ -57,6 +57,8 @@ export function CommunityMarketplace() {
   const [search, setSearch] = useState("");
   const [distanceFilter, setDistanceFilter] = useState<string>("all");
   const [borrowItem, setBorrowItem] = useState<MarketItem | null>(null);
+  const [mode, setMode] = useState<Mode>("all");
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data: { session } }) => {
