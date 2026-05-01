@@ -90,8 +90,8 @@ const Index = () => {
             </form>
 
             <div className="flex items-center gap-6 ml-auto">
-              <Link to="/about" className="text-sm font-medium tracking-wide hover:text-primary transition-colors hidden sm:inline">
-                About
+              <Link to="/how-it-works" className="text-sm font-medium tracking-wide hover:text-primary transition-colors hidden sm:inline">
+                How It Works
               </Link>
               <Link to="/articles" className="text-sm font-medium tracking-wide hover:text-primary transition-colors hidden sm:inline">
                 Articles
