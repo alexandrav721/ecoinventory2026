@@ -277,11 +277,15 @@ async function runTool(name: string, args: any, supa: any, userId: string) {
 }
 
 async function loadUserContext(supa: any, userId: string) {
-  const [{ data: profile }, { data: prefs }] = await Promise.all([
+  const [{ data: profile }, { data: prefs }, { count: itemCount }] = await Promise.all([
     supa.from("profiles").select("full_name, age, gender, interests").eq("id", userId).maybeSingle(),
     supa.from("assistant_user_prefs").select("key, value").eq("user_id", userId),
+    supa
+      .from("inventory_items")
+      .select("id", { count: "exact", head: true })
+      .eq("user_id", userId),
   ]);
-  return { profile, prefs: prefs ?? [] };
+  return { profile, prefs: prefs ?? [], itemCount: itemCount ?? 0 };
 }
 
 Deno.serve(async (req) => {
