@@ -78,6 +78,7 @@ const App = () => (
             <Route path="/how-it-works" element={<About />} />
             <Route path="/about" element={<Navigate to="/how-it-works" replace />} />
             <Route path="/marketplace/item/:id" element={<MarketplaceItem />} />
+            <Route path="/swap" element={<Swap />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
