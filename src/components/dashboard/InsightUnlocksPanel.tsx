@@ -84,10 +84,10 @@ export const InsightUnlocksPanel = ({ totalItems }: InsightUnlocksPanelProps) =>
             <div
               key={u.threshold}
               className={cn(
-                "relative rounded-xl border p-3 transition-all duration-300",
+                "relative rounded-xl border border-border/60 p-4 shadow-sm hover:shadow-md transition-all duration-300",
                 unlocked
                   ? "bg-card ring-1 ring-emerald-400/40"
-                  : "bg-muted/30",
+                  : "bg-card/60",
                 animating && "animate-scale-in ring-2 ring-emerald-400"
               )}
             >
