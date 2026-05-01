@@ -24,6 +24,7 @@ import BrandInput from "@/components/dashboard/BrandInput";
 import { PersonalizedCatalogSelector } from "@/components/dashboard/PersonalizedCatalogSelector";
 import { z } from "zod";
 import { autoCategorizeItems } from "@/lib/autoCategorize";
+import { AddSuccessModal } from "@/components/dashboard/AddSuccessModal";
 
 interface Category {
   id: string;
@@ -65,6 +66,60 @@ const AddItem = () => {
   const [bulkImages, setBulkImages] = useState<Array<{ id: string; url: string; status: 'pending' | 'analyzing' | 'success' | 'error'; result?: any; error?: string }>>([]);
   const [bulkAnalyzing, setBulkAnalyzing] = useState(false);
   const [processingReceipt, setProcessingReceipt] = useState(false);
+  const [successModal, setSuccessModal] = useState<{
+    open: boolean;
+    itemName: string;
+    estimatedValue: number | null;
+    totalItemsAfter: number;
+  }>({ open: false, itemName: "", estimatedValue: null, totalItemsAfter: 0 });
+
+  const initialFormData = {
+    name: "",
+    description: "",
+    category_id: "",
+    brand: "",
+    color: "",
+    dimensions: "",
+    size: "",
+    quantity: 1,
+    original_price: "",
+    purchase_date: "",
+    image_urls: [] as string[],
+    condition: "good",
+    usage_frequency: "",
+    sharing_level: "private" as "private" | "friends" | "public",
+    is_for_borrow: true,
+    is_for_sale: false,
+    sharing_price: "",
+    tags: [] as string[],
+  };
+
+  const fetchTotalItems = async (userId: string): Promise<number> => {
+    const { count } = await supabase
+      .from("inventory_items")
+      .select("id", { count: "exact", head: true })
+      .eq("user_id", userId)
+      .eq("is_sold", false)
+      .eq("is_donated", false)
+      .eq("is_eliminated", false);
+    return count ?? 0;
+  };
+
+  const showSuccessCelebration = (
+    itemName: string,
+    estimatedValue: number | null,
+    totalItemsAfter: number
+  ) => {
+    setSuccessModal({ open: true, itemName, estimatedValue, totalItemsAfter });
+  };
+
+  const handleKeepAdding = () => {
+    setFormData(initialFormData);
+    setBulkImages([]);
+    setSmartInput("");
+    setSmartImage(null);
+    setMode("select");
+  };
 
   const [formData, setFormData] = useState({
     name: "",
@@ -209,8 +264,9 @@ const AddItem = () => {
         );
       }
 
-      toast.success("Item added successfully!");
-      navigate("/dashboard");
+      const totalAfter = await fetchTotalItems(user.id);
+      const estVal = formData.original_price ? parseFloat(formData.original_price) : null;
+      showSuccessCelebration(formData.name.trim(), estVal, totalAfter);
     } catch (error: any) {
       toast.error(error.message || "Failed to add item");
     } finally {
@@ -331,8 +387,13 @@ const AddItem = () => {
           autoCategorizeItems(inserted).catch(e => console.warn("Auto-categorize failed:", e));
         }
 
-        toast.success(`✨ Added ${items.length} items!`);
-        navigate("/dashboard");
+        const totalAfter = await fetchTotalItems(user.id);
+        const sumVal = items.reduce((s: number, it: any) => s + (it.estimatedPrice || 0), 0);
+        const headline =
+          items.length === 1
+            ? items[0].name
+            : `${items[0].name} +${items.length - 1} more`;
+        showSuccessCelebration(headline, sumVal > 0 ? sumVal : null, totalAfter);
         return;
       }
 
@@ -504,8 +565,16 @@ const AddItem = () => {
         );
       }
 
-      toast.success(`Successfully added ${successItems.length} items!`);
-      navigate("/dashboard");
+      const totalAfter = await fetchTotalItems(user.id);
+      const sumVal = successItems.reduce(
+        (s, img) => s + (img.result?.estimatedPrice || 0),
+        0
+      );
+      const headline =
+        successItems.length === 1
+          ? successItems[0].result?.name || "Item"
+          : `${successItems[0].result?.name || "Item"} +${successItems.length - 1} more`;
+      showSuccessCelebration(headline, sumVal > 0 ? sumVal : null, totalAfter);
     } catch (error) {
       console.error('Error saving bulk items:', error);
       toast.error("Failed to save items");
@@ -541,8 +610,16 @@ const AddItem = () => {
 
       if (error) throw error;
 
-      toast.success(`Added ${selectedProducts.length} items to your inventory!`);
-      navigate("/dashboard");
+      const totalAfter = await fetchTotalItems(user.id);
+      const sumVal = selectedProducts.reduce(
+        (s, p) => s + (p.typical_price || 0),
+        0
+      );
+      const headline =
+        selectedProducts.length === 1
+          ? selectedProducts[0].name
+          : `${selectedProducts[0].name} +${selectedProducts.length - 1} more`;
+      showSuccessCelebration(headline, sumVal > 0 ? sumVal : null, totalAfter);
     } catch (error) {
       console.error('Error adding items:', error);
       toast.error('Failed to add items to inventory');
@@ -1300,6 +1377,15 @@ const AddItem = () => {
           </div>
         </form>
       </div>
+
+      <AddSuccessModal
+        open={successModal.open}
+        onOpenChange={(o) => setSuccessModal((s) => ({ ...s, open: o }))}
+        itemName={successModal.itemName}
+        estimatedValue={successModal.estimatedValue}
+        totalItemsAfter={successModal.totalItemsAfter}
+        onKeepAdding={handleKeepAdding}
+      />
     </div>
   );
 };
