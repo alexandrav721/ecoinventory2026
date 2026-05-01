@@ -193,6 +193,8 @@ export default function PublicProfile({ selfMode = false }: Props) {
           </CardContent>
         </Card>
 
+        {isSelf && <ProfileStatsHub userId={profile.id} />}
+
         <section>
           <h2 className="text-xl font-display mb-3">
             {isSelf ? "Items you've made shareable" : "Available to borrow or buy"}
