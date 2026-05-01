@@ -374,6 +374,29 @@ export default function PublicProfile({ selfMode = false }: Props) {
                   <Button size="sm" variant="ghost" className="h-8 text-xs">Dismiss</Button>
                 </div>
               </article>
+
+              {/* Nearby match alert — accent left border */}
+              <article className="group relative rounded-xl border border-border/70 border-l-4 border-l-primary bg-card p-5 hover:border-foreground/30 hover:border-l-primary hover:shadow-sm transition-all">
+                <div className="absolute top-5 right-5 h-2 w-2 rounded-full bg-primary" />
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                    <MapPin className="h-4 w-4 text-primary" />
+                  </div>
+                  <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+                    Nearby match
+                  </span>
+                </div>
+                <p className="font-display text-lg leading-snug text-foreground">
+                  Someone nearby is searching for a <em className="italic">pressure washer</em>
+                </p>
+                <p className="text-xs text-muted-foreground mt-2">
+                  You own one that matches · 0.4 mi away
+                </p>
+                <div className="flex items-center gap-2 mt-4 pt-4 border-t border-border/60">
+                  <Button size="sm" className="h-8 text-xs flex-1">View</Button>
+                  <Button size="sm" variant="ghost" className="h-8 text-xs">Later</Button>
+                </div>
+              </article>
             </div>
           </section>
         )}
