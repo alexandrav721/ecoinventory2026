@@ -245,6 +245,95 @@ export default function PublicProfile({ selfMode = false }: Props) {
 
         {isSelf && <ProfileStatsHub userId={profile.id} />}
 
+        {/* Activity / notifications — editorial cards */}
+        {isSelf && (
+          <section className="space-y-5 animate-fade-in">
+            <div className="flex items-end justify-between gap-4 border-b border-border/60 pb-3">
+              <div>
+                <div className="text-[10px] uppercase tracking-[0.28em] text-muted-foreground mb-1">
+                  Recent activity
+                </div>
+                <h2 className="font-display text-2xl sm:text-3xl font-semibold tracking-tight">
+                  What's <em className="italic">happening</em> around you
+                </h2>
+              </div>
+              <Link to="/notifications" className="text-sm text-muted-foreground hover:text-foreground transition-colors hidden sm:block">
+                View all →
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* Borrow request */}
+              <article className="group relative rounded-xl border border-border/70 bg-card p-5 hover:border-foreground/30 hover:shadow-sm transition-all">
+                <div className="absolute top-5 right-5 h-2 w-2 rounded-full bg-primary" />
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Inbox className="h-4 w-4 text-primary" />
+                  </div>
+                  <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+                    Borrow request
+                  </span>
+                </div>
+                <p className="font-display text-lg leading-snug text-foreground">
+                  <em className="italic">Maya R.</em> wants to borrow your <em className="italic">Dyson V11</em>
+                </p>
+                <p className="text-xs text-muted-foreground mt-2">
+                  Requested for next weekend · 2h ago
+                </p>
+                <div className="flex items-center gap-2 mt-4 pt-4 border-t border-border/60">
+                  <Button size="sm" className="h-8 text-xs flex-1">Respond</Button>
+                  <Button size="sm" variant="ghost" className="h-8 text-xs">Later</Button>
+                </div>
+              </article>
+
+              {/* New follower */}
+              <article className="group relative rounded-xl border border-border/70 bg-card p-5 hover:border-foreground/30 hover:shadow-sm transition-all">
+                <div className="absolute top-5 right-5 h-2 w-2 rounded-full bg-primary" />
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="h-8 w-8 rounded-full bg-accent/10 flex items-center justify-center">
+                    <Heart className="h-4 w-4 text-accent-foreground" />
+                  </div>
+                  <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+                    New follower
+                  </span>
+                </div>
+                <p className="font-display text-lg leading-snug text-foreground">
+                  <em className="italic">Alex K.</em> from Park Slope started following you
+                </p>
+                <p className="text-xs text-muted-foreground mt-2">
+                  3 mutual neighbors · 5h ago
+                </p>
+                <div className="flex items-center gap-2 mt-4 pt-4 border-t border-border/60">
+                  <Button size="sm" variant="outline" className="h-8 text-xs flex-1">Follow back</Button>
+                  <Button size="sm" variant="ghost" className="h-8 text-xs">View</Button>
+                </div>
+              </article>
+
+              {/* Item interest */}
+              <article className="group relative rounded-xl border border-border/70 bg-card p-5 hover:border-foreground/30 hover:shadow-sm transition-all">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
+                    <TrendingUp className="h-4 w-4 text-foreground/70" />
+                  </div>
+                  <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+                    Trending
+                  </span>
+                </div>
+                <p className="font-display text-lg leading-snug text-foreground">
+                  <em className="italic">7 neighbors</em> searched for a <em className="italic">Peloton</em> this week
+                </p>
+                <p className="text-xs text-muted-foreground mt-2">
+                  In Brooklyn · updated daily
+                </p>
+                <div className="flex items-center gap-2 mt-4 pt-4 border-t border-border/60">
+                  <Button size="sm" variant="outline" className="h-8 text-xs flex-1">List yours</Button>
+                </div>
+              </article>
+            </div>
+          </section>
+        )}
+
+
         {/* Items: editorial gallery */}
         <section className="space-y-5 animate-fade-in">
           <div className="flex items-end justify-between gap-4 border-b border-border/60 pb-3">
