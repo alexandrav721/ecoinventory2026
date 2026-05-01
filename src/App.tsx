@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { DemoProvider } from "@/contexts/DemoContext";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
@@ -74,7 +74,8 @@ const App = () => (
             <Route path="/articles/organizing-inventory" element={<OrganizingInventory />} />
             <Route path="/articles/item-depreciation" element={<ItemDepreciation />} />
             <Route path="/articles/building-community" element={<BuildingSharingCommunity />} />
-            <Route path="/about" element={<About />} />
+            <Route path="/how-it-works" element={<About />} />
+            <Route path="/about" element={<Navigate to="/how-it-works" replace />} />
             <Route path="/marketplace/item/:id" element={<MarketplaceItem />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

@@ -44,7 +44,7 @@ const DashboardNav = () => {
   const otherItems: NavItem[] = [
     { path: "/events", label: "Events", icon: Calendar },
     { path: "/articles", label: t('nav.articles'), icon: FileText },
-    { path: "/about", label: t('nav.about'), icon: Info },
+    { path: "/how-it-works", label: t('nav.about'), icon: Info },
   ];
 
   const isActiveInGroup = (items: NavItem[]) => {
