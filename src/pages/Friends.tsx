@@ -79,11 +79,11 @@ const Friends = () => {
               </TabsTrigger>
               <TabsTrigger value="friends" className="gap-2">
                 <Users className="w-4 h-4" />
-                Following
+                In your network
               </TabsTrigger>
               <TabsTrigger value="requests" className="gap-2">
                 <UserPlus className="w-4 h-4" />
-                Follow Requests
+                Network Requests
               </TabsTrigger>
             </TabsList>
 
