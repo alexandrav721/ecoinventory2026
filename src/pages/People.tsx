@@ -138,12 +138,12 @@ export default function People() {
   const handleToggle = async (p: PublicProfile) => {
     if (isFollowing(p.id)) {
       const err = await unfollow(p.id);
-      if (err) toast.error("Could not unfollow");
-      else toast.success(`Unfollowed ${p.display_name}`);
+      if (err) toast.error("Could not remove from network");
+      else toast.success(`Removed ${p.display_name} from your network`);
     } else {
       const err = await follow(p.id);
-      if (err) toast.error("Could not follow");
-      else toast.success(`Following ${p.display_name}`);
+      if (err) toast.error("Could not add to network");
+      else toast.success(`Added ${p.display_name} to your network`);
     }
   };
 
