@@ -24,6 +24,7 @@ import BrandInput from "@/components/dashboard/BrandInput";
 import { PersonalizedCatalogSelector } from "@/components/dashboard/PersonalizedCatalogSelector";
 import { z } from "zod";
 import { autoCategorizeItems } from "@/lib/autoCategorize";
+import { AddSuccessModal } from "@/components/dashboard/AddSuccessModal";
 
 interface Category {
   id: string;
@@ -65,6 +66,60 @@ const AddItem = () => {
   const [bulkImages, setBulkImages] = useState<Array<{ id: string; url: string; status: 'pending' | 'analyzing' | 'success' | 'error'; result?: any; error?: string }>>([]);
   const [bulkAnalyzing, setBulkAnalyzing] = useState(false);
   const [processingReceipt, setProcessingReceipt] = useState(false);
+  const [successModal, setSuccessModal] = useState<{
+    open: boolean;
+    itemName: string;
+    estimatedValue: number | null;
+    totalItemsAfter: number;
+  }>({ open: false, itemName: "", estimatedValue: null, totalItemsAfter: 0 });
+
+  const initialFormData = {
+    name: "",
+    description: "",
+    category_id: "",
+    brand: "",
+    color: "",
+    dimensions: "",
+    size: "",
+    quantity: 1,
+    original_price: "",
+    purchase_date: "",
+    image_urls: [] as string[],
+    condition: "good",
+    usage_frequency: "",
+    sharing_level: "private" as "private" | "friends" | "public",
+    is_for_borrow: true,
+    is_for_sale: false,
+    sharing_price: "",
+    tags: [] as string[],
+  };
+
+  const fetchTotalItems = async (userId: string): Promise<number> => {
+    const { count } = await supabase
+      .from("inventory_items")
+      .select("id", { count: "exact", head: true })
+      .eq("user_id", userId)
+      .eq("is_sold", false)
+      .eq("is_donated", false)
+      .eq("is_eliminated", false);
+    return count ?? 0;
+  };
+
+  const showSuccessCelebration = (
+    itemName: string,
+    estimatedValue: number | null,
+    totalItemsAfter: number
+  ) => {
+    setSuccessModal({ open: true, itemName, estimatedValue, totalItemsAfter });
+  };
+
+  const handleKeepAdding = () => {
+    setFormData(initialFormData);
+    setBulkImages([]);
+    setSmartInput("");
+    setSmartImage(null);
+    setMode("select");
+  };
 
   const [formData, setFormData] = useState({
     name: "",
