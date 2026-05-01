@@ -16,12 +16,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Search, X, Image as ImageIcon } from "lucide-react";
+import { Search, X, Image as ImageIcon, Flame } from "lucide-react";
 import { QuirkyLoader } from "@/components/QuirkyLoader";
 import { EmptyState } from "@/components/EmptyState";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, cn } from "@/lib/utils";
 import { useDemo } from "@/contexts/DemoContext";
 import { ItemDetailSheet } from "@/components/dashboard/ItemDetailSheet";
+import { DuplicateAlertBanner } from "@/components/dashboard/DuplicateAlertBanner";
+import { InsightChipRow } from "@/components/dashboard/InsightChipRow";
+import { MOCK_DUPLICATE_GROUPS, findDemandSignal } from "@/lib/mockInsights";
 import {
   categoryToGroup,
   TOP_LEVEL_GROUPS,
@@ -61,6 +64,7 @@ const InventoryPickleView = () => {
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<SortKey>("recent");
   const [openItemId, setOpenItemId] = useState<string | null>(null);
+  const [highlightTerms, setHighlightTerms] = useState<string[]>([]);
 
   // filters
   const [activeGroups, setActiveGroups] = useState<Set<TopLevelGroup>>(new Set());
@@ -231,6 +235,38 @@ const InventoryPickleView = () => {
     () => items.filter((i) => (i.quantity ?? 1) > 1).length,
     [items]
   );
+
+  const itemNames = useMemo(
+    () => items.map((i) => i.name.toLowerCase()),
+    [items]
+  );
+
+  const insightSummary = useMemo(() => {
+    const groups = MOCK_DUPLICATE_GROUPS.filter((g) =>
+      g.matchTerms.some((t) => itemNames.some((n) => n.includes(t)))
+    );
+    const duplicateValue = groups.reduce((s, g) => s + g.estResaleValue, 0);
+    const demandCount = items.filter((i) => !!findDemandSignal(i.name)).length;
+    const allDupTerms = groups.flatMap((g) => g.matchTerms);
+    return {
+      duplicateGroups: groups.length,
+      duplicateValue,
+      demandCount,
+      allDupTerms,
+    };
+  }, [items, itemNames]);
+
+  const scrollToGrid = () => {
+    document
+      .getElementById("my-assets-grid")
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const highlightAndScroll = (terms: string[]) => {
+    setHighlightTerms(terms);
+    scrollToGrid();
+    window.setTimeout(() => setHighlightTerms([]), 2800);
+  };
 
   const hasFilters =
     activeGroups.size > 0 ||
@@ -468,31 +504,59 @@ const InventoryPickleView = () => {
           </div>
         </div>
 
+        {/* Insight chip row */}
+        <InsightChipRow
+          duplicateGroups={insightSummary.duplicateGroups}
+          demandCount={insightSummary.demandCount}
+          duplicateValue={insightSummary.duplicateValue}
+          onClickDuplicates={() => highlightAndScroll(insightSummary.allDupTerms)}
+          onClickDemand={() =>
+            highlightAndScroll(
+              items
+                .filter((i) => !!findDemandSignal(i.name))
+                .map((i) => i.name.toLowerCase())
+            )
+          }
+        />
+
+        {/* Duplicate alert banner */}
+        <DuplicateAlertBanner
+          itemNames={itemNames}
+          onViewItems={highlightAndScroll}
+        />
+
         {/* Grid */}
-        {filtered.length === 0 ? (
-          <div className="py-20 text-center text-muted-foreground text-sm">
-            No items match your filters.
-            {hasFilters && (
-              <Button
-                variant="link"
-                onClick={clearAll}
-                className="ml-2 h-auto p-0 text-sm"
-              >
-                Clear filters
-              </Button>
-            )}
-          </div>
-        ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-2 gap-y-6">
-            {filtered.map((it) => (
-              <ItemCard
-                key={it.id}
-                item={it}
-                onClick={() => setOpenItemId(it.id)}
-              />
-            ))}
-          </div>
-        )}
+        <div id="my-assets-grid">
+          {filtered.length === 0 ? (
+            <div className="py-20 text-center text-muted-foreground text-sm">
+              No items match your filters.
+              {hasFilters && (
+                <Button
+                  variant="link"
+                  onClick={clearAll}
+                  className="ml-2 h-auto p-0 text-sm"
+                >
+                  Clear filters
+                </Button>
+              )}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-2 gap-y-6">
+              {filtered.map((it) => {
+                const lname = it.name.toLowerCase();
+                const highlighted = highlightTerms.some((t) => lname.includes(t));
+                return (
+                  <ItemCard
+                    key={it.id}
+                    item={it}
+                    highlighted={highlighted}
+                    onClick={() => setOpenItemId(it.id)}
+                  />
+                );
+              })}
+            </div>
+          )}
+        </div>
       </div>
       <ItemDetailSheet
         itemId={openItemId}
@@ -503,11 +567,24 @@ const InventoryPickleView = () => {
   );
 };
 
-const ItemCard = ({ item, onClick }: { item: Item; onClick: () => void }) => {
+const ItemCard = ({
+  item,
+  onClick,
+  highlighted = false,
+}: {
+  item: Item;
+  onClick: () => void;
+  highlighted?: boolean;
+}) => {
+  const demand = findDemandSignal(item.name);
   return (
     <button
       onClick={onClick}
-      className="group text-left flex flex-col gap-2 focus:outline-none"
+      className={cn(
+        "group text-left flex flex-col gap-2 focus:outline-none rounded-md transition-all",
+        highlighted &&
+          "ring-2 ring-amber-400 ring-offset-2 ring-offset-background animate-pulse",
+      )}
     >
       <div className="aspect-[4/5] w-full bg-secondary/40 overflow-hidden relative">
         {item.image_url ? (
@@ -523,6 +600,17 @@ const ItemCard = ({ item, onClick }: { item: Item; onClick: () => void }) => {
             <span className="text-[10px] uppercase tracking-[0.2em] opacity-60">
               {item.group}
             </span>
+          </div>
+        )}
+
+        {demand && (
+          <div
+            className="absolute top-1.5 right-1.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/95 text-white text-[10px] font-semibold shadow-md backdrop-blur-sm"
+            title={demand.label}
+          >
+            <Flame className="w-3 h-3" />
+            <span className="hidden sm:inline">{demand.label}</span>
+            <span className="sm:hidden">Hot</span>
           </div>
         )}
       </div>
