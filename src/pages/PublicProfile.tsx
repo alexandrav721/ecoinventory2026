@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, MapPin, Package, UserCheck, UserPlus, Settings, Sparkles } from "lucide-react";
+import { ArrowLeft, MapPin, Package, UserCheck, UserPlus, Settings, Sparkles, Inbox, Heart, TrendingUp } from "lucide-react";
 import { toast } from "sonner";
 import { useFollows } from "@/hooks/useFollows";
 import { ProfileStatsHub } from "@/components/profile/ProfileStatsHub";
