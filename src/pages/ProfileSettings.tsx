@@ -297,7 +297,7 @@ const ProfileSettings = () => {
                           className="max-w-xs"
                         />
                         <p className="text-sm text-muted-foreground mt-1">
-                          Shown only to your friends
+                          Shown only to people who follow you
                         </p>
                       </div>
                     </div>
