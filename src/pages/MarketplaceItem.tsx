@@ -295,15 +295,21 @@ export default function MarketplaceItem() {
             )}
           </div>
 
-          <div className="flex items-baseline gap-3">
-            {isFree ? (
-              <Badge className="bg-primary text-primary-foreground text-base px-3 py-1">
-                Free to borrow
-              </Badge>
-            ) : (
+          <div className="flex items-baseline gap-3 flex-wrap">
+            {hasPrice && showBuy && (
               <span className="text-3xl font-semibold">
                 ${Number(item.sharing_price).toFixed(2)}
               </span>
+            )}
+            {isFreeBorrow && (
+              <Badge className="bg-primary text-primary-foreground text-base px-3 py-1">
+                Free to borrow
+              </Badge>
+            )}
+            {showBorrow && showBuy && (
+              <Badge variant="outline" className="text-sm">
+                Lend or buy
+              </Badge>
             )}
           </div>
 
