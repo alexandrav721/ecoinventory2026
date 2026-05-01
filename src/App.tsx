@@ -33,6 +33,7 @@ import CircularEconomyGuide from "./pages/articles/CircularEconomyGuide";
 import OrganizingInventory from "./pages/articles/OrganizingInventory";
 import ItemDepreciation from "./pages/articles/ItemDepreciation";
 import BuildingSharingCommunity from "./pages/articles/BuildingSharingCommunity";
+import MarketplaceItem from "./pages/MarketplaceItem";
 
 const queryClient = new QueryClient();
 
