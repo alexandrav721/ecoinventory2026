@@ -567,11 +567,24 @@ const InventoryPickleView = () => {
   );
 };
 
-const ItemCard = ({ item, onClick }: { item: Item; onClick: () => void }) => {
+const ItemCard = ({
+  item,
+  onClick,
+  highlighted = false,
+}: {
+  item: Item;
+  onClick: () => void;
+  highlighted?: boolean;
+}) => {
+  const demand = findDemandSignal(item.name);
   return (
     <button
       onClick={onClick}
-      className="group text-left flex flex-col gap-2 focus:outline-none"
+      className={cn(
+        "group text-left flex flex-col gap-2 focus:outline-none rounded-md transition-all",
+        highlighted &&
+          "ring-2 ring-amber-400 ring-offset-2 ring-offset-background animate-pulse",
+      )}
     >
       <div className="aspect-[4/5] w-full bg-secondary/40 overflow-hidden relative">
         {item.image_url ? (
@@ -587,6 +600,17 @@ const ItemCard = ({ item, onClick }: { item: Item; onClick: () => void }) => {
             <span className="text-[10px] uppercase tracking-[0.2em] opacity-60">
               {item.group}
             </span>
+          </div>
+        )}
+
+        {demand && (
+          <div
+            className="absolute top-1.5 right-1.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/95 text-white text-[10px] font-semibold shadow-md backdrop-blur-sm"
+            title={demand.label}
+          >
+            <Flame className="w-3 h-3" />
+            <span className="hidden sm:inline">{demand.label}</span>
+            <span className="sm:hidden">Hot</span>
           </div>
         )}
       </div>
