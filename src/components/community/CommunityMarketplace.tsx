@@ -100,7 +100,7 @@ export function CommunityMarketplace() {
       setLoading(true);
       const { data: rows, error } = await supabase
         .from("inventory_items")
-        .select("id, user_id, name, description, image_urls, condition, sharing_price")
+        .select("id, user_id, name, description, image_urls, condition, sharing_price, is_for_borrow, is_for_sale")
         .eq("is_available_for_sharing", true)
         .eq("is_donated", false)
         .eq("is_sold", false)
