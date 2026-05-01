@@ -3,7 +3,6 @@ import { Copy, Check, Share2 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -18,25 +17,35 @@ interface InviteNeighborsDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
+const slugify = (raw: string) =>
+  raw
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 32) || "neighbor";
+
 const InviteNeighborsDialog = ({ open, onOpenChange }: InviteNeighborsDialogProps) => {
   const { isDemoMode } = useDemo();
   const [displayName, setDisplayName] = useState<string>("your neighbor");
-  const [inviteCode, setInviteCode] = useState<string>("");
+  const [usernameSlug, setUsernameSlug] = useState<string>("neighbor");
+  const [nearbyCount, setNearbyCount] = useState<number | null>(null);
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     if (!open) return;
 
-    const loadProfile = async () => {
+    const load = async () => {
       if (isDemoMode) {
         setDisplayName("Alexandra");
-        setInviteCode("demo");
+        setUsernameSlug("alexandra");
+        setNearbyCount(14);
         return;
       }
+
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
-
-      setInviteCode(user.id.slice(0, 8));
 
       const { data: profile } = await (supabase as any)
         .from("profiles")
@@ -51,13 +60,23 @@ const InviteNeighborsDialog = ({ open, onOpenChange }: InviteNeighborsDialogProp
         user.email?.split("@")[0] ||
         "your neighbor";
       setDisplayName(name);
+      setUsernameSlug(
+        slugify((profile as any)?.username || (profile as any)?.display_name || name),
+      );
+
+      const { count } = await (supabase as any)
+        .from("inventory_items")
+        .select("id", { count: "exact", head: true })
+        .eq("is_for_borrow", true);
+      setNearbyCount(typeof count === "number" ? count : 0);
     };
 
-    loadProfile();
+    load();
   }, [open, isDemoMode]);
 
-  const inviteUrl = `${window.location.origin}/auth?invite=${inviteCode}`;
+  const inviteUrl = `https://ecoinventory2026.lovable.app/invite/${usernameSlug}`;
   const message = `Your neighbor ${displayName} invited you to Loop — see what's available to borrow on your street.`;
+  const displayCount = nearbyCount ?? 0;
 
   const handleCopy = async () => {
     try {
@@ -91,15 +110,25 @@ const InviteNeighborsDialog = ({ open, onOpenChange }: InviteNeighborsDialogProp
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Invite neighbors to Loop</DialogTitle>
-          <DialogDescription>
-            Share your invite link. The more neighbors join, the more there is to borrow nearby.
-          </DialogDescription>
         </DialogHeader>
 
+        {/* Headline stat */}
+        <div className="rounded-lg border bg-primary/5 p-4">
+          <div className="text-base font-medium text-foreground">
+            🏘 {displayCount} {displayCount === 1 ? "item" : "items"} available to borrow near you
+          </div>
+          <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
+            Every neighbor you invite means more things available on your street.
+            Most people unlock <span className="font-medium text-foreground">5+ new borrowable items</span> per neighbor they add.
+          </p>
+        </div>
+
+        {/* Preview message */}
         <div className="rounded-lg border bg-muted/40 p-4 text-sm leading-relaxed text-foreground">
           {message}
         </div>
 
+        {/* Link */}
         <div className="space-y-2">
           <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
             Your invite link
