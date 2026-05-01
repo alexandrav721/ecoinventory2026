@@ -236,7 +236,7 @@ const ProfileSettings = () => {
                       placeholder="How you appear to the public"
                     />
                     <p className="text-sm text-muted-foreground">
-                      This is shown to users who aren't your friends
+                      This is shown to people who don't follow you
                     </p>
                   </div>
 
