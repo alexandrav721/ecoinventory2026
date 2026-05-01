@@ -30,7 +30,21 @@ const DashboardNav = () => {
   const currentTab = searchParams.get("tab") || "analytics";
   const { isAdmin, loading } = useUserRole();
   const { t } = useTranslation();
-  
+  const { isDemoMode } = useDemo();
+  const [isAuthed, setIsAuthed] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setIsAuthed(!!session?.user);
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
+      setIsAuthed(!!session?.user);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const loggedIn = isDemoMode || isAuthed === true;
+
   const myEstateItems: NavItem[] = [
     { path: "/me", label: "My Profile", icon: User },
     { path: "/dashboard", label: t('dashboard.analytics'), icon: BarChart3, tab: "analytics" },
