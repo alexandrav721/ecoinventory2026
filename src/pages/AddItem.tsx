@@ -192,6 +192,11 @@ const AddItem = () => {
           usage_frequency: formData.usage_frequency || null,
           sharing_level: formData.sharing_level,
           is_available_for_sharing: formData.sharing_level !== "private",
+          is_for_borrow: formData.sharing_level !== "private" ? formData.is_for_borrow : false,
+          is_for_sale: formData.sharing_level !== "private" ? formData.is_for_sale : false,
+          sharing_price: formData.is_for_sale && formData.sharing_price
+            ? parseFloat(formData.sharing_price)
+            : null,
         },
       ]).select("id, name");
 
