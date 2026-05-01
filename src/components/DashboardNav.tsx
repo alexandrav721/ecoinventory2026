@@ -167,7 +167,7 @@ const DashboardNav = () => {
     <div className="relative">
       <nav className="flex items-center gap-1 py-2 px-1">
         {/* Three dropdown menus */}
-        <NavDropdown label="Unlock Value" icon={LayoutDashboard} items={myEstateItems} />
+        <NavDropdown label="Unlock Your Stuff" icon={LayoutDashboard} items={myEstateItems} />
         <NavDropdown label={t('nav.friends')} icon={Users} items={friendsItems} />
         <NavDropdown label="Other" icon={Compass} items={otherItems} />
 
