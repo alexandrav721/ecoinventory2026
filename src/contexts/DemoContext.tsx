@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useState, useCallback, ReactNode } from "react";
+import React, { createContext, useContext, useState, useCallback, useEffect, ReactNode } from "react";
 import { DEMO_ITEMS, DEMO_CATEGORIES, DEMO_STATS, DEMO_FRIENDS, DEMO_FRIENDS_ITEMS, DEMO_FRIEND_REQUESTS, DEMO_EXCESS_INSIGHTS, DEMO_COMMUNITY_ACTIVITY, DEMO_EVENTS } from "@/data/demoData";
+import { supabase } from "@/integrations/supabase/client";
 
 interface DemoContextType {
   isDemoMode: boolean;
