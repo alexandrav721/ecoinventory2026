@@ -28,16 +28,11 @@ const DashboardNav = () => {
   const { isAdmin, loading } = useUserRole();
   const { t } = useTranslation();
   
-  const mySpaceItems: NavItem[] = [
+  const myEstateItems: NavItem[] = [
+    { path: "/me", label: "My Profile", icon: User },
     { path: "/dashboard", label: t('dashboard.analytics'), icon: BarChart3, tab: "analytics" },
     { path: "/dashboard", label: t('dashboard.myInventory'), icon: Package, tab: "inventory" },
     { path: "/dashboard/before-you-buy", label: "Before you buy", icon: Search },
-  ];
-
-  const notificationItems: NavItem[] = [
-    { path: "/notifications", label: t('notifications.all'), icon: Inbox, tab: "all" },
-    { path: "/notifications", label: t('notifications.requests'), icon: Bell, tab: "requests" },
-    { path: "/notifications", label: t('notifications.activity'), icon: Activity, tab: "activity" },
   ];
 
   const friendsItems: NavItem[] = [
@@ -46,12 +41,8 @@ const DashboardNav = () => {
     { path: "/messages", label: t('nav.messages'), icon: MessageSquare },
   ];
 
-  const communityItems: NavItem[] = [
-    { path: "/community", label: t('nav.community'), icon: MapPin },
-    { path: "/events", label: "Events", icon: Calendar },
-  ];
-
   const otherItems: NavItem[] = [
+    { path: "/events", label: "Events", icon: Calendar },
     { path: "/articles", label: t('nav.articles'), icon: FileText },
     { path: "/about", label: t('nav.about'), icon: Info },
   ];
@@ -132,47 +123,11 @@ const DashboardNav = () => {
   return (
     <div className="relative">
       <nav className="flex items-center gap-1 py-2 px-1">
-        {/* Home link */}
-        <Button
-          asChild
-          variant="ghost"
-          size="sm"
-          className={`h-8 px-2.5 gap-1.5 text-sm shrink-0 ${
-            location.pathname === "/" 
-              ? "bg-primary/10 text-primary font-medium" 
-              : "text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          <Link to="/">
-            <Home className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">{t('nav.home')}</span>
-          </Link>
-        </Button>
-
-        {/* Profile link */}
-        <Button
-          asChild
-          variant="ghost"
-          size="sm"
-          className={`h-8 px-2.5 gap-1.5 text-sm shrink-0 ${
-            location.pathname === "/me"
-              ? "bg-primary/10 text-primary font-medium"
-              : "text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          <Link to="/me">
-            <User className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">My Profile</span>
-          </Link>
-        </Button>
-
-        {/* Dropdown menus in requested order */}
-        <NavDropdown label="Community Inventory" icon={MapPin} items={communityItems} />
-        <NavDropdown label={t('nav.mySpace')} icon={LayoutDashboard} items={mySpaceItems} />
+        {/* Three dropdown menus */}
+        <NavDropdown label="My Estate" icon={LayoutDashboard} items={myEstateItems} />
         <NavDropdown label={t('nav.friends')} icon={Users} items={friendsItems} />
         <NavDropdown label="Other" icon={Compass} items={otherItems} />
-        <NavDropdown label={t('nav.notifications')} icon={Bell} items={notificationItems} />
-        
+
         {/* Admin link if applicable */}
         {isAdmin && !loading && (
           <Button
