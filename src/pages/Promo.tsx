@@ -232,8 +232,8 @@ const Promo = () => {
             </div>
             
             <div className="flex gap-6 text-sm text-muted-foreground">
-              <button onClick={() => navigate("/about")} className="hover:text-foreground transition-colors">
-                About
+              <button onClick={() => navigate("/how-it-works")} className="hover:text-foreground transition-colors">
+                How It Works
               </button>
               <button onClick={() => navigate("/articles")} className="hover:text-foreground transition-colors">
                 Articles
