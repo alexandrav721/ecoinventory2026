@@ -223,7 +223,7 @@ export default function People() {
                 )}
               </div>
               {suggestions.length === 0 ? (
-                <p className="text-sm text-muted-foreground">You're following everyone we'd suggest. Nice.</p>
+                <p className="text-sm text-muted-foreground">Everyone we'd suggest is already in your network. Nice.</p>
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {suggestions.map((p) => <PersonCard key={p.id} p={p} />)}
