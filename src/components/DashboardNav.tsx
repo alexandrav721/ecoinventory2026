@@ -40,15 +40,18 @@ const DashboardNav = () => {
     { path: "/notifications", label: t('notifications.activity'), icon: Activity, tab: "activity" },
   ];
 
-  const socialItems: NavItem[] = [
+  const friendsItems: NavItem[] = [
     { path: "/people", label: "People", icon: Compass },
     { path: "/friends", label: t('nav.friends'), icon: Users },
     { path: "/messages", label: t('nav.messages'), icon: MessageSquare },
+  ];
+
+  const communityItems: NavItem[] = [
     { path: "/community", label: t('nav.community'), icon: MapPin },
     { path: "/events", label: "Events", icon: Calendar },
   ];
 
-  const exploreItems: NavItem[] = [
+  const otherItems: NavItem[] = [
     { path: "/articles", label: t('nav.articles'), icon: FileText },
     { path: "/about", label: t('nav.about'), icon: Info },
   ];
@@ -146,12 +149,6 @@ const DashboardNav = () => {
           </Link>
         </Button>
 
-        {/* Dropdown menus */}
-        <NavDropdown label={t('nav.mySpace')} icon={LayoutDashboard} items={mySpaceItems} />
-        <NavDropdown label={t('nav.notifications')} icon={Bell} items={notificationItems} />
-        <NavDropdown label={t('nav.social')} icon={Users} items={socialItems} />
-        <NavDropdown label={t('nav.explore')} icon={Compass} items={exploreItems} />
-
         {/* Profile link */}
         <Button
           asChild
@@ -165,9 +162,16 @@ const DashboardNav = () => {
         >
           <Link to="/me">
             <User className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Profile</span>
+            <span className="hidden sm:inline">My Profile</span>
           </Link>
         </Button>
+
+        {/* Dropdown menus in requested order */}
+        <NavDropdown label="Community Inventory" icon={MapPin} items={communityItems} />
+        <NavDropdown label={t('nav.mySpace')} icon={LayoutDashboard} items={mySpaceItems} />
+        <NavDropdown label={t('nav.friends')} icon={Users} items={friendsItems} />
+        <NavDropdown label="Other" icon={Compass} items={otherItems} />
+        <NavDropdown label={t('nav.notifications')} icon={Bell} items={notificationItems} />
         
         {/* Admin link if applicable */}
         {isAdmin && !loading && (
