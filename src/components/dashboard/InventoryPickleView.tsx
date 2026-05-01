@@ -290,7 +290,7 @@ const InventoryPickleView = () => {
     return (
       <LowInventoryPreviewBanner
         itemCount={0}
-        onAddItem={() => navigate("/dashboard/add-item")}
+        onAddItem={() => window.dispatchEvent(new CustomEvent("open-add-item-modal"))}
       />
     );
   }
@@ -536,7 +536,7 @@ const InventoryPickleView = () => {
         {items.length > 0 && items.length < 5 && (
           <LowInventoryPreviewBanner
             itemCount={items.length}
-            onAddItem={() => navigate("/dashboard/add-item")}
+            onAddItem={() => window.dispatchEvent(new CustomEvent("open-add-item-modal"))}
           />
         )}
 
