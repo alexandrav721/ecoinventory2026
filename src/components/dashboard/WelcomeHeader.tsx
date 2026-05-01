@@ -123,46 +123,8 @@ export const WelcomeHeader = ({ user }: WelcomeHeaderProps) => {
 
   return (
     <div className="space-y-4">
-      {/* Greeting */}
-      <div className="rounded-2xl border bg-card p-5 md:p-6 bg-gradient-to-br from-primary/8 via-background to-background">
-        <div className="flex items-center gap-2 mb-2">
-          <span className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-            {t(`welcome.${greeting}`)}
-          </span>
-          {stats.recentlyAdded > 0 && (
-            <span className="inline-flex items-center gap-1 text-[10px] uppercase tracking-[0.15em] text-orange-600">
-              <Flame className="w-3 h-3" />
-              {stats.recentlyAdded} this week
-            </span>
-          )}
-        </div>
-        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
-          <div>
-            <h2 className="font-display text-5xl md:text-6xl font-light leading-[0.95] tracking-tight text-foreground">
-              Hey <span className="italic font-display-wonk text-primary">{firstName}.</span>
-            </h2>
-          </div>
-          <Button
-            onClick={() => setAddOpen(true)}
-            size="sm"
-            className="gap-2 shrink-0"
-          >
-            <Camera className="w-4 h-4" />
-            Add item
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Button>
-        </div>
-
-        <div className="mt-4">
-          <InsightUnlocksPanel totalItems={stats.totalItems} />
-        </div>
-      </div>
-
+      <InsightUnlocksPanel totalItems={stats.totalItems} />
       <AddItemModal open={addOpen} onOpenChange={setAddOpen} />
-
-
-
-
     </div>
   );
 };
