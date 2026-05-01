@@ -37,7 +37,7 @@ const Demo = () => {
           Take Loop for a <span className="italic font-display-wonk text-primary">spin.</span>
         </h1>
         <p className="text-lg md:text-xl text-muted-foreground mt-8 leading-relaxed">
-          Demo mode loads a sample household — a few rooms of stuff, a handful of friends, some
+          Demo mode loads a sample household — a few rooms of stuff, a handful of people you follow, some
           neighborhood listings. Click around like you would on your own account.{" "}
           <span className="italic font-display-wonk text-foreground">Nothing saves.</span>
         </p>
