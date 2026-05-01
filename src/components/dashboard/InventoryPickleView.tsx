@@ -494,6 +494,11 @@ const InventoryPickleView = () => {
           </div>
         )}
       </div>
+      <ItemDetailSheet
+        itemId={openItemId}
+        open={!!openItemId}
+        onOpenChange={(o) => !o && setOpenItemId(null)}
+      />
     </div>
   );
 };
