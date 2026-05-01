@@ -21,6 +21,7 @@ export default function PublicProfile({ selfMode = false }: Props) {
   const [meId, setMeId] = useState<string | null>(null);
   const [profile, setProfile] = useState<any>(null);
   const [items, setItems] = useState<any[]>([]);
+  const [totalOwned, setTotalOwned] = useState(0);
   const [followerCount, setFollowerCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
   const [isFriend, setIsFriend] = useState(false);
@@ -110,12 +111,14 @@ export default function PublicProfile({ selfMode = false }: Props) {
       const { data: it } = await itemQuery;
       setItems(it ?? []);
 
-      const [{ count: fCount }, { count: ingCount }] = await Promise.all([
+      const [{ count: fCount }, { count: ingCount }, { count: ownedCount }] = await Promise.all([
         supabase.from("follows").select("*", { count: "exact", head: true }).eq("followee_id", targetId),
         supabase.from("follows").select("*", { count: "exact", head: true }).eq("follower_id", targetId),
+        supabase.from("inventory_items").select("*", { count: "exact", head: true }).eq("user_id", targetId),
       ]);
       setFollowerCount(fCount ?? 0);
       setFollowingCount(ingCount ?? 0);
+      setTotalOwned(ownedCount ?? 0);
 
       setLoading(false);
     })();
@@ -197,22 +200,20 @@ export default function PublicProfile({ selfMode = false }: Props) {
                   )}
                 </div>
 
-                {/* Inline stat ribbon */}
-                <div className="flex flex-wrap gap-x-8 gap-y-3 pt-2">
-                  <div>
-                    <div className="font-display text-2xl font-semibold tabular-nums">{items.length}</div>
-                    <div className="text-[11px] uppercase tracking-[0.18em] text-white/50">Shareable</div>
-                  </div>
-                  <div className="hidden sm:block w-px bg-white/15 self-stretch" />
-                  <div>
-                    <div className="font-display text-2xl font-semibold tabular-nums">{followerCount}</div>
-                    <div className="text-[11px] uppercase tracking-[0.18em] text-white/50">In network</div>
-                  </div>
-                  <div className="hidden sm:block w-px bg-white/15 self-stretch" />
-                  <div>
-                    <div className="font-display text-2xl font-semibold tabular-nums">{followingCount}</div>
-                    <div className="text-[11px] uppercase tracking-[0.18em] text-white/50">Following</div>
-                  </div>
+                {/* Inline pill chips */}
+                <div className="flex flex-wrap gap-2 pt-1">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[12px] text-white/80">
+                    <strong className="font-semibold text-white tabular-nums">{totalOwned}</strong>
+                    <span className="text-white/60">items owned</span>
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[12px] text-white/80">
+                    <strong className="font-semibold text-white tabular-nums">{items.length}</strong>
+                    <span className="text-white/60">shared</span>
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[12px] text-white/80">
+                    <strong className="font-semibold text-white tabular-nums">{followerCount}</strong>
+                    <span className="text-white/60">in network</span>
+                  </span>
                 </div>
               </div>
 
