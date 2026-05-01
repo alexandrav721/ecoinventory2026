@@ -173,7 +173,7 @@ const ProfileSettings = () => {
                   </TabsTrigger>
                   <TabsTrigger value="friends" className="gap-2">
                     <Users className="w-4 h-4" />
-                    Followers
+                    My Network
                   </TabsTrigger>
                   <TabsTrigger value="location" className="gap-2">
                     <MapPin className="w-4 h-4" />
