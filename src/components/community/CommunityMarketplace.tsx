@@ -36,11 +36,14 @@ interface MarketItem {
   image_urls: string[] | null;
   condition: string | null;
   sharing_price: number | null;
+  is_for_borrow: boolean;
+  is_for_sale: boolean;
   owner: OwnerProfile | null;
   distance: number | null;
 }
 
 const PAGE_SIZE = 24;
+type Mode = "all" | "borrow" | "buy";
 
 export function CommunityMarketplace() {
   const navigate = useNavigate();
