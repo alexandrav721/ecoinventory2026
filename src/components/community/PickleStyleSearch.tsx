@@ -65,7 +65,8 @@ export function PickleStyleSearch() {
   const [authed, setAuthed] = useState(false);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [friendIds, setFriendIds] = useState<Set<string>>(new Set());
-  const [audience, setAudience] = useState<"public" | "friends">("public");
+  const [audience, setAudience] = useState<Audience>("all");
+  const [offer, setOffer] = useState<Offer>("all");
   const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
 
   // Filters
