@@ -40,16 +40,18 @@ const ProfileDropdown = ({ user }: ProfileDropdownProps) => {
   const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0];
 
   useEffect(() => {
-    if (user && !isDemoMode) {
-      supabase
-        .from("profiles")
-        .select("avatar_url, full_name")
-        .eq("id", user.id)
-        .single()
-        .then(({ data }) => {
-          if (data) setProfile(data);
-        });
+    if (!user || isDemoMode) {
+      setProfile(null);
+      return;
     }
+    supabase
+      .from("profiles")
+      .select("avatar_url, full_name")
+      .eq("id", user.id)
+      .single()
+      .then(({ data }) => {
+        if (data) setProfile(data);
+      });
   }, [user, isDemoMode]);
 
   const handleSignOut = async () => {
@@ -58,9 +60,11 @@ const ProfileDropdown = ({ user }: ProfileDropdownProps) => {
       navigate("/");
       return;
     }
+    setProfile(null);
     await supabase.auth.signOut();
     toast.success(t('nav.signOut'));
-    navigate("/");
+    // Hard reload to clear any cached auth-dependent state across the app
+    window.location.href = "/";
   };
 
   const getInitials = () => {
