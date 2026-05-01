@@ -1,59 +1,39 @@
 ## Goal
 
-Replace the static motivational subtitle in the dashboard greeting card with a dynamic **Insight Unlocks** panel that gives users a tangible reason to keep adding items.
-
-## Where it goes
-
-`src/components/dashboard/WelcomeHeader.tsx` — directly under the "Hey {firstName}." headline, replacing the `motivationalMessage` paragraph. The "Add item" button stays in the header row. Works for both real users and demo mode (already gets `stats.totalItems`).
+When the user's My Assets gallery has **fewer than 5 items**, show a motivating full-width preview banner above the grid (instead of a sparse, discouraging layout). The grid still renders below with whatever items exist; the banner shows what insights they'll unlock.
 
 ## New component
 
-Create `src/components/dashboard/InsightUnlocksPanel.tsx`:
+Create `src/components/dashboard/LowInventoryPreviewBanner.tsx`:
 
-**Props:** `{ totalItems: number }`
+**Props:** `{ itemCount: number; onAddItem: () => void }`
 
-**Structure:**
+**Layout:**
+- Full-width rounded card, soft gradient background (`from-primary/5 via-accent/5 to-emerald-50/60`), matching the InsightUnlocksPanel aesthetic.
+- Header row: 
+  - Left: `✨ Your inventory is just getting started` (h3) + subtitle: `"Here's what Loop will show you when you add {5 - itemCount} more items:"` (or "a few more items" if count >= 5).
+  - Right: prominent **"Add item"** button (primary, with `Plus` icon) — wired to `onAddItem`.
+- Three preview cards (`grid-cols-1 md:grid-cols-3 gap-3`), each grayed/blurred with a `Lock` icon and "Coming soon for you" pill:
+  1. **Resale value tracker** — sample: "$1,240 in resellable items" / detail: "MacBook Pro · ~$680 · prices steady"
+  2. **Duplicate finder** — "3 cameras across your home" / "Could free up ~$420 by selling 2"
+  3. **Borrow from neighbors** — "8 items available within 0.5 mi" / "Drill, ladder, projector & more"
+- Each preview card uses muted text colors (`text-foreground/60`, `text-muted-foreground`), grayscale icon tile, and a subtle backdrop-blur veil to signal "preview / locked".
 
-1. **Progress strip (top)** — soft blue→green gradient background (`from-primary/5 via-accent/5 to-emerald-50`), rounded-xl, hairline border.
-   - Headline line: 
-     - If below first threshold: `"You have {n} items — {needed} more to unlock your first insight"`
-     - Between thresholds: `"{n} items logged — {needed} more until {next insight name}"`
-     - All unlocked: `"All insights unlocked — keep building your inventory"`
-   - Progress bar: green fill (`bg-emerald-500`) animating to `(totalItems / nextThreshold) * 100`. Uses existing `Progress` component with custom indicator color override, or a plain div bar for color control.
+## Integration in `InventoryPickleView.tsx`
 
-2. **Three teaser cards in a row** (`grid-cols-3`, gap-3):
-   - `{ emoji: "💰", title: "Your resale value", threshold: 5 }`
-   - `{ emoji: "🔄", title: "Duplicate finder", threshold: 10 }`
-   - `{ emoji: "🤝", title: "Borrow from neighbors", threshold: 15 }`
-
-   **Locked state:** muted card, `Lock` icon (lucide) top-right, grayscale emoji (CSS filter), title in muted-foreground, small chip "Unlock at {threshold} items".
-
-   **Unlocked state:** full color, no padlock, subtle ring (`ring-1 ring-emerald-400/40`), small green check chip "Unlocked", `animate-scale-in` on the transition tick.
-
-   On mobile (<640px) collapse to a horizontal scroll row or 1-col stack — pick `grid-cols-1 sm:grid-cols-3` for simplicity.
-
-3. **Unlock animation:** track previously seen unlocks in `localStorage` (`loop-unlocks-seen`, JSON array of thresholds). When `totalItems` crosses a threshold not yet in the list, briefly add an `animate-scale-in` + ring-pulse class to that card and append the threshold to localStorage so it doesn't replay on refresh. No confetti here (already used in AddItemModal milestones).
-
-## WelcomeHeader edits
-
-- Remove `getMotivationalMessage`, `getNextMilestone`, `progressToMilestone` (now handled inside the new panel).
-- Remove the `<p>{motivationalMessage}</p>` line.
-- Render `<InsightUnlocksPanel totalItems={stats.totalItems} />` below the greeting card (or inside it, beneath the headline row — preferred so it visually belongs to the welcome block).
+- Import the new component.
+- Render it conditionally **above the grid** (after the `DuplicateAlertBanner`, before `<div id="my-assets-grid">`) when `items.length < 5` AND `items.length > 0` (the existing `EmptyState` still handles the 0-item case — confirm with user, but keeping that empty state intact since it has its own primary CTA).
+  - Actually, simpler: render when `items.length < 5` regardless — but the empty state currently early-returns. Keep the early return for 0 items (existing UX) and show banner for 1–4 items.
+- `onAddItem` navigates to `/dashboard/add-item` (matches existing patterns in this file).
 
 ## Visual notes
 
-- Soft gradient: `bg-gradient-to-br from-primary/5 via-accent/5 to-emerald-50/60` on the progress strip wrapper.
-- Cards: `rounded-xl border p-3` with `bg-card` for unlocked, `bg-muted/30` for locked.
-- Use lucide `Lock` and `Check` icons; keep emojis as text per spec (this is product UI, emojis allowed here).
-- Progress bar height `h-2`, full width, with green fill.
-
-## Edge cases
-
-- `totalItems === 0`: progress shows 0%, message reads "Add your first item — 5 more to unlock your first insight".
-- `totalItems >= 15`: all three cards unlocked, progress bar at 100% green, message "All insights unlocked".
-- Demo mode: `stats.totalItems = 42` already — all unlocked, all cards show in unlocked state immediately (no animation since localStorage prevents replay after first view).
+- Uses existing semantic tokens (`bg-card`, `text-foreground`, `text-muted-foreground`, `border`).
+- Lucide icons: `Plus`, `TrendingUp`, `Repeat`, `Users`, `Lock`.
+- Mock data is hard-coded inside the component — no API calls.
+- Works in both demo mode and real user mode (just keys off `items.length`).
 
 ## Out of scope
 
-- Wiring the unlocked cards to actual insight pages (they remain visual teasers for now — clicking does nothing or shows a tooltip "Coming soon"). Confirm if you want them clickable.
-- Changing the milestone toasts in `AddItemModal` (those stay at 1/5/10).
+- Replacing the 0-item `EmptyState` (still shows when truly empty).
+- Making preview cards clickable / wiring them to real insight pages.
