@@ -701,47 +701,94 @@ function ProductCard({ item, onOpen }: { item: Item; onOpen: () => void }) {
   const orig = item.original_price ? Number(item.original_price) : null;
   const price = item.sharing_price ? Number(item.sharing_price) : null;
   const locText = [item.owner_city, item.owner_state].filter(Boolean).join(", ");
+  const photoCount = item.image_urls?.length ?? 0;
+  const discountPct =
+    orig && price && orig > price ? Math.round(((orig - price) / orig) * 100) : null;
 
   return (
     <Link to={`/profile/${item.user_id}`} onClick={onOpen} className="group block">
-      <div className="aspect-[3/4] bg-secondary/40 overflow-hidden rounded-sm mb-3">
+      <div className="relative aspect-[3/4] overflow-hidden rounded-xl mb-3 bg-secondary/40 ring-1 ring-border/60 group-hover:ring-foreground/20 group-hover:shadow-xl transition-all duration-300">
         {cover ? (
           <img
             src={cover}
             alt={item.name}
             loading="lazy"
-            className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-xs text-muted-foreground">
             No photo
           </div>
         )}
+
+        {/* Top-left: Borrow / Buy chip */}
+        <div className="absolute top-2.5 left-2.5">
+          <span
+            className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-white shadow-md backdrop-blur"
+            style={{
+              background: isFree
+                ? "linear-gradient(135deg, hsl(160 70% 42%), hsl(180 65% 40%))"
+                : "linear-gradient(135deg, hsl(330 85% 55%), hsl(15 90% 60%))",
+            }}
+          >
+            {isFree ? <HandHeart className="w-3 h-3" /> : <ShoppingBag className="w-3 h-3" />}
+            {isFree ? "Borrow" : "Buy"}
+          </span>
+        </div>
+
+        {/* Top-right: discount badge */}
+        {discountPct && discountPct >= 10 && (
+          <div className="absolute top-2.5 right-2.5">
+            <span className="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold text-white shadow-md"
+              style={{ background: "hsl(0 80% 55%)" }}>
+              -{discountPct}%
+            </span>
+          </div>
+        )}
+
+        {/* Bottom-right: photo count */}
+        {photoCount > 1 && (
+          <div className="absolute bottom-2.5 right-2.5">
+            <span className="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium bg-black/60 text-white backdrop-blur">
+              📷 {photoCount}
+            </span>
+          </div>
+        )}
+
+        {/* Hover gradient overlay */}
+        <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/40 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
       </div>
-      <div className="space-y-0.5">
+
+      <div className="space-y-1 px-0.5">
+        {item.brand && (
+          <p className="text-[10px] uppercase tracking-[0.14em] font-semibold" style={{ color: "hsl(217 91% 50%)" }}>
+            {item.brand}
+          </p>
+        )}
         <h3 className="text-sm font-medium leading-snug line-clamp-2 group-hover:underline">
-          {item.brand ? `${item.brand} ` : ""}
           {item.name}
         </h3>
         <p className="text-xs text-muted-foreground">
-          {item.size ? `Size: ${item.size}` : null}
+          {item.size ? `Size ${item.size}` : null}
           {item.size && locText ? " · " : null}
-          {locText || (!item.size && "Location not set")}
+          {locText || (!item.size && "NYC")}
         </p>
-        <div className="flex items-baseline justify-between pt-1.5 text-sm">
-          <div className="flex items-baseline gap-2">
-            {orig != null && (
+        <div className="flex items-baseline justify-between pt-1.5">
+          <div className="flex items-baseline gap-1.5">
+            {isFree ? (
+              <span className="text-base font-bold" style={{ color: "hsl(160 70% 38%)" }}>Free to borrow</span>
+            ) : (
               <>
-                <span className="text-muted-foreground text-xs">Orig. Retail</span>
-                <span className={price != null && orig > price ? "line-through text-muted-foreground text-xs" : "text-xs"}>
-                  ${orig.toFixed(0)}
+                <span className="text-base font-bold" style={{ color: "hsl(330 85% 50%)" }}>
+                  ${price!.toFixed(0)}
                 </span>
+                {orig != null && orig > (price ?? 0) && (
+                  <span className="line-through text-muted-foreground text-xs">
+                    ${orig.toFixed(0)}
+                  </span>
+                )}
               </>
             )}
-          </div>
-          <div className="flex items-baseline gap-1.5">
-            <span className="text-muted-foreground text-xs">{isFree ? "Borrow" : "Rent"}</span>
-            <span className="font-semibold">{isFree ? "Free" : `$${price!.toFixed(0)}`}</span>
           </div>
         </div>
       </div>
