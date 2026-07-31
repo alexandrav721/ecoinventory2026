@@ -41,6 +41,7 @@ import ItemDetail from "./pages/ItemDetail";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import Support from "./pages/Support";
+import Landing from "./pages/Landing";
 
 const queryClient = new QueryClient();
 
@@ -60,7 +61,10 @@ const RootRoute = () => {
 
   if (authState === "loading") return null;
   if (authState === "in" || isDemoMode) return <Navigate to="/dashboard" replace />;
-  return <Navigate to="/how-it-works" replace />;
+  // Logged-out visitors get the marketing landing for the iPhone app. It used
+  // to redirect to /how-it-works (the old web-app tour), which never mentioned
+  // that Loop is a mobile app or how to get it.
+  return <Landing />;
 };
 
 const App = () => (
