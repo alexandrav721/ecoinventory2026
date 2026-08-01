@@ -42,6 +42,7 @@ import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import Support from "./pages/Support";
 import Landing from "./pages/Landing";
+import Invite from "./pages/Invite";
 
 const queryClient = new QueryClient();
 
@@ -114,6 +115,9 @@ const App = () => (
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/support" element={<Support />} />
+            {/* Referral links from the app land here (celebrateloop.com/invite/:token). */}
+            <Route path="/invite/:token" element={<Invite />} />
+            <Route path="/invite" element={<Invite />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

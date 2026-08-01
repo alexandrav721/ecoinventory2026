@@ -1,0 +1,10 @@
+# SPA fallback — required on static hosts (Cloudflare Pages, Netlify).
+#
+# This is a client-side-routed React Router app: only index.html exists on
+# disk, and the router picks the page from the URL once JS boots. Without this
+# rule the host looks for a real file at /privacy and returns 404, which would
+# break the exact URL Apple requires for the App Store listing, plus /terms,
+# /support and every referral link.
+#
+# 200 (not 301) so the address bar keeps the original path for the router.
+/*    /index.html   200
