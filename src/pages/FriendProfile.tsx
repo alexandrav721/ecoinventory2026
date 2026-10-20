@@ -118,8 +118,6 @@ export default function FriendProfile() {
           is_for_borrow,
           is_donated,
           sharing_price,
-          rent_price,
-          rent_window,
           categories (name)
         `)
         .eq("user_id", friendId)

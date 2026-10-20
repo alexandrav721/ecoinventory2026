@@ -8,6 +8,7 @@ import {
   asRentWindow,
   type RentWindow,
 } from "@/lib/rentWindow";
+import { RENT_COLUMNS_PRESENT } from "@/lib/schemaFlags";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { toast } from "sonner";
@@ -231,18 +232,24 @@ const EditItem = () => {
             : null,
           is_available_for_sharing: formData.sharing_level !== "private",
           /* Price and window travel together or not at all. */
-          rent_price:
-            formData.sharing_level !== "private" &&
-            formData.is_for_borrow &&
-            formData.rent_price
-              ? parseFloat(formData.rent_price)
-              : null,
-          rent_window:
-            formData.sharing_level !== "private" &&
-            formData.is_for_borrow &&
-            formData.rent_price
-              ? formData.rent_window
-              : null,
+          /* Spread-in, not always present — see src/lib/schemaFlags.ts.
+             An unknown column rejects the whole UPDATE. */
+          ...(RENT_COLUMNS_PRESENT
+            ? {
+                rent_price:
+                  formData.sharing_level !== "private" &&
+                  formData.is_for_borrow &&
+                  formData.rent_price
+                    ? parseFloat(formData.rent_price)
+                    : null,
+                rent_window:
+                  formData.sharing_level !== "private" &&
+                  formData.is_for_borrow &&
+                  formData.rent_price
+                    ? formData.rent_window
+                    : null,
+              }
+            : {}),
           is_for_borrow: formData.sharing_level !== "private" ? formData.is_for_borrow : false,
           is_for_sale: formData.sharing_level !== "private" ? formData.is_for_sale : false,
           is_donated: formData.is_donated,
@@ -504,7 +511,7 @@ const EditItem = () => {
                       onCheckedChange={(v) => setFormData({ ...formData, is_for_borrow: v })}
                     />
                   </div>
-                  {formData.is_for_borrow && (
+                  {RENT_COLUMNS_PRESENT && formData.is_for_borrow && (
                     <div className="space-y-1.5">
                       <Label htmlFor="rent_price" className="text-sm">
                         Rent rate (USD)

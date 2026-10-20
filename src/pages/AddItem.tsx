@@ -7,6 +7,7 @@ import {
   WINDOW_DESCRIPTION,
   type RentWindow,
 } from "@/lib/rentWindow";
+import { RENT_COLUMNS_PRESENT } from "@/lib/schemaFlags";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Camera, Receipt, PenTool, Package, Upload, Sparkles, Loader2, X, Mail } from "lucide-react";
 import { toast } from "sonner";
@@ -310,14 +311,22 @@ const AddItem = () => {
              explicit that an unknown window must not fall back to "day"
              because that overcharges — a $250/month item would bill $250 x 30.
              So a price with no window is never written. */
-          rent_price:
-            formData.is_for_borrow && formData.rent_price
-              ? parseFloat(formData.rent_price)
-              : null,
-          rent_window:
-            formData.is_for_borrow && formData.rent_price
-              ? formData.rent_window
-              : null,
+          /* Spread-in rather than always present: naming a column this
+             project does not have makes PostgREST reject the WHOLE insert,
+             so a flag that is off has to mean "send no such key", not
+             "send null". See src/lib/schemaFlags.ts. */
+          ...(RENT_COLUMNS_PRESENT
+            ? {
+                rent_price:
+                  formData.is_for_borrow && formData.rent_price
+                    ? parseFloat(formData.rent_price)
+                    : null,
+                rent_window:
+                  formData.is_for_borrow && formData.rent_price
+                    ? formData.rent_window
+                    : null,
+              }
+            : {}),
         },
       ]).select("id, name");
 
@@ -1380,7 +1389,7 @@ const AddItem = () => {
                       The window is NOT optional once a price is set —
                       rent_price prices ONE window, so an unknown window
                       silently billed as "day" turns $250/month into $7,500. */}
-                  {formData.is_for_borrow && (
+                  {RENT_COLUMNS_PRESENT && formData.is_for_borrow && (
                     <div className="space-y-1.5">
                       <Label htmlFor="rent_price" className="text-sm">
                         Rent rate (USD)

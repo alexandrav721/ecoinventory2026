@@ -61,6 +61,7 @@ import { Label } from "@/components/ui/label";
 import { ChevronRight, SlidersHorizontal, X, Lock, Globe, Users, Layers, ShoppingBag, HandHeart } from "lucide-react";
 import { isItemVisible } from "@/lib/itemVisibility";
 import { asRentWindow, formatRentPrice } from "@/lib/rentWindow";
+import { ADMIN_HIDDEN_COLUMN_PRESENT } from "@/lib/schemaFlags";
 import { useVisibilityContext } from "@/hooks/useVisibilityContext";
 
 type Item = {
@@ -171,14 +172,16 @@ export function PickleStyleSearch() {
       let q = supabase
         .from("inventory_items")
         .select(
-          "id, user_id, name, image_urls, condition, brand, color, size, original_price, sharing_price, category_id, sharing_level, is_for_sale, is_for_borrow, is_donated, rent_price, rent_window"
+          // /* + rent_price, rent_window when RENT_COLUMNS_PRESENT — src/lib/schemaFlags.ts */
+          "id, user_id, name, image_urls, condition, brand, color, size, original_price, sharing_price, category_id, sharing_level, is_for_sale, is_for_borrow, is_donated"
         )
         .eq("is_available_for_sharing", true)
         /* NOT filtering is_donated — see the header. It means "offered
            free", not "already gone". */
         .not("is_sold", "is", true)
         .not("is_eliminated", "is", true)
-        .not("admin_hidden", "is", true);
+        ;
+      if (ADMIN_HIDDEN_COLUMN_PRESENT) q = q.not("admin_hidden", "is", true);
       /* Browse is other people's things. The app's never shows you yours. */
       if (currentUserId) q = q.neq("user_id", currentUserId);
       const { data: rows } = await q
