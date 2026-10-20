@@ -60,6 +60,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { ChevronRight, SlidersHorizontal, X, Lock, Globe, Users, Layers, ShoppingBag, HandHeart } from "lucide-react";
 import { isItemVisible } from "@/lib/itemVisibility";
+import { asRentWindow, formatRentPrice } from "@/lib/rentWindow";
 import { useVisibilityContext } from "@/hooks/useVisibilityContext";
 
 type Item = {
@@ -276,8 +277,15 @@ export function PickleStyleSearch() {
     if (priceMin) list = list.filter((it) => Number(it.sharing_price ?? 0) >= Number(priceMin));
     if (priceMax) list = list.filter((it) => Number(it.sharing_price ?? 0) <= Number(priceMax));
 
-    if (offer === "borrow") list = list.filter((it) => !it.sharing_price || Number(it.sharing_price) === 0);
-    if (offer === "buy") list = list.filter((it) => it.sharing_price && Number(it.sharing_price) > 0);
+    /* These filtered on sharing_price, so "Borrow" returned every item
+       with no SALE price — paid rentals and free giveaways alike — and
+       "Buy" worked only by accident. The flags are what the toggle is
+       actually asking about. A giveaway counts as borrowable here for the
+       same reason the app counts it as offered: it is a way to get the
+       thing without buying it. */
+    if (offer === "borrow")
+      list = list.filter((it) => !!it.is_for_borrow || !!it.is_donated);
+    if (offer === "buy") list = list.filter((it) => !!it.is_for_sale);
 
 
 
@@ -755,7 +763,38 @@ function Pill({ label, onRemove }: { label: string; onRemove: () => void }) {
 
 function ProductCard({ item, onOpen }: { item: Item; onOpen: () => void }) {
   const cover = item.image_urls?.[0];
-  const isFree = !item.sharing_price || Number(item.sharing_price) === 0;
+  /* THE PRICE LABEL used to be derived from sharing_price alone, so every
+     item with no SALE price printed "Free to borrow" — paid rentals
+     included, which the website could not even set until today. It also
+     printed the SALE asking price as the borrow price on items that were
+     both.
+
+     Three distinct states now, read from the columns that mean them:
+       - a rent rate  -> "$8/day", through the app's own formatter, so the
+         phone and the web quote the same string
+       - offered to borrow with no rate -> genuinely free
+       - for sale -> the sale price
+     formatRentPrice returns null for a zero or missing rate rather than
+     "$0", which is why this is a fallthrough and not a ternary. */
+  const rentLabel = formatRentPrice(
+    item.rent_price,
+    asRentWindow(item.rent_window),
+    { compact: true }
+  );
+  const isFree = !rentLabel && !!item.is_for_borrow && !item.is_for_sale;
+  const isGiveaway = !!item.is_donated && !item.is_for_sale;
+  const sellable = !!item.is_for_sale;
+  /* The app's nearbyAction ladder (src/hooks/useNearbyItems.ts), so the
+     same row gets the same word on both surfaces. */
+  const action = item.is_for_sale
+    ? item.is_for_borrow || item.is_donated
+      ? "Buy + borrow"
+      : "Buy"
+    : item.is_donated
+      ? "Free"
+      : item.is_for_borrow
+        ? "Borrow"
+        : "Nearby";
   const orig = item.original_price ? Number(item.original_price) : null;
   const price = item.sharing_price ? Number(item.sharing_price) : null;
   const locText = [item.owner_city, item.owner_state].filter(Boolean).join(", ");
@@ -781,16 +820,21 @@ function ProductCard({ item, onOpen }: { item: Item; onOpen: () => void }) {
 
         {/* Top-left: Borrow / Buy chip */}
         <div className="absolute top-2.5 left-2.5">
+          {/* The chip read `isFree ? "Borrow" : "Buy"` — inferred from the
+              price, never from the flags that say what an item is offered
+              for. So a paid rental was labelled "Buy", and an item that
+              was both printed only one of the two. `action` is the app's
+              own ladder, from useNearbyItems.nearbyAction. */}
           <span
             className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-white shadow-md backdrop-blur"
             style={{
-              background: isFree
-                ? "linear-gradient(135deg, hsl(160 70% 42%), hsl(180 65% 40%))"
-                : "linear-gradient(135deg, hsl(330 85% 55%), hsl(15 90% 60%))",
+              background: sellable
+                ? "linear-gradient(135deg, hsl(330 85% 55%), hsl(15 90% 60%))"
+                : "linear-gradient(135deg, hsl(160 70% 42%), hsl(180 65% 40%))",
             }}
           >
-            {isFree ? <HandHeart className="w-3 h-3" /> : <ShoppingBag className="w-3 h-3" />}
-            {isFree ? "Borrow" : "Buy"}
+            {sellable ? <ShoppingBag className="w-3 h-3" /> : <HandHeart className="w-3 h-3" />}
+            {action}
           </span>
         </div>
 
@@ -826,14 +870,28 @@ function ProductCard({ item, onOpen }: { item: Item; onOpen: () => void }) {
         </p>
         <div className="flex items-baseline justify-between pt-1.5">
           <div className="flex items-baseline gap-1.5">
-            {isFree ? (
-              <span className="text-base font-bold" style={{ color: "hsl(160 70% 38%)" }}>Free to borrow</span>
-            ) : (
-              <span className="text-base font-bold" style={{ color: "hsl(330 85% 50%)" }}>
-                ${price!.toFixed(0)}
+            {/* Four states, and NO non-null assertion on the price.
+                `price!.toFixed(0)` used to sit in the final branch, which
+                was only safe because the old isFree swallowed every
+                priceless item. With isFree narrowed to "offered to borrow,
+                no rate", a free GIVEAWAY (is_donated, no sale price) fell
+                through to it and would have thrown on null. */}
+            {rentLabel ? (
+              <span className="text-base font-bold" style={{ color: "hsl(160 70% 38%)" }}>
+                {rentLabel}
               </span>
-
-            )}
+            ) : isFree ? (
+              <span className="text-base font-bold" style={{ color: "hsl(160 70% 38%)" }}>Free to borrow</span>
+            ) : isGiveaway ? (
+              /* The app's word for is_donated is "Free" (see
+                 useNearbyItems.nearbyAction). Not "donated", which on the
+                 website still reads as "already gone". */
+              <span className="text-base font-bold" style={{ color: "hsl(160 70% 38%)" }}>Free</span>
+            ) : price !== null ? (
+              <span className="text-base font-bold" style={{ color: "hsl(330 85% 50%)" }}>
+                ${price.toFixed(0)}
+              </span>
+            ) : null}
           </div>
         </div>
       </div>
