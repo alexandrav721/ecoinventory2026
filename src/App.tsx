@@ -27,6 +27,7 @@ import Notifications from "./pages/Notifications";
 import NotFound from "./pages/NotFound";
 import AddItem from "./pages/AddItem";
 import Home from "./pages/Home";
+import Insights from "./pages/Insights";
 import EditItem from "./pages/EditItem";
 import Quiz from "./pages/Quiz";
 import Declutter from "./pages/Declutter";
@@ -88,6 +89,7 @@ const App = () => (
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/home" element={<Home />} />
+            <Route path="/insights" element={<Insights />} />
             <Route path="/dashboard/add-item" element={<AddItem />} />
             <Route path="/dashboard/quiz" element={<Quiz />} />
             <Route path="/dashboard/declutter" element={<Declutter />} />

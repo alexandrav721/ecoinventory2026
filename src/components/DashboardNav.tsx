@@ -49,6 +49,10 @@ const DashboardNav = () => {
   const loggedIn = isDemoMode || isAuthed === true;
 
   const myEstateItems: NavItem[] = [
+    /* Home and Insights lead, matching the app's tab order: what you own
+       first, the tools after. Both read the same rows as the phone. */
+    { path: "/home", label: "Home", icon: Home },
+    { path: "/insights", label: "Everything you own", icon: BarChart3 },
     { path: "/me", label: "My Profile", icon: User },
     { path: "/dashboard", label: t('dashboard.analytics'), icon: BarChart3, tab: "analytics" },
     { path: "/dashboard", label: t('dashboard.myInventory'), icon: Package, tab: "inventory" },
