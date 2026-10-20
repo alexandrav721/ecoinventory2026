@@ -91,7 +91,7 @@ const AddItem = () => {
     original_price: "",
     purchase_date: "",
     image_urls: [] as string[],
-    condition: "good",
+    condition: "",
     usage_frequency: "",
     sharing_level: "private" as "private" | "friends" | "public",
     /* false, matching the app (ecoinventory-mobile/app/(tabs)/add.tsx:
@@ -152,7 +152,7 @@ const AddItem = () => {
     original_price: "",
     purchase_date: "",
     image_urls: [] as string[],
-    condition: "good",
+    condition: "",
     usage_frequency: "",
     sharing_level: "private" as "private" | "friends" | "public",
     /* false, matching the app (ecoinventory-mobile/app/(tabs)/add.tsx:
@@ -207,7 +207,7 @@ const AddItem = () => {
         brand: aiData.brand || "",
         color: aiData.color || "",
         size: aiData.size || "",
-        condition: conditionMap[aiData.condition] || "good",
+        condition: conditionMap[aiData.condition] ?? "",
         original_price: aiData.estimatedPrice ? aiData.estimatedPrice.toString() : "",
         image_urls: quickAddData.imageUrl ? [quickAddData.imageUrl] : [],
       }));
@@ -288,7 +288,15 @@ const AddItem = () => {
           image_urls: formData.image_urls,
           category_id: formData.category_id || null,
           quantity: formData.quantity,
-          condition: formData.condition,
+          /* Unset, not "good". The app initialises condition to null
+             (app/(tabs)/add.tsx:402) and writes only what the owner picked;
+             an item with no condition shows no condition chip. The website
+             seeded "good" into the form and wrote it unconditionally, so
+             anyone who never opened this picker published a condition they
+             never stated — and editing an app item here STAMPED "good" onto
+             a row whose owner had deliberately left it blank. Same rule as
+             purchase_date: a field that hides rather than lies is better. */
+          condition: formData.condition || null,
           usage_frequency: formData.usage_frequency || null,
           sharing_level: formData.sharing_level,
           is_available_for_sharing: formData.sharing_level !== "private",
@@ -403,7 +411,7 @@ const AddItem = () => {
             brand: aiData.brand || "",
             color: aiData.color || "",
             size: aiData.size || "",
-            condition: conditionMap[aiData.condition] || "good",
+            condition: conditionMap[aiData.condition] ?? "",
             original_price: aiData.estimatedPrice ? aiData.estimatedPrice.toString() : "",
             quantity: aiData.quantity || 1,
           });
@@ -427,7 +435,7 @@ const AddItem = () => {
           category_id: matchCategoryId(aiData.category) || null,
           brand: aiData.brand || null,
           color: aiData.color || null,
-          condition: conditionMap[aiData.condition] || 'good',
+          condition: conditionMap[aiData.condition] ?? "",
           size: aiData.size || null,
           original_price: aiData.estimatedPrice || null,
           quantity: aiData.quantity || 1,
@@ -466,7 +474,7 @@ const AddItem = () => {
           brand: aiData.brand || "",
           color: aiData.color || "",
           size: aiData.size || "",
-          condition: conditionMap[aiData.condition] || "good",
+          condition: conditionMap[aiData.condition] ?? "",
           original_price: aiData.estimatedPrice ? aiData.estimatedPrice.toString() : "",
           image_urls: smartImage ? [smartImage] : [],
         });
@@ -602,7 +610,7 @@ const AddItem = () => {
           category_id: categoryId || null,
           brand: aiData.brand || null,
           color: aiData.color || null,
-          condition: conditionMap[aiData.condition] || 'good',
+          condition: conditionMap[aiData.condition] ?? "",
           size: aiData.size || null,
           original_price: aiData.estimatedPrice || null,
           image_urls: [img.url],
@@ -659,7 +667,7 @@ const AddItem = () => {
         color: product.color || null,
         dimensions: product.dimensions || null,
         quantity: 1,
-        condition: 'good'
+        condition: ""
       }));
 
       const { error } = await supabase
@@ -1290,7 +1298,9 @@ const AddItem = () => {
                   onValueChange={(value) => setFormData({ ...formData, condition: value })}
                 >
                   <SelectTrigger>
-                    <SelectValue />
+                    {/* A placeholder, because "" is now a real value meaning
+                          "the owner did not say" — not a broken form. */}
+                      <SelectValue placeholder="Not said" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="new">New</SelectItem>

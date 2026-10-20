@@ -1,6 +1,13 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import {
+  DEFAULT_RENT_WINDOW,
+  RENT_WINDOWS,
+  WINDOW_DESCRIPTION,
+  asRentWindow,
+  type RentWindow,
+} from "@/lib/rentWindow";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { toast } from "sonner";
@@ -54,10 +61,17 @@ const EditItem = () => {
     original_price: "",
     purchase_date: "",
     image_urls: [] as string[],
-    condition: "good",
+    condition: "",
     usage_frequency: "",
     sharing_level: "private" as "private" | "friends" | "public",
     sharing_price: "",
+    /* Rent used to be absent from this screen entirely, which made saving
+       ANY edit destructive: the update wrote the whole sharing block and
+       left rent_price out, so a paid rental became a free loan the moment
+       its owner changed its colour. Blank here means lend free, same as on
+       the add form. */
+    rent_price: "",
+    rent_window: DEFAULT_RENT_WINDOW as RentWindow,
     is_for_borrow: true,
     is_for_sale: false,
     tags: [] as string[],
@@ -112,10 +126,17 @@ const EditItem = () => {
           original_price: data.original_price?.toString() || "",
           purchase_date: data.purchase_date || "",
           image_urls: data.image_urls || [],
-          condition: data.condition || "good",
+          condition: data.condition || "",
           usage_frequency: data.usage_frequency || "",
           sharing_level: (data.sharing_level as "private" | "friends" | "public") || "private",
           sharing_price: data.sharing_price?.toString() || "",
+          rent_price: (data as any).rent_price?.toString() || "",
+          /* asRentWindow returns null for anything it does not recognise
+             rather than guessing — guessing "day" is how a monthly rate
+             gets billed thirty times. The fallback applies only to the
+             picker's starting position, never to a stored value. */
+          rent_window:
+            asRentWindow((data as any).rent_window) ?? DEFAULT_RENT_WINDOW,
           is_for_borrow: data.is_for_borrow ?? true,
           is_for_sale: data.is_for_sale ?? false,
           tags: data.tags || [],
@@ -188,13 +209,26 @@ const EditItem = () => {
           image_urls: formData.image_urls,
           category_id: formData.category_id || null,
           quantity: formData.quantity,
-          condition: formData.condition,
+          condition: formData.condition || null,
           usage_frequency: formData.usage_frequency || null,
           sharing_level: formData.sharing_level,
           sharing_price: formData.is_for_sale && formData.sharing_price
             ? parseFloat(formData.sharing_price)
             : null,
           is_available_for_sharing: formData.sharing_level !== "private",
+          /* Price and window travel together or not at all. */
+          rent_price:
+            formData.sharing_level !== "private" &&
+            formData.is_for_borrow &&
+            formData.rent_price
+              ? parseFloat(formData.rent_price)
+              : null,
+          rent_window:
+            formData.sharing_level !== "private" &&
+            formData.is_for_borrow &&
+            formData.rent_price
+              ? formData.rent_window
+              : null,
           is_for_borrow: formData.sharing_level !== "private" ? formData.is_for_borrow : false,
           is_for_sale: formData.sharing_level !== "private" ? formData.is_for_sale : false,
           is_donated: formData.is_donated,
@@ -353,7 +387,9 @@ const EditItem = () => {
                   onValueChange={(value) => setFormData({ ...formData, condition: value })}
                 >
                   <SelectTrigger>
-                    <SelectValue />
+                    {/* A placeholder, because "" is now a real value meaning
+                          "the owner did not say" — not a broken form. */}
+                      <SelectValue placeholder="Not said" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="new">New</SelectItem>
@@ -385,11 +421,22 @@ const EditItem = () => {
                 <SelectTrigger>
                   <SelectValue placeholder="Select frequency" />
                 </SelectTrigger>
+                {/* THE APP'S FIVE, EXACTLY. This list used to be
+                    daily | frequent | occasional | rare — only "daily"
+                    existed in both vocabularies. The app validates a
+                    loaded value against its five and drops anything else
+                    to null (app/edit-item/[id].tsx:417), so marking a
+                    bread maker "Rare" here showed NOTHING selected on the
+                    phone, and the next phone save wrote that null back,
+                    erasing the answer. The exact strings matter downstream
+                    too: Room Sweep, Insights and the neglect score all
+                    query .in("usage_frequency", ["rarely", "never"]). */}
                 <SelectContent>
                   <SelectItem value="daily">Daily</SelectItem>
-                  <SelectItem value="frequent">Frequent</SelectItem>
-                  <SelectItem value="occasional">Occasional</SelectItem>
-                  <SelectItem value="rare">Rare</SelectItem>
+                  <SelectItem value="weekly">Weekly</SelectItem>
+                  <SelectItem value="monthly">Monthly</SelectItem>
+                  <SelectItem value="rarely">Rarely</SelectItem>
+                  <SelectItem value="never">Never</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -443,6 +490,52 @@ const EditItem = () => {
                       onCheckedChange={(v) => setFormData({ ...formData, is_for_borrow: v })}
                     />
                   </div>
+                  {formData.is_for_borrow && (
+                    <div className="space-y-1.5">
+                      <Label htmlFor="rent_price" className="text-sm">
+                        Rent rate (USD)
+                        <span className="ml-2 font-normal text-muted-foreground">
+                          optional
+                        </span>
+                      </Label>
+                      <div className="flex gap-2">
+                        <Input
+                          id="rent_price"
+                          type="number"
+                          min="0"
+                          step="0.01"
+                          placeholder="Blank = lend it free"
+                          value={formData.rent_price}
+                          onChange={(e) =>
+                            setFormData({ ...formData, rent_price: e.target.value })
+                          }
+                          className="flex-1"
+                        />
+                        <Select
+                          value={formData.rent_window}
+                          onValueChange={(v) =>
+                            setFormData({ ...formData, rent_window: v as RentWindow })
+                          }
+                        >
+                          <SelectTrigger className="w-[150px] shrink-0">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {RENT_WINDOWS.map((w) => (
+                              <SelectItem key={w} value={w}>
+                                per {w}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        {formData.rent_price
+                          ? WINDOW_DESCRIPTION[formData.rent_window]
+                          : "No rate means you're happy to lend it for nothing."}
+                      </p>
+                    </div>
+                  )}
                   <div className="flex items-center justify-between gap-3">
                     <div>
                       <p className="text-sm font-medium">For sale</p>

@@ -92,12 +92,30 @@ const Declutter = () => {
           category_name: catMap.get(it.category_id) ?? null,
         }));
       } else {
+        /* SCOPE TO THE OWNER. This query had no user_id filter at all, and
+           the table's cross-user SELECT policy is `is_available_for_sharing
+           = true` — so the declutter deck was dealing out every other
+           member's shared belongings for you to triage. Worse, the submit
+           handler below writes is_donated / is_sold by row id, so "Donate"
+           on a stranger's sofa issued an UPDATE against their row. The
+           UPDATE policy (auth.uid() = user_id) rejected it, which is the
+           only reason this was embarrassing rather than destructive: the
+           writes landed in the `failed` count and the deck still showed you
+           things that were never yours. */
+        const { data: auth } = await supabase.auth.getUser();
+        const uid = auth?.user?.id;
+        if (!uid) {
+          setQueue([]);
+          setLoading(false);
+          return;
+        }
         const [{ data: rawItems }, { data: cats }] = await Promise.all([
           supabase
             .from("inventory_items")
             .select(
               "id, name, brand, original_price, quantity, usage_frequency, condition, image_urls, created_at, category_id, is_donated, is_sold, is_eliminated"
             )
+            .eq("user_id", uid)
             .not("is_donated", "is", true)
             .not("is_sold", "is", true)
             .not("is_eliminated", "is", true),
