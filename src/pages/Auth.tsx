@@ -62,8 +62,20 @@ const Auth = () => {
       cancelled = true;
     };
   }, []);
-  const providerReady = (name: string) =>
-    providers === null ? true : providers[name] === true;
+  const providerReady = (name: string) => {
+    /* APPLE IS NEVER OFFERED ON THE WEB, even though /auth/v1/settings
+       reports it enabled. That endpoint reports whether a provider is
+       switched on, NOT whether it has usable web credentials — asked
+       directly, /auth/v1/authorize?provider=apple answers
+       "Unsupported provider: missing OAuth secret" on both projects.
+       The iPhone signs in with Apple natively, through a different
+       credential that the web flow cannot use. So the button could only
+       ever fail, and a button that can only fail is worse than no
+       button. Delete this branch if a web Apple credential is ever
+       added. */
+    if (name === "apple") return false;
+    return providers === null ? true : providers[name] === true;
+  };
 
   const handleForgotPassword = async (e: React.FormEvent) => {
     e.preventDefault();

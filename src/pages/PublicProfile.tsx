@@ -137,8 +137,7 @@ export default function PublicProfile({ selfMode = false }: Props) {
          against the viewer's friend and block sets. */
       const itemQuery = supabase
         .from("inventory_items")
-        // /* + rent_price, rent_window when RENT_COLUMNS_PRESENT — src/lib/schemaFlags.ts */
-        .select("id, user_id, name, description, image_urls, condition, brand, sharing_price, is_available_for_sharing, sharing_level, is_for_sale, is_for_borrow, is_donated, categories(name, icon)")
+        .select("id, user_id, name, description, image_urls, condition, brand, sharing_price, rent_price, rent_window, is_available_for_sharing, sharing_level, is_for_sale, is_for_borrow, is_donated, categories(name, icon)")
         .eq("user_id", targetId)
         .eq("is_available_for_sharing", true)
         .not("is_sold", "is", true)

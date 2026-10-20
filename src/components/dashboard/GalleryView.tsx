@@ -45,7 +45,7 @@ interface Category {
   id: string;
   name: string;
   icon: string | null;
-  parent_id: string | null;
+  parent_id?: string | null;
 }
 
 interface CategoryWithItems {

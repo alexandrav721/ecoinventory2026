@@ -37,7 +37,7 @@ interface Category {
   id: string;
   name: string;
   icon: string;
-  parent_id: string | null;
+  parent_id?: string | null;
 }
 
 interface CatalogProduct {

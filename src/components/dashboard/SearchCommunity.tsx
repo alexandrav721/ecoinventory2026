@@ -1,3 +1,12 @@
+/**
+ * DEAD CODE. Nothing imports this file; the live community search is
+ * src/components/community/PickleStyleSearch.tsx.
+ *
+ * Its `profiles(...)` embed is also ambiguous against the real database —
+ * there is more than one foreign key between inventory_items and profiles,
+ * so PostgREST needs the column hinted, e.g. profiles!user_id(...). Left
+ * as-is rather than half-fixed: reviving it means rewriting the query.
+ */
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -83,7 +92,7 @@ const SearchCommunity = () => {
           description,
           condition,
           user_id,
-          profiles!inner(
+          profiles!user_id!inner(
             full_name,
             latitude,
             longitude

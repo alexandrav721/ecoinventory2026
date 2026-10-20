@@ -14,7 +14,7 @@ interface Category {
   id: string;
   name: string;
   icon: string | null;
-  parent_id: string | null;
+  parent_id?: string | null;
 }
 
 interface CategorySelectorProps {
@@ -257,9 +257,9 @@ export function CategorySelector({ value, onChange, itemName = "", onFeedback }:
 
     setCategories(data || []);
     
-    // Separate parent and child categories
-    const parents = (data || []).filter((c) => c.parent_id === null);
-    setParentCategories(parents);
+    /* The real `categories` table is a flat locked list with no
+       parent_id, so every category IS a parent. */
+    setParentCategories(data || []);
   };
 
   const loadSubCategories = async (parentId: string) => {

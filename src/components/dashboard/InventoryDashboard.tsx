@@ -1,3 +1,18 @@
+/**
+ * DEAD CODE, AND WRONG FOR THE REAL SCHEMA.
+ *
+ * Nothing imports this file (checked by walking imports from src/App.tsx).
+ * Kept rather than deleted because removing someone else's files is not
+ * mine to decide.
+ *
+ * It assumes `categories` has `parent_id` / `user_id` — a user-editable
+ * parent/child tree. The real table has neither: Loop's categories are a
+ * LOCKED flat list of twelve, shared by the app and the website, and
+ * nobody can add or rename one. Any query here naming those columns
+ * returns 400 against the live database.
+ *
+ * Reviving this means rewriting it against the flat list.
+ */
 import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
@@ -117,7 +132,7 @@ const InventoryDashboard = () => {
         .from("inventory_items")
         .select(`
           *,
-          categories (name, parent_id)
+          categories (name)
         `)
         .eq("user_id", user.id);
 
@@ -137,11 +152,8 @@ const InventoryDashboard = () => {
         // Show main categories only - roll up subcategories to their parents
         items?.forEach((item) => {
           if (item.category_id) {
-            let category = categoryMap.get(item.category_id);
-            // If it's a subcategory, find the root parent
-            while (category?.parent_id) {
-              category = categoryMap.get(category.parent_id);
-            }
+            /* No parent walk: the real categories table is flat. */
+            const category = categoryMap.get(item.category_id);
             const categoryName = category?.name || "Uncategorized";
             dataMap.set(categoryName, (dataMap.get(categoryName) || 0) + 1);
           } else {

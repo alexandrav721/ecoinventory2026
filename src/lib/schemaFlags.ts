@@ -1,5 +1,12 @@
 /**
- * Columns this website's database does not have yet.
+ * Columns the website's database may or may not have.
+ *
+ * BOTH ARE NOW TRUE, because .env.local points this site at the "Loop"
+ * project (taodxvqcgszqkqhtwkqt) — Alexandra's own, the one her iPhone app
+ * uses — and that project has rent_price, rent_window, admin_hidden and the
+ * mutes table, all verified by probe. If you ever point it back at the old
+ * pxktgcwhisjdiquezvav project, set both to false and strip the rent columns
+ * out of the four selects again, or every page that names them returns 400.
  *
  * THE WEBSITE AND THE APP POINT AT TWO DIFFERENT SUPABASE PROJECTS:
  *
@@ -31,10 +38,10 @@
  * the rent rate, the window picker and the "$8/day" labels start working;
  * nothing else in the codebase needs to change.
  */
-export const RENT_COLUMNS_PRESENT = false;
+export const RENT_COLUMNS_PRESENT = true;
 
 /** Added by the app's moderation work; absent on the website's project. */
-export const ADMIN_HIDDEN_COLUMN_PRESENT = false;
+export const ADMIN_HIDDEN_COLUMN_PRESENT = true;
 
 /**
  * The rent columns, as a select fragment — "" when they are absent, so a

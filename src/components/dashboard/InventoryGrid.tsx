@@ -69,7 +69,7 @@ interface Category {
   id: string;
   name: string;
   icon: string | null;
-  parent_id: string | null;
+  parent_id?: string | null;
 }
 
 type SortField = 'name' | 'category' | 'brand' | 'color' | 'quantity' | 'original_price' | 'condition';

@@ -1,3 +1,18 @@
+/**
+ * DEAD CODE, AND WRONG FOR THE REAL SCHEMA.
+ *
+ * Nothing imports this file (checked by walking imports from src/App.tsx).
+ * Kept rather than deleted because removing someone else's files is not
+ * mine to decide.
+ *
+ * It assumes `categories` has `parent_id` / `user_id` — a user-editable
+ * parent/child tree. The real table has neither: Loop's categories are a
+ * LOCKED flat list of twelve, shared by the app and the website, and
+ * nobody can add or rename one. Any query here naming those columns
+ * returns 400 against the live database.
+ *
+ * Reviving this means rewriting it against the flat list.
+ */
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -41,8 +56,8 @@ interface Category {
   id: string;
   name: string;
   icon: string | null;
-  parent_id: string | null;
-  user_id: string | null;
+  parent_id?: string | null;
+  user_id?: string | null;
 }
 
 const categorySchema = z.object({
@@ -192,7 +207,9 @@ const UserCategoryManager = () => {
         supabase.from("inventory_items").select("id", { count: 'exact', head: true }).eq("category_id", deleteCategory.id),
         supabase.from("suggested_brands").select("id", { count: 'exact', head: true }).eq("category_id", deleteCategory.id),
         supabase.from("product_category_mappings").select("id", { count: 'exact', head: true }).eq("category_id", deleteCategory.id),
-        supabase.from("categories").select("id", { count: 'exact', head: true }).eq("parent_id", deleteCategory.id),
+        /* parent_id does not exist on the real table; a flat list has no
+           children to count. */
+        Promise.resolve({ count: 0, error: null }),
       ]);
 
       const catalogCount = checks[0].count || 0;
@@ -258,10 +275,9 @@ const UserCategoryManager = () => {
         if (updateError) throw updateError;
 
         // Now delete all user-created categories
-        const { error: deleteError } = await supabase
-          .from("categories")
-          .delete()
-          .eq("user_id", userId);
+        /* user_id does not exist either — categories are not user-owned,
+           so there is nothing of the user\'s to delete. */
+        const deleteError: { message: string } | null = null;
 
         if (deleteError) throw deleteError;
       }

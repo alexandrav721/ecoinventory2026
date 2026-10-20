@@ -32,8 +32,8 @@ interface Category {
   id: string;
   name: string;
   icon: string | null;
-  parent_id: string | null;
-  user_id: string | null;
+  parent_id?: string | null;
+  user_id?: string | null;
 }
 
 const CategoryManager = () => {

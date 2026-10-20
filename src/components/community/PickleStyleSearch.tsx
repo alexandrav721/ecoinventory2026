@@ -61,6 +61,7 @@ import { Label } from "@/components/ui/label";
 import { ChevronRight, SlidersHorizontal, X, Lock, Globe, Users, Layers, ShoppingBag, HandHeart } from "lucide-react";
 import { isItemVisible } from "@/lib/itemVisibility";
 import { asRentWindow, formatRentPrice } from "@/lib/rentWindow";
+import { displayText } from "@/lib/displayText";
 import { ADMIN_HIDDEN_COLUMN_PRESENT } from "@/lib/schemaFlags";
 import { useVisibilityContext } from "@/hooks/useVisibilityContext";
 
@@ -172,8 +173,7 @@ export function PickleStyleSearch() {
       let q = supabase
         .from("inventory_items")
         .select(
-          // /* + rent_price, rent_window when RENT_COLUMNS_PRESENT — src/lib/schemaFlags.ts */
-          "id, user_id, name, image_urls, condition, brand, color, size, original_price, sharing_price, category_id, sharing_level, is_for_sale, is_for_borrow, is_donated"
+          "id, user_id, name, image_urls, condition, brand, color, size, original_price, sharing_price, category_id, sharing_level, is_for_sale, is_for_borrow, is_donated, rent_price, rent_window"
         )
         .eq("is_available_for_sharing", true)
         /* NOT filtering is_donated — see the header. It means "offered
@@ -227,10 +227,16 @@ export function PickleStyleSearch() {
     const condSet = new Set<string>();
     const locSet = new Set<string>();
     items.forEach((it) => {
-      if (it.size) sizeSet.add(it.size);
-      if (it.brand) brandSet.add(it.brand);
-      if (it.color) colorSet.add(it.color);
-      if (it.condition) condSet.add(it.condition);
+      /* Same reason: without this the Size filter offered "null" as a
+         size you could tick, and Brand offered "null" as a brand. */
+      const size = displayText(it.size);
+      const brand = displayText(it.brand);
+      const color = displayText(it.color);
+      const cond = displayText(it.condition);
+      if (size) sizeSet.add(size);
+      if (brand) brandSet.add(brand);
+      if (color) colorSet.add(color);
+      if (cond) condSet.add(cond);
       if (it.owner_city) locSet.add(it.owner_city);
     });
     const sortStr = (a: string, b: string) => a.localeCompare(b);
@@ -865,18 +871,21 @@ function ProductCard({ item, onOpen }: { item: Item; onOpen: () => void }) {
       </div>
 
       <div className="space-y-1 px-0.5">
-        {item.brand && (
+        {/* displayText, not a truthiness check: the live database holds
+            the literal string "null" in some brands and sizes. It is
+            truthy, so it was printing as "NULL" above the item name. */}
+        {displayText(item.brand) && (
           <p className="text-[10px] uppercase tracking-[0.14em] font-semibold" style={{ color: "hsl(217 91% 50%)" }}>
-            {item.brand}
+            {displayText(item.brand)}
           </p>
         )}
         <h3 className="text-sm font-medium leading-snug line-clamp-2 group-hover:underline">
           {item.name}
         </h3>
         <p className="text-xs text-muted-foreground">
-          {item.size ? `Size ${item.size}` : null}
-          {item.size && locText ? " · " : null}
-          {locText || (!item.size && "NYC")}
+          {displayText(item.size) ? `Size ${displayText(item.size)}` : null}
+          {displayText(item.size) && locText ? " · " : null}
+          {locText || (!displayText(item.size) && "NYC")}
         </p>
         <div className="flex items-baseline justify-between pt-1.5">
           <div className="flex items-baseline gap-1.5">
