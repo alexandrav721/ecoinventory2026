@@ -21,6 +21,8 @@ import { useMemo } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { ArrowRight, Camera, Plus } from "lucide-react";
 import { useHomeSummary, useSessionUser } from "@/hooks/useHomeSummary";
+import { useDemo } from "@/contexts/DemoContext";
+import { buildHomeSummary } from "@/lib/homeSummary";
 import { matchWant } from "@/lib/wantMatch";
 import type { ShelfKey } from "@/lib/homeSummary";
 import DashboardNav from "@/components/DashboardNav";
@@ -106,7 +108,18 @@ function Ring({
 
 export default function Home() {
   const { user, checking } = useSessionUser();
-  const { summary, firstName, items, asks, isLoading } = useHomeSummary(user?.id);
+  /* Demo mode has to work here because RootRoute sends demo visitors
+     straight to /home. Without this they bounce to /auth, which is a
+     regression this page introduced when it took over from /dashboard as
+     the signed-in landing. */
+  const { isDemoMode, demoItems } = useDemo();
+  const live = useHomeSummary(user?.id);
+
+  const summary = isDemoMode ? buildHomeSummary(demoItems as any) : live.summary;
+  const firstName = isDemoMode ? "Alex" : live.firstName;
+  const items = isDemoMode ? (demoItems as any[]) : live.items;
+  const asks = isDemoMode ? [] : live.asks;
+  const isLoading = isDemoMode ? false : live.isLoading;
 
   if (checking) {
     return <div className="min-h-screen bg-background" />;
@@ -114,7 +127,7 @@ export default function Home() {
   /* <Navigate>, not navigate() — calling the imperative one during render
      updates the router while this component is still rendering, which React
      warns about and which can drop the redirect under concurrent rendering. */
-  if (!user) {
+  if (!user && !isDemoMode) {
     return <Navigate to="/auth" replace />;
   }
 

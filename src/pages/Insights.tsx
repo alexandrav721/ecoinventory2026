@@ -31,6 +31,7 @@ import { Link, Navigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useSessionUser } from "@/hooks/useHomeSummary";
+import { useDemo } from "@/contexts/DemoContext";
 import { buildBands, type EverythingBand } from "@/lib/everything";
 import { coverageNote, coverageOf, sumKnown, tally } from "@/lib/coverage";
 import { groupDuplicates } from "@/lib/realInsights";
@@ -138,16 +139,23 @@ function Band({ band }: { band: EverythingBand }) {
 
 export default function Insights() {
   const { user, checking } = useSessionUser();
-  const { items, categories } = useInsightsData(user?.id);
+  /* Same reason as Home: demo visitors land on the signed-in surfaces and
+     must not be thrown at /auth. */
+  const { isDemoMode, demoItems, demoCategories } = useDemo();
+  const { items, categories } = useInsightsData(isDemoMode ? undefined : user?.id);
 
-  const rows = useMemo(
-    () => ((items.data ?? []) as any[]).filter((r) => !r.is_sold && !r.is_donated),
-    [items.data]
-  );
+  const rows = useMemo(() => {
+    const src = isDemoMode ? (demoItems as any[]) : ((items.data ?? []) as any[]);
+    return src.filter((r) => !r.is_sold && !r.is_donated);
+  }, [items.data, isDemoMode, demoItems]);
 
   const bands = useMemo(
-    () => buildBands(rows as any, (categories.data ?? []) as any),
-    [rows, categories.data]
+    () =>
+      buildBands(
+        rows as any,
+        (isDemoMode ? (demoCategories as any) : (categories.data ?? [])) as any
+      ),
+    [rows, categories.data, isDemoMode, demoCategories]
   );
 
   const photo = useMemo(
@@ -162,7 +170,7 @@ export default function Insights() {
   const piles = useMemo(() => groupDuplicates(rows as any), [rows]);
 
   if (checking) return <div className="min-h-screen bg-background" />;
-  if (!user) return <Navigate to="/auth" replace />;
+  if (!user && !isDemoMode) return <Navigate to="/auth" replace />;
 
   const total = rows.length;
   const useRecorded = use.find((u) => u.key === "__unrecorded")?.count ?? 0;
@@ -179,7 +187,7 @@ export default function Insights() {
           Everything you own.
         </h1>
 
-        {items.isLoading ? (
+        {!isDemoMode && items.isLoading ? (
           <div className="mt-6 h-40 rounded-2xl border border-border bg-card animate-pulse" />
         ) : total === 0 ? (
           <section className="mt-6 rounded-2xl border border-border bg-card px-6 py-8">
