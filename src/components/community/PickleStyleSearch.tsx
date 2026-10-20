@@ -598,11 +598,18 @@ export function PickleStyleSearch() {
                   </SheetContent>
                 </Sheet>
                 <span className="text-sm text-muted-foreground">
+                  {/* `degraded` never hides the grid — it only adds a
+                      note, because a count with a caveat beats a blank
+                      page. "friends" is the one worth saying out loud: it
+                      means friends-only things are being left out. */}
                   {loading || !vis.ready
-                    ? vis.failed
-                      ? "Couldn't load who you're connected to"
-                      : "Loading…"
+                    ? "Loading…"
                     : `${filtered.length} ${filtered.length === 1 ? "item" : "items"}`}
+                  {!loading &&
+                  vis.ready &&
+                  (vis.degraded === "friends" || vis.degraded === "both")
+                    ? " · couldn't check who you're connected to, so friends-only things are hidden"
+                    : ""}
                 </span>
               </div>
               <Select value={sort} onValueChange={setSort}>
