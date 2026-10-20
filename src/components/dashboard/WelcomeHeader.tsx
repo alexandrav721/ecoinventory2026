@@ -6,7 +6,6 @@ import { useDemo } from "@/contexts/DemoContext";
 import { useTranslation } from "react-i18next";
 import { ArrowRight } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { AddItemModal } from "@/components/dashboard/AddItemModal";
 import { InsightUnlocksPanel } from "@/components/dashboard/InsightUnlocksPanel";
 
 interface WelcomeHeaderProps {
@@ -79,9 +78,14 @@ export const WelcomeHeader = ({ user }: WelcomeHeaderProps) => {
         .from("inventory_items")
         .select("quantity, original_price, is_available_for_sharing, created_at")
         .eq("user_id", user.id)
-        .eq("is_sold", false)
-        .eq("is_donated", false)
-        .eq("is_eliminated", false);
+        // PostgREST `eq.false` does NOT match NULL, and all three of these
+        // columns are nullable. Every item with a NULL in any of them was
+        // being dropped from the count silently — so a user whose rows
+        // predate those columns saw a total lower than their real one.
+        // `.not(col, "is", true)` keeps NULL, which is what "not sold" means.
+        .not("is_sold", "is", true)
+        .not("is_donated", "is", true)
+        .not("is_eliminated", "is", true);
 
       if (items) {
         const totalItems = items.reduce((sum, item) => sum + (item.quantity || 1), 0);
@@ -124,7 +128,6 @@ export const WelcomeHeader = ({ user }: WelcomeHeaderProps) => {
   return (
     <div className="space-y-4">
       <InsightUnlocksPanel totalItems={stats.totalItems} />
-      <AddItemModal open={addOpen} onOpenChange={setAddOpen} />
     </div>
   );
 };

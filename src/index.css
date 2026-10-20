@@ -8,88 +8,132 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Brand palette — Blue / Cyan on white, editorial layout */
-    --background: 0 0% 100%;
-    --foreground: 215 25% 15%;
+    /* ── Loop brand, ported from the app ───────────────────────────────────
+       Source of truth: ecoinventory-mobile/src/lib/tokens.ts — the Sept 2026
+       pass, "Chic: white ground, claret accent, Archivo + Instrument Serif".
+       Every value below is that file's hex converted to HSL. Nothing here was
+       invented. If the app's palette moves, re-port it rather than retyping
+       values, or the two drift apart again — which is how they diverged in
+       the first place. */
 
-    --card: 0 0% 100%;
-    --card-foreground: 215 25% 15%;
+    /* Surfaces. Cards sit BELOW the page, not above it: a white ground cannot
+       lift a white card, so the stack inverts. That is the move that makes a
+       white page safe rather than flat. */
+    --background: 0 0% 100%;          /* paper       #FFFFFF */
+    --foreground: 20 4% 13%;            /* ink         #232120 — warm near-black */
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 215 25% 15%;
+    --card: 30 25% 98%;                 /* card        #FCFBFA */
+    --card-foreground: 20 4% 13%;
 
-    --primary: 217 91% 60%;
+    --popover: 30 25% 98%;
+    --popover-foreground: 20 4% 13%;
+
+    /* Primary is the app's dark CTA — deliberately deeper than body text. */
+    --primary: 30 8% 10%;           /* primary     #1B1917 */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 214 32% 96%;
-    --secondary-foreground: 215 25% 15%;
+    --secondary: 36 19% 95%;            /* fill        #F4F2EF */
+    --secondary-foreground: 20 4% 13%;
 
-    --muted: 0 0% 96%;
-    --muted-foreground: 215 15% 40%;
+    --muted: 36 19% 95%;
+    --muted-foreground: 33 6% 35%;  /* mutedFg     #5F5A54 */
 
-    --accent: 199 89% 48%;
-    --accent-foreground: 0 0% 100%;
+    /* shadcn's --accent is a hover SURFACE, not the brand accent, so it takes
+       the app's warm oat. The claret lives in --claret below. */
+    --accent: 37 31% 95%;         /* accentSoft  #F6F3EE */
+    --accent-foreground: 20 4% 13%;
 
-    --destructive: 0 72% 51%;
+    --destructive: 6 60% 39%;        /* danger      #9E3327 */
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 90%;
-    --input: 0 0% 90%;
-    --ring: 217 91% 60%;
+    --border: 33 15% 88%;           /* hairline    #E5E1DC — light on purpose;
+                                            heavy rules are what read cheap */
+    --input: 33 15% 88%;
+    --ring: 343 51% 36%;               /* claret      #8C2E48 */
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;                   /* RADIUS.lg   12px */
 
-    --chart-1: 217 91% 60%;
-    --chart-2: 199 89% 48%;
-    --chart-3: 38 92% 50%;
+    /* THE accent: claret. 8.1:1 on white (measured), so unlike a tint it works
+       as text AND as a fill — which is why it can be the only one. */
+    --claret: 343 51% 36%;             /* accent      #8C2E48 */
+    --claret-deep: 342 54% 27%;    /* accentDeep  #6B2036 */
+    --champagne: 37 45% 94%;     /* primarySoft #F7F2EA */
+    --line: 35 12% 81%;                 /* line        #D4CFC8 — rare stronger rule */
+    --ink-soft: 30 7% 27%;          /* inkSoft     #4A4540 */
+    --subtle: 30 6% 41%;             /* subtle      #6E6862 */
+    --faint: 32 6% 57%;               /* faint       #99938C — placeholders ONLY */
+    --success: 149 26% 32%;           /* success     #3C6650 */
 
-    --gradient-eco: linear-gradient(135deg, hsl(217 91% 60%), hsl(199 89% 48%));
-    --gradient-fun: linear-gradient(135deg, hsl(280 80% 65%), hsl(217 91% 60%), hsl(199 89% 48%));
-    --gradient-subtle: linear-gradient(180deg, hsl(0 0% 100%), hsl(217 91% 98%));
+    --chart-1: 343 51% 36%;
+    --chart-2: 149 26% 32%;
+    --chart-3: 30 7% 27%;
 
-    --shadow-soft: 0 4px 20px -4px hsl(217 91% 60% / 0.15);
-    --shadow-card: 0 2px 8px -2px hsl(217 50% 30% / 0.08);
-    --shadow-glow: 0 0 30px hsl(217 91% 60% / 0.2);
+    /* The app has no gradients. These survive only so existing utilities still
+       resolve — now a claret ramp and a paper wash, not blue-to-cyan. */
+    --gradient-eco: linear-gradient(135deg, hsl(343 51% 36%), hsl(342 54% 27%));
+    --gradient-fun: linear-gradient(135deg, hsl(342 54% 27%), hsl(343 51% 36%));
+    --gradient-subtle: linear-gradient(180deg, hsl(0 0% 100%), hsl(37 45% 94%));
+
+    /* One elevation, used rarely. tokens.ts: "Blurry drop shadows are a 2014
+       card metaphor and read cheap immediately." Surfaces separate with a
+       hairline and a tonal step instead. */
+    --shadow-soft: 0 2px 8px -2px hsl(20 4% 13% / 0.07);
+    --shadow-card: 0 1px 3px -1px hsl(20 4% 13% / 0.05);
+    --shadow-glow: 0 2px 8px -2px hsl(343 51% 36% / 0.12);
 
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   }
 
+  /* The app ships light-only. This is the same system on a warm dark ground,
+     with the claret LIFTED: #8C2E48 is 8.1:1 on white but only ~2.5:1 on a
+     dark page, so dark mode needs a lighter claret or the accent stops being
+     legible as text — which was the whole argument for choosing it. */
   .dark {
-    --background: 222 47% 11%;
-    --foreground: 210 40% 98%;
+    --background: 30 5% 9%;             /* #171615 */
+    --foreground: 30 21% 95%;            /* #F4F1EE */
 
-    --card: 222 47% 15%;
-    --card-foreground: 210 40% 98%;
+    --card: 20 5% 12%;                 /* #1F1D1C */
+    --card-foreground: 30 21% 95%;
 
-    --popover: 222 47% 15%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 20 5% 12%;
+    --popover-foreground: 30 21% 95%;
 
-    --primary: 217 91% 60%;
-    --primary-foreground: 222 47% 11%;
+    --primary: 30 21% 95%;
+    --primary-foreground: 30 5% 9%;
 
-    --secondary: 217 33% 17%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 20 4% 14%;            /* #262423 */
+    --secondary-foreground: 30 21% 95%;
 
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 65%;
+    --muted: 20 4% 14%;
+    --muted-foreground: 32 7% 62%;  /* #A49E97 */
 
-    --accent: 199 89% 48%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 20 4% 14%;
+    --accent-foreground: 30 21% 95%;
 
-    --destructive: 0 72% 51%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive: 7 56% 66%;
+    --destructive-foreground: 30 5% 9%;
 
-    --border: 217 33% 24%;
-    --input: 217 33% 24%;
-    --ring: 217 91% 60%;
+    --border: 12 5% 19%;           /* #332F2E */
+    --input: 12 5% 19%;
+    --ring: 345 61% 69%;               /* lifted claret #E08098 */
 
-    --chart-1: 217 91% 60%;
-    --chart-2: 142 76% 46%;
-    --chart-3: 38 92% 60%;
-    
-    --shadow-soft: 0 4px 20px -4px hsl(217 91% 60% / 0.25);
-    --shadow-card: 0 2px 8px -2px hsl(0 0% 0% / 0.3);
+    --claret: 345 61% 69%;
+    --claret-deep: 345 45% 60%;
+    --champagne: 344 17% 12%;
+    --line: 12 4% 26%;
+    --ink-soft: 33 11% 84%;
+    --subtle: 32 7% 62%;
+    --faint: 30 6% 41%;
+    --success: 145 25% 60%;
+
+    --chart-1: 345 61% 69%;
+    --chart-2: 145 25% 60%;
+    --chart-3: 33 11% 84%;
+
+    --shadow-soft: 0 2px 8px -2px hsl(0 0% 0% / 0.40);
+    --shadow-card: 0 1px 3px -1px hsl(0 0% 0% / 0.30);
+    --shadow-glow: 0 2px 8px -2px hsl(345 61% 69% / 0.18);
   }
 }
 
@@ -117,15 +161,23 @@ All colors MUST be HSL.
   }
 
   /* Fun hover effects for buttons and cards */
+  /* The app's editorial voice: Instrument Serif. Fraunces' variable axes
+     (SOFT / WONK) mean nothing on this face, so they go rather than sit inert
+     in the stylesheet. */
   .font-display {
-    font-family: 'Fraunces', 'Iowan Old Style', Georgia, serif;
-    font-optical-sizing: auto;
-    font-variation-settings: "SOFT" 50, "WONK" 0;
-    letter-spacing: -0.02em;
+    font-family: 'Instrument Serif', 'Iowan Old Style', Georgia, serif;
+    font-weight: 400;
+    letter-spacing: -0.01em;
   }
-  .font-display-wonk {
-    font-family: 'Fraunces', Georgia, serif;
-    font-variation-settings: "SOFT" 100, "WONK" 1;
+  /* Screen titles in the app are Instrument Serif ITALIC. That is the
+     editorial moment, and it is the single thing that makes a page read as
+     Loop rather than as a generic marketplace. */
+  .font-display-wonk,
+  .font-display-italic {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: -0.01em;
   }
   .editorial-rule {
     @apply h-px w-12 bg-foreground/40;

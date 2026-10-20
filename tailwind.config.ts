@@ -14,13 +14,26 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
-        display: ['Fraunces', 'Iowan Old Style', 'Georgia', 'serif'],
-      },
+          // Sept 2026 — Archivo + Instrument Serif, matching the app's
+          // src/lib/tokens.ts. `sans` is the UI voice; `display`/`serif`
+          // carry Instrument Serif, italic being the editorial moment.
+          sans: ['Archivo', 'system-ui', '-apple-system', 'sans-serif'],
+          display: ['Instrument Serif', 'Iowan Old Style', 'Georgia', 'serif'],
+          serif: ['Instrument Serif', 'Georgia', 'serif'],
+        },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
+        // Brand tokens beyond shadcn's defaults, so claret is reachable as
+        // a class (text-claret, bg-claret, border-claret) rather than a hex.
+        claret: {
+          DEFAULT: "hsl(var(--claret))",
+          deep: "hsl(var(--claret-deep))",
+        },
+        champagne: "hsl(var(--champagne))",
+        line: "hsl(var(--line))",
+        success: "hsl(var(--success))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {

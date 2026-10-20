@@ -26,6 +26,7 @@ import Messages from "./pages/Messages";
 import Notifications from "./pages/Notifications";
 import NotFound from "./pages/NotFound";
 import AddItem from "./pages/AddItem";
+import Home from "./pages/Home";
 import EditItem from "./pages/EditItem";
 import Quiz from "./pages/Quiz";
 import Declutter from "./pages/Declutter";
@@ -61,7 +62,11 @@ const RootRoute = () => {
   }, []);
 
   if (authState === "loading") return null;
-  if (authState === "in" || isDemoMode) return <Navigate to="/dashboard" replace />;
+  // Signed-in visitors land on Home — the summary — rather than straight into
+  // /dashboard, which is a tabbed workspace with a dozen panels. Same reason
+  // the app grew a Home tab: the first thing Loop says to you should be what
+  // you have, not a set of tools. /dashboard is still there, one click away.
+  if (authState === "in" || isDemoMode) return <Navigate to="/home" replace />;
   // Logged-out visitors get the marketing landing for the iPhone app. It used
   // to redirect to /how-it-works (the old web-app tour), which never mentioned
   // that Loop is a mobile app or how to get it.
@@ -82,6 +87,7 @@ const App = () => (
             <Route path="/auth" element={<Auth />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/home" element={<Home />} />
             <Route path="/dashboard/add-item" element={<AddItem />} />
             <Route path="/dashboard/quiz" element={<Quiz />} />
             <Route path="/dashboard/declutter" element={<Declutter />} />

@@ -1,6 +1,5 @@
-import { useState } from "react";
 import { ArrowRight } from "lucide-react";
-import { AddItemModal } from "@/components/dashboard/AddItemModal";
+import { useNavigate } from "react-router-dom";
 
 interface InsightUnlocksPanelProps {
   totalItems: number;
@@ -13,7 +12,11 @@ const UNLOCKS = [
 ] as const;
 
 export const InsightUnlocksPanel = ({ totalItems }: InsightUnlocksPanelProps) => {
-  const [addOpen, setAddOpen] = useState(false);
+  /* Was opening AddItemModal, which contains zero Supabase calls and a
+     MOCK_EMAIL_ITEMS array — a signed-in user could fill it in and nothing
+     was ever written. /dashboard/add-item is the page that actually
+     inserts into inventory_items, and therefore the page the app sees. */
+  const navigate = useNavigate();
 
   const next = UNLOCKS.find((u) => totalItems < u.threshold);
   const allUnlocked = !next;
@@ -41,7 +44,7 @@ export const InsightUnlocksPanel = ({ totalItems }: InsightUnlocksPanelProps) =>
         </div>
         <button
           type="button"
-          onClick={() => !allUnlocked && setAddOpen(true)}
+          onClick={() => !allUnlocked && navigate("/dashboard/add-item")}
           disabled={allUnlocked}
           className="text-sm text-foreground hover:text-primary transition-colors whitespace-nowrap inline-flex items-center gap-1 disabled:opacity-60 disabled:cursor-default"
         >
@@ -49,7 +52,6 @@ export const InsightUnlocksPanel = ({ totalItems }: InsightUnlocksPanelProps) =>
           {!allUnlocked && <ArrowRight className="w-3.5 h-3.5" />}
         </button>
       </div>
-      <AddItemModal open={addOpen} onOpenChange={setAddOpen} />
     </>
   );
 };

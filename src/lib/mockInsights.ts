@@ -1,3 +1,17 @@
+/**
+ * ⚠️ DEAD FILE as of Oct 2026 — nothing imports this any more.
+ *
+ * It was imported by InventoryPickleView and DuplicateAlertBanner WITHOUT a
+ * demo-mode guard, which meant real signed-in users were shown invented
+ * numbers: "12 people want this" for anything containing "macbook",
+ * "Est. $220 resale value" for a camera group that may not have existed.
+ *
+ * Replaced by src/lib/realInsights.ts, which counts duplicates from the
+ * user's own rows and demand from open item_requests.
+ *
+ * Kept only so the DEMO_ITEMS path has something to point at if demo mode is
+ * ever rebuilt. Do not import it from anything a signed-in user can reach.
+ */
 // Mock/static insight data for the My Assets view.
 // Keyed by lowercase substrings of item names from DEMO_ITEMS so it lights up
 // out of the box in demo mode and degrades gracefully for real users.

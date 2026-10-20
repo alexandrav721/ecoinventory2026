@@ -25,7 +25,7 @@ import { ItemDetailSheet } from "@/components/dashboard/ItemDetailSheet";
 import { DuplicateAlertBanner } from "@/components/dashboard/DuplicateAlertBanner";
 import { InsightChipRow } from "@/components/dashboard/InsightChipRow";
 import { LowInventoryPreviewBanner } from "@/components/dashboard/LowInventoryPreviewBanner";
-import { MOCK_DUPLICATE_GROUPS, findDemandSignal } from "@/lib/mockInsights";
+import { groupDuplicates, itemsWanted, useOpenWants, wantsMatching } from "@/lib/realInsights";
 import {
   categoryToGroup,
   TOP_LEVEL_GROUPS,
@@ -242,20 +242,27 @@ const InventoryPickleView = () => {
     [items]
   );
 
+  /* Real duplicates from the user's own rows, and real demand from open
+     item_requests. Both used to come from src/lib/mockInsights.ts, which
+     hardcoded "12 people want this" for anything containing "macbook" and
+     showed it to signed-in users with no demo guard. */
+  const { data: openWants } = useOpenWants();
+
   const insightSummary = useMemo(() => {
-    const groups = MOCK_DUPLICATE_GROUPS.filter((g) =>
-      g.matchTerms.some((t) => itemNames.some((n) => n.includes(t)))
-    );
-    const duplicateValue = groups.reduce((s, g) => s + g.estResaleValue, 0);
-    const demandCount = items.filter((i) => !!findDemandSignal(i.name)).length;
-    const allDupTerms = groups.flatMap((g) => g.matchTerms);
+    const piles = groupDuplicates(items);
+    const wanted = itemsWanted(items, openWants);
     return {
-      duplicateGroups: groups.length,
-      duplicateValue,
-      demandCount,
-      allDupTerms,
+      duplicateGroups: piles.length,
+      /* No money. The old figure was an invented estResaleValue per group;
+         there is no resale-price source in this database, and a dashboard
+         cannot carry the caveat a guessed valuation would need. 0 makes
+         InsightChipRow drop the chip entirely. */
+      duplicateValue: 0,
+      demandCount: wanted.length,
+      allDupTerms: piles.flatMap((p) => p.terms),
+      wantedTerms: wanted.map((i) => i.name.toLowerCase()),
     };
-  }, [items, itemNames]);
+  }, [items, openWants]);
 
   const scrollToGrid = () => {
     document
@@ -517,13 +524,7 @@ const InventoryPickleView = () => {
           demandCount={insightSummary.demandCount}
           duplicateValue={insightSummary.duplicateValue}
           onClickDuplicates={() => highlightAndScroll(insightSummary.allDupTerms)}
-          onClickDemand={() =>
-            highlightAndScroll(
-              items
-                .filter((i) => !!findDemandSignal(i.name))
-                .map((i) => i.name.toLowerCase())
-            )
-          }
+          onClickDemand={() => highlightAndScroll(insightSummary.wantedTerms)}
         />
 
         {/* Duplicate alert banner */}
@@ -565,6 +566,7 @@ const InventoryPickleView = () => {
                     key={it.id}
                     item={it}
                     highlighted={highlighted}
+                    demandCount={wantsMatching(it.name, openWants)}
                     onClick={() => setOpenItemId(it.id)}
                   />
                 );
@@ -586,12 +588,15 @@ const ItemCard = ({
   item,
   onClick,
   highlighted = false,
+  demandCount = 0,
 }: {
   item: Item;
   onClick: () => void;
   highlighted?: boolean;
+  /** Open asks this item could answer. Computed by the parent, which holds
+   *  the wants list — a leaf card should not run its own query. */
+  demandCount?: number;
 }) => {
-  const demand = findDemandSignal(item.name);
   return (
     <button
       onClick={onClick}
@@ -618,14 +623,20 @@ const ItemCard = ({
           </div>
         )}
 
-        {demand && (
+        {/* A count, not a slogan. This used to read "High demand nearby" or
+            "12 people want this" from a hardcoded list — claims no one could
+            check. This is how many open asks could actually match, and the
+            badge simply doesn't render when the answer is none. */}
+        {demandCount > 0 && (
           <div
-            className="absolute top-1.5 right-1.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/95 text-white text-[10px] font-semibold shadow-md backdrop-blur-sm"
-            title={demand.label}
+            className="absolute top-1.5 right-1.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-claret/95 text-white text-[10px] font-semibold shadow-md backdrop-blur-sm"
+            title={`${demandCount} open ${demandCount === 1 ? "ask" : "asks"} might match this`}
           >
             <Flame className="w-3 h-3" />
-            <span className="hidden sm:inline">{demand.label}</span>
-            <span className="sm:hidden">Hot</span>
+            <span className="hidden sm:inline">
+              {demandCount} {demandCount === 1 ? "ask" : "asks"}
+            </span>
+            <span className="sm:hidden">{demandCount}</span>
           </div>
         )}
       </div>
