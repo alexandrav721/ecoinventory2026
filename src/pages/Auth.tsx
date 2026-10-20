@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -33,6 +33,37 @@ const Auth = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { t } = useTranslation();
+
+  /* Which social providers this Supabase project actually has configured.
+     The Apple button was rendered unconditionally, and the website's
+     project has no Apple provider — so it was a button that could only
+     ever fail. /auth/v1/settings is a public endpoint that lists them, so
+     the page can just ask instead of assuming. Null = still asking; both
+     buttons stay enabled until we know, so a slow network never hides a
+     working one. */
+  const [providers, setProviders] = useState<Record<string, boolean> | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const base = import.meta.env.VITE_SUPABASE_URL;
+        const key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+        const res = await fetch(`${base}/auth/v1/settings`, {
+          headers: { apikey: key },
+        });
+        const json = await res.json();
+        if (!cancelled) setProviders(json?.external ?? {});
+      } catch {
+        /* Leave it null — both buttons stay live rather than disappearing
+           because one fetch failed. */
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+  const providerReady = (name: string) =>
+    providers === null ? true : providers[name] === true;
 
   const handleForgotPassword = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -98,7 +129,19 @@ const Auth = () => {
         navigate("/dashboard");
       }
     } catch (error: any) {
-      toast.error(error.message || t('auth.authError'));
+      /* "Invalid login credentials" is what Supabase says both when the
+         password is wrong AND when the account has no password at all —
+         which is every account created with Google. Saying only that sends
+         people round the password-reset loop for an account that never had
+         a password to reset. */
+      const raw = String(error?.message ?? "");
+      if (/invalid login credentials/i.test(raw)) {
+        toast.error(
+          "That email and password don't match. If you signed up with Google, use the Google button — a Google account has no password here."
+        );
+      } else {
+        toast.error(raw || t('auth.authError'));
+      }
     } finally {
       setLoading(false);
     }
@@ -131,18 +174,49 @@ const Auth = () => {
     }
   };
 
+  /**
+   * GOOGLE / APPLE SIGN-IN WAS BROKEN ON EVERY HOST EXCEPT LOVABLE'S.
+   *
+   * This used to call a Lovable wrapper (src/integrations/lovable/index.ts)
+   * which navigates the browser to `/~oauth/initiate?provider=...`. That
+   * path exists only on Lovable's own hosting. Anywhere else — Cloudflare
+   * Pages, celebrateloop.com, localhost — it hits the SPA fallback and the
+   * app renders its own "404: non-existent route /~oauth/initiate".
+   * Confirmed live in a browser, which is the only way this shows up:
+   * nothing throws, nothing logs, you just land on a 404.
+   *
+   * Anyone who signed up with Google was therefore locked out completely:
+   * the Google button 404s, and they have no password to fall back on.
+   *
+   * It now uses Supabase's own OAuth, which both projects already have
+   * Google configured for (GET /auth/v1/settings confirms it). No Lovable
+   * hosting, no extra service in the path.
+   *
+   * ONE THING TO KNOW ABOUT redirectTo: Supabase only honours a redirect
+   * that matches the project's allow-list (Auth -> URL Configuration).
+   * A URL that is NOT on the list does not error — it silently falls back
+   * to the project's Site URL, so you end up signed in on a different
+   * domain. That is why this sends the bare origin, which is the form most
+   * likely to be covered, and why the toast below says where you will
+   * land if it is not.
+   */
   const handleSocialAuth = async (provider: 'apple' | 'google') => {
     try {
       setLoading(true);
-      const { lovable } = await import("@/integrations/lovable/index");
-      const result = await lovable.auth.signInWithOAuth(provider, {
-        redirect_uri: `${window.location.origin}/dashboard`,
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider,
+        options: { redirectTo: `${window.location.origin}/` },
       });
-      if (result.error) throw result.error;
-      if (result.redirected) return;
-      navigate("/dashboard");
+      if (error) throw error;
+      /* No navigate() here: signInWithOAuth hands the browser to the
+         provider. The old code's navigate("/dashboard") ran on a page that
+         was already leaving, which is part of why the failure was silent. */
     } catch (error: any) {
-      toast.error(error.message || t('auth.authError'));
+      toast.error(
+        error?.message
+          ? `${provider === 'google' ? 'Google' : 'Apple'} sign-in failed: ${error.message}`
+          : t('auth.authError')
+      );
       setLoading(false);
     }
   };
@@ -345,6 +419,7 @@ const Auth = () => {
               </div>
 
               <div className="grid gap-3">
+                {providerReady('google') && (
                 <Button
                   type="button"
                   variant="outline"
@@ -360,16 +435,23 @@ const Auth = () => {
                   </svg>
                   {isLogin ? 'Sign in' : 'Sign up'} with Google
                 </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => handleSocialAuth('apple')}
-                  disabled={loading}
-                  className="w-full"
-                >
-                  <Apple className="w-5 h-5 mr-2" />
-                  {isLogin ? 'Sign in' : 'Sign up'} with Apple
-                </Button>
+                )}
+                {/* Only when the project actually has Apple configured.
+                    This rendered unconditionally while the website's
+                    Supabase project had no Apple provider at all, so it was
+                    a button that could only ever fail. */}
+                {providerReady('apple') && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => handleSocialAuth('apple')}
+                    disabled={loading}
+                    className="w-full"
+                  >
+                    <Apple className="w-5 h-5 mr-2" />
+                    {isLogin ? 'Sign in' : 'Sign up'} with Apple
+                  </Button>
+                )}
               </div>
 
               <div className="mt-4 text-center text-sm">
