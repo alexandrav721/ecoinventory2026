@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { isItemVisible } from "@/lib/itemVisibility";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import AppHeader from "@/components/AppHeader";
@@ -57,6 +58,17 @@ export default function People() {
       });
       setFriendIds(fIds);
 
+      /* Blocks, for the item counts below. The website had never read this
+         table, so somebody blocked on the phone still had their things
+         counted here. */
+      const { data: muteRows } = await (supabase as any)
+        .from("mutes")
+        .select("muted_id")
+        .eq("muter_id", user.id);
+      const mIds = new Set<string>(
+        ((muteRows ?? []) as { muted_id: string }[]).map((r) => r.muted_id)
+      );
+
       // All other profiles
       const { data: all } = await supabase
         .from("profiles")
@@ -76,14 +88,31 @@ export default function People() {
         followerCount.set(f.followee_id, (followerCount.get(f.followee_id) ?? 0) + 1);
       });
 
-      // Available items count per user (publicly available for sharing)
+      /* "N items" per person, counted with the SAME rule that decides what
+         you can actually open. It used to count every
+         is_available_for_sharing row, friends-only ones included — so a
+         stranger's card promised twelve items and their profile showed
+         three. A number you cannot click through to is worse than none. */
       const { data: itemsData } = await supabase
         .from("inventory_items")
-        .select("user_id")
+        .select(
+          "user_id, sharing_level, image_urls, is_for_sale, is_for_borrow, is_donated"
+        )
         .in("user_id", ids.length ? ids : ["00000000-0000-0000-0000-000000000000"])
-        .eq("is_available_for_sharing", true);
+        .eq("is_available_for_sharing", true)
+        .not("is_sold", "is", true)
+        .not("is_eliminated", "is", true);
       const itemCount = new Map<string, number>();
       (itemsData ?? []).forEach((i: any) => {
+        if (
+          !isItemVisible(i, {
+            friendSet: fIds,
+            muteSet: mIds,
+            requirePhoto: true,
+          })
+        ) {
+          return;
+        }
         itemCount.set(i.user_id, (itemCount.get(i.user_id) ?? 0) + 1);
       });
 

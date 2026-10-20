@@ -64,17 +64,35 @@ const InviteNeighborsDialog = ({ open, onOpenChange }: InviteNeighborsDialogProp
         slugify((profile as any)?.username || (profile as any)?.display_name || name),
       );
 
+      /* Counts only what a stranger could actually open: public and
+         public_anon, photographed, still available. It used to count every
+         is_for_borrow row the viewer's RLS allowed — friends-only items
+         included — so the invite dialog quoted a number larger than
+         anything the invitee would find. (It is also not "nearby": there
+         is no location predicate here and never was. Renamed below to say
+         what it counts.) */
       const { count } = await (supabase as any)
         .from("inventory_items")
         .select("id", { count: "exact", head: true })
-        .eq("is_for_borrow", true);
+        .eq("is_for_borrow", true)
+        .eq("is_available_for_sharing", true)
+        .in("sharing_level", ["public", "public_anon"])
+        .not("image_urls", "is", null)
+        .not("is_sold", "is", true)
+        .not("is_eliminated", "is", true);
       setNearbyCount(typeof count === "number" ? count : 0);
     };
 
     load();
   }, [open, isDemoMode]);
 
-  const inviteUrl = `https://ecoinventory2026.lovable.app/invite/${usernameSlug}`;
+  /* The app sends invites to celebrateloop.com/invite — see
+     ecoinventory-mobile/src/hooks/useInvites.ts:5 (INVITE_BASE_URL) — and
+     App.tsx routes /invite/:token here for exactly that reason. This line
+     was still pointing at the old Lovable preview host, so every invite
+     copied from the website sent a neighbour to a staging domain with
+     Loop's name nowhere on it. Same product, same link, one host. */
+  const inviteUrl = `https://celebrateloop.com/invite/${usernameSlug}`;
   const message = `Your neighbor ${displayName} invited you to Loop — see what's available to borrow on your street. Join and add your first item to get $20 in Loop credit to spend in the marketplace.`;
   const displayCount = nearbyCount ?? 0;
 
@@ -130,7 +148,10 @@ const InviteNeighborsDialog = ({ open, onOpenChange }: InviteNeighborsDialogProp
         {/* Headline stat */}
         <div className="rounded-lg border bg-primary/5 p-4">
           <div className="text-base font-medium text-foreground">
-            🏘 {displayCount} {displayCount === 1 ? "item" : "items"} available to borrow near you
+            {/* Not "near you": there is no location predicate in the
+                count above and never was. It is everything publicly
+                listed to borrow. */}
+            🏘 {displayCount} {displayCount === 1 ? "thing" : "things"} on Loop to borrow right now
           </div>
           <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
             Every neighbor you invite means more things available on your street.

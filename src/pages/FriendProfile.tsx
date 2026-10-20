@@ -1,6 +1,8 @@
 import { useState, useEffect, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { isItemVisible } from "@/lib/itemVisibility";
+import { useVisibilityContext } from "@/hooks/useVisibilityContext";
 import AppHeader from "@/components/AppHeader";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -36,6 +38,8 @@ export default function FriendProfile() {
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [profile, setProfile] = useState<any>(null);
   const [items, setItems] = useState<any[]>([]);
+  /* Distinguishes "they have shared nothing" from "we could not find out". */
+  const [itemsFailed, setItemsFailed] = useState(false);
   const [mutualFriends, setMutualFriends] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -84,22 +88,51 @@ export default function FriendProfile() {
         });
       }
 
-      // Fetch friend's shared items
-      const { data: itemsData } = await supabase
+      /* THIS QUERY HAS NEVER RETURNED A ROW. It asked for `image_url`,
+         singular. The column is `image_urls` — verified against the live
+         database, which answers:
+           column inventory_items.image_url does not exist
+         PostgREST returns 400, `data` comes back null, the destructure
+         ignored `error`, and `itemsData || []` turned the failure into an
+         empty list. So every friend's profile has always reported that
+         they have shared nothing, for as long as the column has had its
+         current name.
+
+         The `.in("sharing_level", ["friends", "public"])` filter is gone
+         too: it silently dropped `public_anon`, a real audience the app
+         offers. A coarse DB filter NARROWER than the visibility rule hides
+         things the rule would allow, so the rule decides on its own. */
+      const { data: itemsData, error: itemsError } = await supabase
         .from("inventory_items")
         .select(`
           id,
+          user_id,
           name,
           description,
           condition,
-          image_url,
+          image_urls,
           brand,
           category_id,
+          sharing_level,
+          is_for_sale,
+          is_for_borrow,
+          is_donated,
+          sharing_price,
+          rent_price,
+          rent_window,
           categories (name)
         `)
         .eq("user_id", friendId)
-        .in("sharing_level", ["friends", "public"]);
+        .eq("is_available_for_sharing", true)
+        .not("is_sold", "is", true)
+        .not("is_eliminated", "is", true);
 
+      /* Say so, rather than rendering "nothing shared" — which is exactly
+         what hid this for so long. */
+      if (itemsError) {
+        console.error("friend items query failed:", itemsError.message);
+        setItemsFailed(true);
+      }
       setItems(itemsData || []);
 
       // Fetch mutual friends
@@ -167,8 +200,26 @@ export default function FriendProfile() {
     return Array.from(uniqueConditions).sort();
   }, [items]);
 
+  const vis = useVisibilityContext(currentUserId ?? undefined);
+
+  /* The privacy gate. The search / category / condition filters below
+     narrow this further, and the gate goes FIRST so no filter can surface
+     a row the rule excludes. requireOffered is off because this is a
+     friend's shelf rather than a browse grid, matching the app's own
+     profile screen; requirePhoto stays on. */
+  const visible = useMemo(() => {
+    if (!vis.ready) return [];
+    return items.filter((item) =>
+      isItemVisible(item, {
+        friendSet: vis.friendSet,
+        muteSet: vis.muteSet,
+        requirePhoto: true,
+      })
+    );
+  }, [items, vis.ready, vis.friendSet, vis.muteSet]);
+
   const filteredItems = useMemo(() => {
-    return items.filter((item) => {
+    return visible.filter((item) => {
       const matchesSearch =
         searchQuery === "" ||
         item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -183,7 +234,7 @@ export default function FriendProfile() {
 
       return matchesSearch && matchesCategory && matchesCondition;
     });
-  }, [items, searchQuery, categoryFilter, conditionFilter]);
+  }, [visible, searchQuery, categoryFilter, conditionFilter]);
 
   const handleExpressInterest = async (item: Item) => {
     if (!currentUserId || !friendId) return;
@@ -318,7 +369,7 @@ export default function FriendProfile() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Package className="w-5 h-5" />
-                Shared Items ({filteredItems.length} of {items.length})
+                Shared Items ({filteredItems.length} of {visible.length})
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -382,9 +433,11 @@ export default function FriendProfile() {
                 </div>
               )}
 
-              {items.length === 0 ? (
+              {visible.length === 0 ? (
                 <div className="text-center py-12 text-muted-foreground">
-                  {profile.display_name} hasn't shared any items yet
+                  {itemsFailed
+                    ? "Couldn't load their items just now."
+                    : `${profile.display_name} hasn't shared any items yet`}
                 </div>
               ) : filteredItems.length === 0 ? (
                 <div className="text-center py-12 text-muted-foreground">

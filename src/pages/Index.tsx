@@ -26,16 +26,36 @@ const Index = () => {
     supabase.auth.getSession().then(({ data: { session } }) => setIsLoggedIn(!!session));
 
     const fetchStats = async () => {
-      const { count: itemsCount } = await supabase
-        .from("inventory_items")
-        .select("*", { count: "exact", head: true });
+      /* "Items catalogued" was an UNSCOPED count, which a browser cannot
+         actually compute: RLS narrows it to rows the viewer may read, so
+         for a logged-out visitor it returns exactly the shared count — the
+         page printed one number under two labels (both 32 today) — and for
+         a signed-in member it quietly grows by their own private rows. A
+         public figure that changes with who is looking is not a figure.
+
+         Both tiles now read the one thing a visitor can honestly count.
+         The real catalogue total needs a server-side aggregate (an RPC or
+         a counts table); until that exists the page says what it knows. */
       const { count: usersCount } = await supabase
         .from("profiles")
         .select("*", { count: "exact", head: true });
       const { count: sharedCount } = await supabase
         .from("inventory_items")
         .select("*", { count: "exact", head: true })
-        .eq("is_available_for_sharing", true);
+        .eq("is_available_for_sharing", true)
+        .not("is_sold", "is", true)
+        .not("is_eliminated", "is", true);
+      /* A DIFFERENT true number, so the three tiles say three things.
+         "Things to borrow" is the one that matters for Loop's pitch and it
+         is honestly countable from the browser. */
+      const { count: borrowCount } = await supabase
+        .from("inventory_items")
+        .select("*", { count: "exact", head: true })
+        .eq("is_available_for_sharing", true)
+        .eq("is_for_borrow", true)
+        .not("is_sold", "is", true)
+        .not("is_eliminated", "is", true);
+      const itemsCount = borrowCount;
 
       setStats({
         totalItems: itemsCount || 0,

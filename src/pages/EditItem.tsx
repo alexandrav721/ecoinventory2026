@@ -105,10 +105,24 @@ const EditItem = () => {
 
     setFetchingItem(true);
     try {
+      /* Scoped to the owner. The UPDATE policy (auth.uid() = user_id)
+         already stopped you SAVING someone else's row, but the SELECT
+         policy is `is_available_for_sharing = true`, so this loaded any
+         shared item by id — every column of it, including the owner's
+         purchase price and notes — into a full edit form that then failed
+         silently on save. Read access was the leak; the write block only
+         hid it. */
+      const { data: auth } = await supabase.auth.getUser();
+      const uid = auth?.user?.id;
+      if (!uid) {
+        navigate("/auth");
+        return;
+      }
       const { data, error } = await supabase
         .from("inventory_items")
         .select("*")
         .eq("id", id)
+        .eq("user_id", uid)
         .single();
 
       if (error) throw error;

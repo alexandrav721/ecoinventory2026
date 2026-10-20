@@ -145,10 +145,23 @@ export const ItemDetailSheet = ({ itemId, open, onOpenChange }: ItemDetailSheetP
       }
 
       // Real mode
+      /* Scoped to the owner. This is a dashboard tool for your own things,
+         but it looked an item up by id alone — and the table's cross-user
+         SELECT policy is `is_available_for_sharing = true`, so a stray id
+         would have loaded a stranger's item into your own inventory sheet.
+         The dashboard only links to your rows today; the scope makes that
+         a property rather than a habit. */
+      const { data: auth } = await supabase.auth.getUser();
+      const uid = auth?.user?.id;
+      if (!uid) {
+        if (!cancelled) setLoading(false);
+        return;
+      }
       const { data, error } = await supabase
         .from("inventory_items")
         .select("id, name, brand, category_id, condition, original_price, quantity, image_urls, description, tags, purchase_date, created_at, size, color")
         .eq("id", itemId)
+        .eq("user_id", uid)
         .maybeSingle();
 
       if (cancelled) return;

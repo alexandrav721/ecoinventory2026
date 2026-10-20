@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import AppHeader from "@/components/AppHeader";
@@ -9,6 +9,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, MapPin, Package, UserCheck, UserPlus, Settings, Sparkles, Inbox, Heart, TrendingUp } from "lucide-react";
 import { toast } from "sonner";
 import { useFollows } from "@/hooks/useFollows";
+import { isItemVisible } from "@/lib/itemVisibility";
+import { useVisibilityContext } from "@/hooks/useVisibilityContext";
 import { ProfileStatsHub } from "@/components/profile/ProfileStatsHub";
 
 interface Props {
@@ -30,6 +32,30 @@ export default function PublicProfile({ selfMode = false }: Props) {
   const { isFollowing, follow, unfollow } = useFollows(meId);
 
   const targetId = selfMode ? meId : id;
+
+  /* THE PRIVACY GATE for this page. `items` holds what the query returned;
+     everything rendered reads `visibleItems`.
+
+     Viewing your OWN profile is exempt: it is your shelf, and you are
+     entitled to see your private and unlisted things on it. For anyone
+     else the app's rule decides, with requireOffered deliberately OFF —
+     a profile is someone's shelf rather than a browse surface, and the
+     app's own profile screen likewise shows things that are catalogued but
+     not currently listed. requirePhoto is on, because Loop's photo rule
+     holds everywhere a stranger looks. */
+  const vis = useVisibilityContext(meId ?? undefined);
+  const viewingSelf = !!meId && meId === targetId;
+  const visibleItems = useMemo(() => {
+    if (viewingSelf) return items;
+    if (!vis.ready) return [];
+    return items.filter((it) =>
+      isItemVisible(it, {
+        friendSet: vis.friendSet,
+        muteSet: vis.muteSet,
+        requirePhoto: true,
+      })
+    );
+  }, [items, viewingSelf, vis.ready, vis.friendSet, vis.muteSet]);
 
   useEffect(() => {
     (async () => {
@@ -99,12 +125,23 @@ export default function PublicProfile({ selfMode = false }: Props) {
         state: prof.state,
       });
 
-      // Items: if self, all items; if friend, all shared; else, only available_for_sharing
+      /* This comment used to read "if self, all items; if friend, all
+         shared; else, only available_for_sharing" — and the query did
+         exactly one of those three things, unconditionally, with no
+         sharing_level in the select at all. So a stranger opening
+         someone's profile saw every friends-only item they own. The
+         branching the comment described now actually happens, below, in
+         isItemVisible.
+
+         user_id is in the select because the rule checks the owner
+         against the viewer's friend and block sets. */
       const itemQuery = supabase
         .from("inventory_items")
-        .select("id, name, description, image_urls, condition, brand, sharing_price, is_available_for_sharing, categories(name, icon)")
+        .select("id, user_id, name, description, image_urls, condition, brand, sharing_price, rent_price, rent_window, is_available_for_sharing, sharing_level, is_for_sale, is_for_borrow, is_donated, categories(name, icon)")
         .eq("user_id", targetId)
         .eq("is_available_for_sharing", true)
+        .not("is_sold", "is", true)
+        .not("is_eliminated", "is", true)
         .order("created_at", { ascending: false })
         .limit(60);
 
@@ -114,7 +151,15 @@ export default function PublicProfile({ selfMode = false }: Props) {
       const [{ count: fCount }, { count: ingCount }, { count: ownedCount }] = await Promise.all([
         supabase.from("follows").select("*", { count: "exact", head: true }).eq("followee_id", targetId),
         supabase.from("follows").select("*", { count: "exact", head: true }).eq("follower_id", targetId),
-        supabase.from("inventory_items").select("*", { count: "exact", head: true }).eq("user_id", targetId),
+        /* "Items owned" counted archived rows, so the website's number sat
+           above the app's for the same person. The app's profile count
+           excludes is_eliminated and nothing else
+           (src/hooks/useDrawerProfile.ts:43-47); match it exactly. */
+        supabase
+          .from("inventory_items")
+          .select("id", { count: "exact", head: true })
+          .eq("user_id", targetId)
+          .not("is_eliminated", "is", true),
       ]);
       setFollowerCount(fCount ?? 0);
       setFollowingCount(ingCount ?? 0);
@@ -207,7 +252,7 @@ export default function PublicProfile({ selfMode = false }: Props) {
                     <span className="text-white/60">items owned</span>
                   </span>
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[12px] text-white/80">
-                    <strong className="font-semibold text-white tabular-nums">{items.length}</strong>
+                    <strong className="font-semibold text-white tabular-nums">{visibleItems.length}</strong>
                     <span className="text-white/60">shared</span>
                   </span>
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[12px] text-white/80">
@@ -374,14 +419,14 @@ export default function PublicProfile({ selfMode = false }: Props) {
                 {isSelf ? <>Things you've made <em className="italic">shareable</em></> : <>Available to <em className="italic">borrow or buy</em></>}
               </h2>
             </div>
-            {items.length > 0 && (
+            {visibleItems.length > 0 && (
               <span className="text-sm text-muted-foreground tabular-nums hidden sm:block">
-                {items.length} {items.length === 1 ? "item" : "items"}
+                {visibleItems.length} {visibleItems.length === 1 ? "item" : "items"}
               </span>
             )}
           </div>
 
-          {items.length === 0 ? (
+          {visibleItems.length === 0 ? (
             <Card className="border-dashed border-2 bg-transparent">
               <CardContent className="p-10 text-center space-y-3">
                 <Package className="w-10 h-10 mx-auto text-muted-foreground/60" />
@@ -399,7 +444,7 @@ export default function PublicProfile({ selfMode = false }: Props) {
             </Card>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
-              {items.map((it) => (
+              {visibleItems.map((it) => (
                 <Card
                   key={it.id}
                   className="group overflow-hidden border-border/60 bg-white hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 rounded-2xl"

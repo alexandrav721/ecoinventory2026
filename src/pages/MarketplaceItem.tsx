@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { isItemVisible } from "@/lib/itemVisibility";
+import { useVisibilityContext } from "@/hooks/useVisibilityContext";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -29,6 +31,14 @@ interface Item {
   sharing_price: number | null;
   is_for_borrow?: boolean | null;
   is_for_sale?: boolean | null;
+  /* Read by isItemVisible. A listing page reachable by direct link is the
+     most shareable URL on the site, so it is the one that most needs the
+     rule — without sharing_level this page rendered a friends-only item in
+     full to anyone holding its link. */
+  sharing_level?: string | null;
+  is_donated?: boolean | null;
+  rent_price?: number | null;
+  rent_window?: string | null;
   brand: string | null;
   tags: string[] | null;
   category_id: string | null;
@@ -45,13 +55,39 @@ export default function MarketplaceItem() {
   const [loading, setLoading] = useState(true);
   const [activeImage, setActiveImage] = useState(0);
   const [authed, setAuthed] = useState(false);
+  const [meId, setMeId] = useState<string | null>(null);
   const [borrowOpen, setBorrowOpen] = useState(false);
 
   const [similar, setSimilar] = useState<Item[]>([]);
   const [similarLoading, setSimilarLoading] = useState(false);
 
+  /* THE GATE for a direct item link — the most shareable URL on the site,
+     and the one that most needed this: without sharing_level the page
+     rendered a friends-only item in full, with the owner's name and city,
+     to anyone holding the link.
+
+     requireOffered is ON here, unlike the two profile pages: this IS a
+     listing page. That also retires the `is_for_borrow ?? true` legacy
+     default below, which was putting a Borrow button on items that were
+     never offered for anything. */
+  const vis = useVisibilityContext(meId ?? undefined);
+  const gate = useCallback(
+    (row: Item) =>
+      row.user_id === meId ||
+      isItemVisible(row as never, {
+        friendSet: vis.friendSet,
+        muteSet: vis.muteSet,
+        requirePhoto: true,
+        requireOffered: true,
+      }),
+    [meId, vis.friendSet, vis.muteSet]
+  );
+
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => setAuthed(!!session));
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setAuthed(!!session);
+      setMeId(session?.user?.id ?? null);
+    });
   }, []);
 
   useEffect(() => {
@@ -65,10 +101,12 @@ export default function MarketplaceItem() {
       const { data, error } = await supabase
         .from("inventory_items")
         .select(
-          "id, user_id, name, description, image_urls, condition, sharing_price, brand, tags, category_id, is_for_borrow, is_for_sale"
+          "id, user_id, name, description, image_urls, condition, sharing_price, rent_price, rent_window, brand, tags, category_id, is_for_borrow, is_for_sale, is_donated, sharing_level"
         )
         .eq("id", id)
         .eq("is_available_for_sharing", true)
+        .not("is_sold", "is", true)
+        .not("is_eliminated", "is", true)
         .maybeSingle();
 
       if (cancelled) return;
@@ -86,6 +124,15 @@ export default function MarketplaceItem() {
         .maybeSingle();
 
       if (cancelled) return;
+      /* Invisible to this viewer reads as "not available" — the same state
+         as a withdrawn listing, which is the right answer: a stranger
+         should not be able to tell a friends-only item apart from one that
+         was never there. */
+      if (!gate(data as unknown as Item)) {
+        setItem(null);
+        setLoading(false);
+        return;
+      }
       setItem({ ...(data as any), owner: (ownerRow as any) ?? null });
       setLoading(false);
     })();
@@ -93,7 +140,10 @@ export default function MarketplaceItem() {
     return () => {
       cancelled = true;
     };
-  }, [id]);
+    /* gate and vis.ready are real dependencies: the viewer's identity and
+       their friend/block sets arrive after the first render, and the
+       decision this effect makes depends on both. */
+  }, [id, gate, vis.ready]);
 
   // Fetch similar items via AI edge function
   useEffect(() => {
@@ -123,10 +173,12 @@ export default function MarketplaceItem() {
         const { data: rows } = await supabase
           .from("inventory_items")
           .select(
-            "id, user_id, name, description, image_urls, condition, sharing_price, brand, tags, category_id, is_for_borrow, is_for_sale"
+            "id, user_id, name, description, image_urls, condition, sharing_price, rent_price, rent_window, brand, tags, category_id, is_for_borrow, is_for_sale, is_donated, sharing_level"
           )
           .in("id", ids)
-          .eq("is_available_for_sharing", true);
+          .eq("is_available_for_sharing", true)
+          .not("is_sold", "is", true)
+          .not("is_eliminated", "is", true);
 
         if (cancelled) return;
 
@@ -144,7 +196,7 @@ export default function MarketplaceItem() {
           .filter(Boolean)
           .map((r: any) => ({ ...r, owner: ownerMap.get(r.user_id) ?? null }));
 
-        if (!cancelled) setSimilar(ordered as Item[]);
+        if (!cancelled) setSimilar((ordered as Item[]).filter(gate));
       } catch (e) {
         console.error("similar items error", e);
       } finally {
@@ -155,7 +207,8 @@ export default function MarketplaceItem() {
     return () => {
       cancelled = true;
     };
-  }, [item?.id]);
+    /* gate is a dependency now that the rail is filtered by it. */
+  }, [item?.id, gate]);
 
   const requireAuth = (action: string) => {
     toast.info(`Sign in to ${action}`);

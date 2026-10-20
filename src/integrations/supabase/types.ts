@@ -638,6 +638,9 @@ export type Database = {
           original_price: number | null
           purchase_date: string | null
           quantity: number | null
+          admin_hidden: boolean
+          rent_price: number | null
+          rent_window: string | null
           sharing_level: string | null
           sharing_price: number | null
           size: string | null
@@ -671,6 +674,9 @@ export type Database = {
           original_price?: number | null
           purchase_date?: string | null
           quantity?: number | null
+          admin_hidden?: boolean
+          rent_price?: number | null
+          rent_window?: string | null
           sharing_level?: string | null
           sharing_price?: number | null
           size?: string | null
@@ -704,6 +710,9 @@ export type Database = {
           original_price?: number | null
           purchase_date?: string | null
           quantity?: number | null
+          admin_hidden?: boolean
+          rent_price?: number | null
+          rent_window?: string | null
           sharing_level?: string | null
           sharing_price?: number | null
           size?: string | null
