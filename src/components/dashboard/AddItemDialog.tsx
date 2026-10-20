@@ -1,3 +1,16 @@
+/**
+ * ⚠️ NOT MOUNTED ANYWHERE (checked Oct 2026) — this is the second dead
+ * add-item component in this folder, after AddItemModal.tsx.
+ *
+ * The live add flow is src/pages/AddItem.tsx at /dashboard/add-item.
+ *
+ * Left in place rather than deleted, but do not fix bugs in here thinking
+ * you are fixing the product: it still contains the
+ * `purchase_date: formData.purchase_date || new Date().toISOString()`
+ * default that was corrected in AddItem.tsx, because stamping today's date
+ * writes a claim the user never made and nothing afterwards can tell it
+ * from a real answer. If you ever mount this, fix that line first.
+ */
 import { useState } from "react";
 import React from "react";
 import { supabase } from "@/integrations/supabase/client";

@@ -255,7 +255,22 @@ const AddItem = () => {
           tags: formData.tags,
           user_id: user.id,
           original_price: formData.original_price ? parseFloat(formData.original_price) : null,
-          purchase_date: formData.purchase_date || new Date().toISOString(),
+          /* null, not today.
+         *
+         * This stamped today's date whenever the user left the field blank,
+         * which writes a claim they never made — and writes it permanently:
+         * afterwards nothing can tell "bought today" from "didn't say".
+         *
+         * The app refuses to do this on purpose. Its At-a-glance strip used
+         * to fall back to created_at for item age and was corrected in Sept
+         * 2026, because for most users — the add flow does not ask — it
+         * reported time-since-joining-Loop as the age of their possessions.
+         * The comment left there reads: "A cell that hides rather than lies
+         * is the better trade."
+         *
+         * It also feeds money. estimateWorthToday() depreciates by age, so a
+         * five-year-old drill added here was being valued as if bought today. */
+        purchase_date: formData.purchase_date || null,
           image_urls: formData.image_urls,
           category_id: formData.category_id || null,
           quantity: formData.quantity,
