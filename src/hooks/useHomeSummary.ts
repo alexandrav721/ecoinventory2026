@@ -105,27 +105,62 @@ export function useHomeSummary(userId: string | undefined) {
     staleTime: 60_000,
     queryFn: async (): Promise<NeighborAsk[]> => {
       const since = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString();
+      /* THIS SHELF HAS ALWAYS BEEN EMPTY, on both Supabase projects.
+         It asked for an embedded join —
+           requester:profiles!item_requests_requester_id_fkey(...)
+         — and no such foreign key exists. PostgREST answers 400:
+           Could not find a relationship between 'item_requests' and
+           'profiles' in the schema cache
+         `if (error) throw error` put react-query into an error state, Home
+         guards on `asks.length > 0`, and the section rendered its "nobody
+         has asked for anything yet" copy instead. A feature that is
+         missing looks exactly like a feature nobody is using, which is
+         why this never got reported. Checked against BOTH projects: the
+         FK is absent from each, and selecting `id, requester_id` alone
+         works, so only the embed was wrong.
+
+         Two queries rather than a join. Names are a separate lookup by
+         id, and an ask whose requester we cannot name still shows — the
+         ask is the point, not the asker. */
       const { data, error } = await (supabase as any)
         .from("item_requests")
-        .select(
-          `id, item_name, description, is_anonymous, requester_id, status, created_at,
-           requester:profiles!item_requests_requester_id_fkey(id, public_display_name, full_name)`
-        )
+        .select("id, item_name, description, is_anonymous, requester_id, status, created_at")
         .eq("status", "open")
         .neq("requester_id", userId!)
         .gte("created_at", since)
         .order("created_at", { ascending: false })
         .limit(4);
       if (error) throw error;
-      return ((data ?? []) as any[]).map((w) => ({
+
+      const rows = (data ?? []) as any[];
+      /* Only the ones that are not anonymous — no reason to look up a name
+         we have already decided not to show. */
+      const nameIds = Array.from(
+        new Set(
+          rows
+            .filter((w) => !w.is_anonymous && w.requester_id)
+            .map((w) => w.requester_id as string)
+        )
+      );
+      const names = new Map<string, string>();
+      if (nameIds.length > 0) {
+        const { data: people } = await supabase
+          .from("profiles")
+          .select("id, public_display_name, full_name")
+          .in("id", nameIds);
+        for (const person of (people ?? []) as any[]) {
+          const n = person.public_display_name ?? person.full_name;
+          if (typeof n === "string" && n.trim()) names.set(person.id, n.trim());
+        }
+      }
+
+      return rows.map((w) => ({
         id: w.id,
         itemName: (w.item_name ?? "").toString(),
         description: w.description ?? null,
         requesterName: w.is_anonymous
           ? "A neighbour"
-          : (w.requester?.public_display_name ??
-             w.requester?.full_name ??
-             "A neighbour"),
+          : (names.get(w.requester_id) ?? "A neighbour"),
       }));
     },
   });

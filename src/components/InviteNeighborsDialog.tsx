@@ -47,22 +47,37 @@ const InviteNeighborsDialog = ({ open, onOpenChange }: InviteNeighborsDialogProp
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      const { data: profile } = await (supabase as any)
-        .from("profiles")
-        .select("display_name, full_name, username")
-        .eq("user_id", user.id)
-        .maybeSingle();
+      /* THREE WRONG COLUMN NAMES AND A WRONG KEY. This asked for
+         `display_name, username` filtered by `user_id` — none of which
+         exist on profiles, on EITHER Supabase project. The real columns
+         are `public_display_name` and `full_name`, and the key is `id`.
+         PostgREST answered 42703 ("column profiles.display_name does not
+         exist"); the destructure ignored `error`, so `profile` was null
+         and every fallback fired.
 
+         The visible result: the invite read "Your neighbor alexandrav721
+         invited you to Loop" — the local part of the sender's EMAIL
+         ADDRESS, in a message sent to a neighbour — and the link became
+         /invite/alexandrav721. Never a crash, so never reported. The cast
+         to `any` is why tsc never flagged it either; it is gone. */
+      const { data: profile, error: profileError } = await supabase
+        .from("profiles")
+        .select("public_display_name, full_name")
+        .eq("id", user.id)
+        .maybeSingle();
+      if (profileError) {
+        console.warn("invite: could not read your profile", profileError.message);
+      }
+
+      /* No email fallback. Putting someone's email address into a message
+         they are sending to a neighbour is worse than a generic word, and
+         "your neighbor" reads fine. */
       const name =
-        (profile as any)?.display_name ||
-        (profile as any)?.full_name ||
-        (profile as any)?.username ||
-        user.email?.split("@")[0] ||
+        profile?.public_display_name?.trim() ||
+        profile?.full_name?.trim() ||
         "your neighbor";
       setDisplayName(name);
-      setUsernameSlug(
-        slugify((profile as any)?.username || (profile as any)?.display_name || name),
-      );
+      setUsernameSlug(slugify(name));
 
       /* Counts only what a stranger could actually open: public and
          public_anon, photographed, still available. It used to count every
