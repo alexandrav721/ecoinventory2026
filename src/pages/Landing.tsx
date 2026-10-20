@@ -1,4 +1,11 @@
 import { Link } from "react-router-dom";
+import {
+  FifthOne,
+  Hours,
+  OwnFour,
+  Pile,
+  Repeats,
+} from "@/components/landing/Pile";
 
 /**
  * celebrateloop.com — the marketing landing for the Loop iPhone app.
@@ -98,118 +105,6 @@ function GetTheApp({ dark = false }: { dark?: boolean }) {
   );
 }
 
-/** A stylised phone showing the app, drawn rather than screenshotted so it
- *  never goes stale. Swap for a real screenshot once the listing is live. */
-function PhoneMock() {
-  return (
-    <div
-      className="relative mx-auto"
-      style={{
-        width: 260,
-        height: 530,
-        borderRadius: 46,
-        background: INK,
-        padding: 10,
-        boxShadow: "0 30px 70px rgba(43,39,35,0.28)",
-      }}
-    >
-      <div
-        className="h-full w-full overflow-hidden"
-        style={{ borderRadius: 37, background: "#FCFBFA" }}
-      >
-        <div className="px-5 pt-7">
-          <div className="text-[11px] uppercase tracking-[0.18em]" style={{ color: MUTED }}>
-            Near you
-          </div>
-          <div
-            className="mt-1 text-[26px] italic leading-tight"
-            style={{ fontFamily: "Instrument Serif, Georgia, serif", color: INK }}
-          >
-            Borrow it from
-            <br />
-            three doors down
-          </div>
-        </div>
-        <div className="mt-5 space-y-3 px-5">
-          {[
-            { emoji: "🪜", name: "Extension ladder", price: "$6 / day" },
-            { emoji: "💦", name: "Pressure washer", price: "$15 / day" },
-            { emoji: "🎂", name: "Stand mixer", price: "$9 / day" },
-            { emoji: "⛺", name: "4-person tent", price: "$12 / day" },
-          ].map((it) => (
-            <div
-              key={it.name}
-              className="flex items-center gap-3 rounded-2xl px-3 py-3"
-              style={{ background: "#FFFFFF", border: `1px solid ${HAIRLINE}` }}
-            >
-              <div
-                className="flex h-11 w-11 items-center justify-center rounded-xl text-xl"
-                style={{ background: "#F6F3EE" }}
-              >
-                {it.emoji}
-              </div>
-              <div className="min-w-0 flex-1">
-                <div className="truncate text-[13px] font-semibold" style={{ color: INK }}>
-                  {it.name}
-                </div>
-                <div className="text-[11px]" style={{ color: MUTED }}>
-                  {it.price} · 0.3 mi away
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-const FEATURES = [
-  {
-    emoji: "🧹",
-    title: "Listing is a game, not a chore",
-    body: "Sweep one room: tap what you own and it lists with a price already filled in. Photos come after, in one batch.",
-    value: "A whole room listed in about two minutes",
-  },
-  {
-    emoji: "💸",
-    title: "The money finds you",
-    body: "Once your things are in Loop, you never hunt for a buyer. The moment a neighbor wants one, you get the ping.",
-    value: "Passive income from what you already own",
-  },
-  {
-    emoji: "🙋",
-    title: "Ask your block first",
-    body: "Post what you need and everyone nearby who owns one hears about it instantly. Borrow it for the weekend instead of buying it forever.",
-    value: "Stop buying things you'll use twice",
-  },
-  {
-    emoji: "🛡️",
-    title: "Built so lending feels safe",
-    body: "Real neighbors with ratings. Money held until you confirm the handoff. Block or report anyone, instantly.",
-    value: "Escrow on every payment",
-  },
-];
-
-const BEFORE = [
-  "Bought a drill you'll use twice",
-  "Closets full of forgotten things",
-  "Baby gear rotting in the garage",
-  "No idea what any of it's worth",
-];
-const AFTER = [
-  "Borrow it from three doors down",
-  "Know exactly what you own",
-  "Pass the phase on, get paid",
-  "Idle stuff quietly earning",
-];
-
-const CREW = [
-  { emoji: "🐢", name: "Sage", line: "Every borrow is one less thing built, boxed, and shipped." },
-  { emoji: "🦫", name: "Bo", line: "Your drill works nine minutes a year. Put it on payroll." },
-  { emoji: "🐿️", name: "Pip", line: "Book club rule #1: nobody buys the same book twice." },
-  { emoji: "🦉", name: "Olive", line: "Know what you own and you'll buy less, find it faster." },
-];
 
 const Landing = () => {
   return (
@@ -240,147 +135,125 @@ const Landing = () => {
         </div>
       </header>
 
-      {/* Hero */}
-      <section className="mx-auto grid max-w-6xl items-center gap-12 px-5 py-16 md:grid-cols-2 md:py-24">
+      {/* ─── HERO · beats B (the words) and A (the picture) ───────────
+          Both of the founder's first two images are on screen one: the
+          headline is "you own four of these and didn't know", and the
+          thing beside it is the pile, already wearing its price tags.
+          Nothing animates before it is readable — see Pile.tsx. */}
+      <section className="mx-auto grid max-w-6xl items-center gap-10 px-5 pb-14 pt-10 md:grid-cols-[0.95fr_1.05fr] md:gap-14 md:pb-20 md:pt-16">
         <div>
-          <p
-            className="text-xs uppercase tracking-[0.2em]"
-            style={{ color: MUTED }}
-          >
-            Neighbor-to-neighbor lending
+          <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: CLARET }}>
+            Now in FiDi
           </p>
           <h1
-            className="mt-4 text-[clamp(2.4rem,6vw,4rem)] font-medium leading-[1.05]"
+            className="mt-4 text-[clamp(2.4rem,6.2vw,4.2rem)] font-medium leading-[1.02]"
             style={{ fontFamily: "Instrument Serif, Georgia, serif" }}
           >
-            Your street already owns{" "}
-            <span className="italic" style={{ color: CLARET }}>
-              everything
-            </span>{" "}
-            you need
+            You already own
+            <br />
+            {/* "four" and the noun stay on one line: the noun's locked
+                min-width was pushing it onto a line of its own. */}
+            <span className="whitespace-nowrap">
+              four <OwnFour />
+            </span>
           </h1>
-          <p className="mt-5 max-w-xl text-lg leading-relaxed" style={{ color: "#4A4540" }}>
-            Everyone on your block bought the same drill, the same cooler, the
-            same folding chairs — and they all sit still. Loop turns your
-            neighborhood into a shared closet, toolshed, and library.
+          <p className="mt-5 max-w-md text-[17px] leading-relaxed" style={{ color: "#4A4540" }}>
+            Loop remembers what you have. So you stop buying it twice — and
+            start renting out the rest.
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-4">
             <GetTheApp />
-            <a href="#how" className="text-sm font-semibold hover:opacity-70" style={{ color: CLARET }}>
-              See how it works →
+            <a href="#hours" className="text-sm font-semibold hover:opacity-70" style={{ color: CLARET }}>
+              See what it costs you ↓
             </a>
           </div>
-        </div>
-        <PhoneMock />
-      </section>
-
-      {/* Before / After */}
-      <section style={{ background: "#F7F2EA" }} className="px-5 py-20">
-        <div className="mx-auto max-w-5xl">
-          <h2
-            className="text-center text-[clamp(1.8rem,4vw,2.6rem)] font-medium"
-            style={{ fontFamily: "Instrument Serif, Georgia, serif" }}
-          >
-            Same house, same stuff
-          </h2>
-          <p className="mx-auto mt-3 max-w-xl text-center" style={{ color: MUTED }}>
-            Nothing new gets bought. The things you already own just start
-            working for you.
+          <p className="mt-4 text-xs" style={{ color: MUTED }}>
+            iPhone · free to start
           </p>
-          <div className="mt-12 grid gap-6 md:grid-cols-2">
-            <div
-              className="rounded-3xl p-7"
-              style={{ background: "#E5E1DC", border: `1px solid ${HAIRLINE}` }}
+        </div>
+        <Pile />
+      </section>
+
+      {/* ─── BEAT C · hours. Early, not buried.
+          The panel's sharpest note was that leading with the joke leaves
+          the heaviest idea at section five, where nobody reads it. This is
+          section two. */}
+      <section id="hours" style={{ background: CHAMPAGNE }} className="px-5 py-20">
+        <div className="mx-auto grid max-w-5xl gap-10 md:grid-cols-[0.8fr_1.2fr] md:gap-14">
+          <div>
+            <h2
+              className="text-[clamp(1.9rem,4.2vw,2.9rem)] font-medium leading-[1.08]"
+              style={{ fontFamily: "Instrument Serif, Georgia, serif" }}
             >
-              <div className="text-3xl">😮‍💨</div>
-              <h3 className="mt-3 text-xl font-semibold" style={{ color: "#6E6862" }}>
-                Before Loop
-              </h3>
-              <ul className="mt-5 space-y-3">
-                {BEFORE.map((b) => (
-                  <li key={b} className="flex gap-3" style={{ color: "#6E6862" }}>
-                    <span aria-hidden>✕</span>
-                    <span>{b}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="rounded-3xl p-7" style={{ background: INK }}>
-              <div className="text-3xl">🤩</div>
-              <h3 className="mt-3 text-xl font-semibold" style={{ color: "#FFFFFF" }}>
-                After Loop
-              </h3>
-              <ul className="mt-5 space-y-3">
-                {AFTER.map((a) => (
-                  <li key={a} className="flex gap-3" style={{ color: "rgba(255,255,255,0.92)" }}>
-                    <span aria-hidden style={{ color: CHAMPAGNE }}>
-                      ✓
-                    </span>
-                    <span>{a}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+              You paid for this
+              <br />
+              in <span className="italic" style={{ color: CLARET }}>hours</span>.
+            </h2>
+            <p className="mt-5 max-w-sm text-[16px] leading-relaxed" style={{ color: "#4A4540" }}>
+              Not in money. You went to work, you sold the hours, and the
+              hours are sitting in your closet.
+            </p>
           </div>
+          <Hours />
         </div>
       </section>
 
-      {/* Features */}
-      <section id="how" className="mx-auto max-w-5xl px-5 py-20">
+      {/* ─── BEAT B, expanded ─────────────────────────────────────────── */}
+      <section className="mx-auto max-w-6xl px-5 py-20">
         <h2
-          className="text-center text-[clamp(1.8rem,4vw,2.6rem)] font-medium"
+          className="text-[clamp(1.9rem,4.2vw,2.9rem)] font-medium"
           style={{ fontFamily: "Instrument Serif, Georgia, serif" }}
         >
-          How Loop works
+          It's never just umbrellas
         </h2>
-        <div className="mt-12 grid gap-6 md:grid-cols-2">
-          {FEATURES.map((f) => (
-            <div
-              key={f.title}
-              className="rounded-3xl p-7"
-              style={{ background: "#FFFFFF", border: `1px solid ${HAIRLINE}` }}
+        <p className="mt-3 max-w-xl text-[16px]" style={{ color: MUTED }}>
+          Loop counts the repeats. It doesn't have an opinion about them.
+        </p>
+        <div className="mt-9">
+          <Repeats />
+        </div>
+        <div className="mt-14 grid gap-10 md:grid-cols-[1fr_0.9fr] md:items-center">
+          <div>
+            <h3
+              className="text-[clamp(1.5rem,3vw,2.1rem)] font-medium leading-tight"
+              style={{ fontFamily: "Instrument Serif, Georgia, serif" }}
             >
-              <div
-                className="flex h-14 w-14 items-center justify-center rounded-2xl text-2xl"
-                style={{ background: "#F6F3EE" }}
-              >
-                {f.emoji}
-              </div>
-              <h3 className="mt-4 text-xl font-semibold">{f.title}</h3>
-              <p className="mt-2 leading-relaxed" style={{ color: MUTED }}>
-                {f.body}
-              </p>
-              <p
-                className="mt-4 rounded-xl px-4 py-2.5 text-sm font-semibold"
-                style={{ background: CLARET, color: "#FFFFFF" }}
-              >
-                👉 {f.value}
-              </p>
-            </div>
-          ))}
+              Four of them. You knew about one.
+            </h3>
+            <p className="mt-4 max-w-md text-[16px] leading-relaxed" style={{ color: "#4A4540" }}>
+              The fifth one is the one you were about to buy. That's the whole
+              product, really.
+            </p>
+          </div>
+          <FifthOne />
         </div>
       </section>
 
-      {/* The crew */}
-      <section style={{ background: "#F7F2EA" }} className="px-5 py-20">
+      {/* ─── THE PROMISE · three things, three lines ───────────────────── */}
+      <section id="how" style={{ background: CHAMPAGNE }} className="px-5 py-20">
         <div className="mx-auto max-w-5xl">
           <h2
-            className="text-center text-[clamp(1.6rem,3.4vw,2.2rem)] font-medium"
+            className="text-[clamp(1.9rem,4.2vw,2.9rem)] font-medium"
             style={{ fontFamily: "Instrument Serif, Georgia, serif" }}
           >
-            Meet the crew
+            Add a thing. Three things happen.
           </h2>
-          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {CREW.map((c) => (
-              <div
-                key={c.name}
-                className="rounded-3xl p-6 text-center"
-                style={{ background: PAPER, border: `1px solid ${HAIRLINE}` }}
-              >
-                <div className="text-4xl">{c.emoji}</div>
-                <div className="mt-2 font-semibold">{c.name}</div>
-                <p className="mt-2 text-sm leading-relaxed" style={{ color: MUTED }}>
-                  “{c.line}”
+          <div className="mt-10 grid gap-8 md:grid-cols-3">
+            {[
+              ["It's on your list", "Next time, you'll know you already have one."],
+              ["A neighbour can rent it", "They ask in the app. You say yes or no."],
+              ["You see what you spent", "Added up from the prices you typed. Nothing guessed."],
+            ].map(([t, d], i) => (
+              <div key={t}>
+                <p
+                  className="text-[2.6rem] italic leading-none"
+                  style={{ fontFamily: "Instrument Serif, Georgia, serif", color: CLARET }}
+                >
+                  {i + 1}
+                </p>
+                <h3 className="mt-3 text-[17px] font-semibold">{t}</h3>
+                <p className="mt-1.5 text-[15px] leading-relaxed" style={{ color: "#4A4540" }}>
+                  {d}
                 </p>
               </div>
             ))}
@@ -388,25 +261,45 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* Closing CTA */}
-      <section className="px-5 py-24">
+      {/* ─── PROOF · the refusals. Deliberately small and plain: this is
+          the trust beat, and a card with an icon would undercut it. The
+          voice is Insights.tsx's, so the front door and the product agree
+          about what is knowable. */}
+      <section className="px-5 py-16">
         <div
-          className="mx-auto max-w-3xl rounded-[32px] px-8 py-16 text-center"
-          style={{ background: INK }}
+          className="mx-auto max-w-xl"
+          style={{ borderTop: `1px solid ${HAIRLINE}`, paddingTop: 28 }}
         >
+          <h2 className="text-[15px] font-semibold">Nothing here is a guess.</h2>
+          <ul className="mt-4 space-y-2.5 text-[14.5px] leading-relaxed" style={{ color: "#4A4540" }}>
+            <li>Totals come from prices you typed. What you left blank stays blank.</li>
+            <li>Loop doesn't appraise your things, and never shows you a resale price as a fact.</li>
+            <li>No invented demand, no borrowed install counts, no reviews we didn't get.</li>
+          </ul>
+        </div>
+      </section>
+
+      {/* ─── CTA · on paper, not another black slab. The page already has
+          an ink pill in the hero; a second heavy block here was the thing
+          that made the old page read generic. */}
+      <section className="px-5 pb-24 pt-4">
+        <div className="mx-auto max-w-2xl text-center">
           <h2
-            className="text-[clamp(1.8rem,4vw,2.8rem)] font-medium"
-            style={{ fontFamily: "Instrument Serif, Georgia, serif", color: "#FFFFFF" }}
+            className="text-[clamp(2rem,5vw,3.2rem)] font-medium leading-[1.05]"
+            style={{ fontFamily: "Instrument Serif, Georgia, serif" }}
           >
-            Put your closet to work
+            Start with four of something.
           </h2>
-          <p className="mx-auto mt-4 max-w-md" style={{ color: "rgba(255,255,255,0.75)" }}>
-            Borrow what you'd use once. Lend what's gathering dust. Keep the
-            good stuff moving around your block.
+          <p className="mx-auto mt-4 max-w-sm text-[16px]" style={{ color: MUTED }}>
+            Add the things you own twice. It takes about two minutes.
           </p>
           <div className="mt-8 flex justify-center">
-            <GetTheApp dark />
+            <GetTheApp />
           </div>
+          <p className="mt-6 text-xs" style={{ color: MUTED }}>
+            Loop opens one neighbourhood at a time — borrowing only works if
+            it's two blocks away. FiDi first.
+          </p>
         </div>
       </section>
 

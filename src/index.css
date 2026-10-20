@@ -260,3 +260,18 @@ All colors MUST be HSL.
   animation-fill-mode: forwards;
   pointer-events: none;
 }
+
+/* Loop: the hourly-rate field on the landing page */
+/* A number input inside a serif sentence should not wear form-control
+   spinner arrows. It stays type="number" so phones still show the numeric
+   keypad; only the arrows go. Inline styles cannot reach these
+   pseudo-elements, which is why this lives here. */
+input.loop-rate::-webkit-outer-spin-button,
+input.loop-rate::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input.loop-rate {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
