@@ -117,7 +117,10 @@ const CATEGORY_MULT: Record<string, number> = {
 const UNKNOWN_CATEGORY = 0.8;
 
 /* ADAPTATION 2 — `__DEV__` is a React Native global. */
-if (import.meta.env.DEV) {
+/* Optional-chained: `import.meta.env` only exists under Vite, so a bare
+   `.DEV` crashes on import in a plain node script or a test runner — and a
+   drift WARNING must never be the reason a module fails to load. */
+if (import.meta.env?.DEV) {
   // Fail loudly in development if the vocabulary and this map drift apart
   // again. Silent fallback to 0.8 is exactly how the last bug hid for months.
   const missing = ALL_CATEGORY_ROWS.filter(
