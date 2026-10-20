@@ -127,9 +127,9 @@ export function PickleStyleSearch() {
           "id, user_id, name, image_urls, condition, brand, color, size, original_price, sharing_price, category_id"
         )
         .eq("is_available_for_sharing", true)
-        .eq("is_donated", false)
-        .eq("is_sold", false)
-        .eq("is_eliminated", false)
+        .not("is_donated", "is", true)
+        .not("is_sold", "is", true)
+        .not("is_eliminated", "is", true)
         .order("created_at", { ascending: false })
         .limit(200);
 

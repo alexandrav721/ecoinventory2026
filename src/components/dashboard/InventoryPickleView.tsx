@@ -119,9 +119,9 @@ const InventoryPickleView = () => {
               "id, name, category_id, original_price, quantity, condition, brand, image_urls, created_at, is_donated, is_sold, is_eliminated"
             )
             .eq("user_id", user.id)
-            .eq("is_donated", false)
-            .eq("is_sold", false)
-            .eq("is_eliminated", false)
+            .not("is_donated", "is", true)
+            .not("is_sold", "is", true)
+            .not("is_eliminated", "is", true)
             .order("created_at", { ascending: false }),
           supabase.from("categories").select("id, name"),
         ]);

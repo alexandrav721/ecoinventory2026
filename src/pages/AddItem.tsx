@@ -88,7 +88,14 @@ const AddItem = () => {
     condition: "good",
     usage_frequency: "",
     sharing_level: "private" as "private" | "friends" | "public",
-    is_for_borrow: true,
+    /* false, matching the app (ecoinventory-mobile/app/(tabs)/add.tsx:
+       "Saves private by default; the owner chooses the audience").
+       This was true, which meant the same person adding the same thing got
+       a different item depending on which device they used: the website's
+       copy landed on Home's "To lend" shelf and the phone's landed on
+       "Private". Two surfaces, one database — they have to agree about
+       what a new item IS. */
+    is_for_borrow: false,
     is_for_sale: false,
     sharing_price: "",
     tags: [] as string[],
@@ -99,9 +106,11 @@ const AddItem = () => {
       .from("inventory_items")
       .select("id", { count: "exact", head: true })
       .eq("user_id", userId)
-      .eq("is_sold", false)
-      .eq("is_donated", false)
-      .eq("is_eliminated", false);
+      // eq.false does not match NULL and these columns are nullable, so
+      // this was under-counting. Same bug as WelcomeHeader had.
+      .not("is_sold", "is", true)
+      .not("is_donated", "is", true)
+      .not("is_eliminated", "is", true);
     return count ?? 0;
   };
 
@@ -136,7 +145,14 @@ const AddItem = () => {
     condition: "good",
     usage_frequency: "",
     sharing_level: "private" as "private" | "friends" | "public",
-    is_for_borrow: true,
+    /* false, matching the app (ecoinventory-mobile/app/(tabs)/add.tsx:
+       "Saves private by default; the owner chooses the audience").
+       This was true, which meant the same person adding the same thing got
+       a different item depending on which device they used: the website's
+       copy landed on Home's "To lend" shelf and the phone's landed on
+       "Private". Two surfaces, one database — they have to agree about
+       what a new item IS. */
+    is_for_borrow: false,
     is_for_sale: false,
     sharing_price: "",
     tags: [] as string[],

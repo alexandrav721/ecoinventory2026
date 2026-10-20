@@ -102,9 +102,9 @@ export function CommunityMarketplace() {
         .from("inventory_items")
         .select("id, user_id, name, description, image_urls, condition, sharing_price, is_for_borrow, is_for_sale")
         .eq("is_available_for_sharing", true)
-        .eq("is_donated", false)
-        .eq("is_sold", false)
-        .eq("is_eliminated", false)
+        .not("is_donated", "is", true)
+        .not("is_sold", "is", true)
+        .not("is_eliminated", "is", true)
         .order("created_at", { ascending: false })
         .limit(PAGE_SIZE * 4);
 

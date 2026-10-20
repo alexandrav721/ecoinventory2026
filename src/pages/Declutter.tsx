@@ -98,9 +98,9 @@ const Declutter = () => {
             .select(
               "id, name, brand, original_price, quantity, usage_frequency, condition, image_urls, created_at, category_id, is_donated, is_sold, is_eliminated"
             )
-            .eq("is_donated", false)
-            .eq("is_sold", false)
-            .eq("is_eliminated", false),
+            .not("is_donated", "is", true)
+            .not("is_sold", "is", true)
+            .not("is_eliminated", "is", true),
           supabase.from("categories").select("id, name"),
         ]);
         const catMap = new Map((cats ?? []).map((c: any) => [c.id, c.name]));

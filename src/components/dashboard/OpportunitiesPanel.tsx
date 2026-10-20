@@ -106,9 +106,9 @@ export const OpportunitiesPanel = () => {
         .from("inventory_items")
         .select("*")
         .eq("user_id", user.id)
-        .eq("is_sold", false)
-        .eq("is_donated", false)
-        .eq("is_eliminated", false);
+        .not("is_sold", "is", true)
+        .not("is_donated", "is", true)
+        .not("is_eliminated", "is", true);
       if (!items || items.length === 0) {
         toast.info("Add some items first to get insights!");
         return;

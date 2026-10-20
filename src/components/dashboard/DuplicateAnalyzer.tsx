@@ -53,7 +53,7 @@ const DuplicateAnalyzer = () => {
       }
 
       const [itemsResult, categoriesResult] = await Promise.all([
-        supabase.from("inventory_items").select("*").eq("user_id", user.id).eq("is_donated", false).eq("is_sold", false),
+        supabase.from("inventory_items").select("*").eq("user_id", user.id).not("is_donated", "is", true).not("is_sold", "is", true),
         supabase.from("categories").select("*")
       ]);
 

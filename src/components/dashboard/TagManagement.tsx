@@ -49,9 +49,9 @@ export function TagManagement({ userId }: { userId: string }) {
         .from("inventory_items")
         .select("id, tags")
         .eq("user_id", userId)
-        .eq("is_donated", false)
-        .eq("is_sold", false)
-        .eq("is_eliminated", false);
+        .not("is_donated", "is", true)
+        .not("is_sold", "is", true)
+        .not("is_eliminated", "is", true);
 
       if (error) throw error;
 

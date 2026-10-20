@@ -159,8 +159,8 @@ export function GalleryView() {
           .from("inventory_items")
           .select("*")
           .eq("user_id", user.id)
-          .eq("is_donated", false)
-          .eq("is_sold", false)
+          .not("is_donated", "is", true)
+          .not("is_sold", "is", true)
           .order("created_at", { ascending: false }),
         supabase
           .from("categories")
