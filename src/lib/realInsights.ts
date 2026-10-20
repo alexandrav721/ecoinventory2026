@@ -38,7 +38,12 @@ export type DuplicatePile = {
   terms: string[];
 };
 
-type NamedItem = { id?: string; name: string };
+/* `name` is optional AND nullable because that is what the body already
+   accepts (`it?.name ?? ""`, then `continue` on blank) and what the column
+   actually is — inventory_items.name is nullable. Declaring it required
+   only forced every caller to launder real rows through `as any`, which
+   is how a type stops catching anything. */
+type NamedItem = { id?: string; name?: string | null };
 
 /**
  * Things the user owns more than one of, by name.

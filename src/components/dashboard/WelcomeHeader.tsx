@@ -1,10 +1,39 @@
+/**
+ * WelcomeHeader — the "N items added" progress strip at the top of /dashboard.
+ *
+ * WHAT THIS FILE IS FOR. One number, shown once: how many things you have.
+ * It used to compute four (total, value, shared, recently added) and render
+ * one; the other three were dead, and so were a greeting, a motivational
+ * message and a next-milestone helper. They are gone. A number nothing
+ * displays still has to be right, and nobody maintains one that isn't read.
+ *
+ * TWO BUGS LIVED IN THE DEAD CODE, AND ONE OF THEM REACHED THE SCREEN.
+ *
+ *   1. Demo mode hardcoded `totalItems: 42` while the demo household has 12
+ *      items. /dashboard therefore said "42 items added" directly above a
+ *      list of twelve. The first screen a visitor sees contradicted itself.
+ *      It now counts the same array the list below it renders from, so the
+ *      two cannot drift apart again.
+ *
+ *   2. It counted `sum(quantity)` rather than rows. The app counts rows
+ *      (`counts[shelfOf(item)] += 1` in homeSummary.ts) and never multiplies
+ *      money by quantity anywhere — in the app `quantity` is a "×50" badge
+ *      on a card, nothing more. So one record collection of 50 counted as
+ *      50 things here, 1 thing on /home, 1 thing on /insights and 1 thing
+ *      on the phone. Three surfaces and the app agreed; this file didn't.
+ *      Rows it is. That also makes the unlock thresholds mean something:
+ *      a single multi-quantity row no longer unlocks everything at once.
+ *
+ * The NULL filter below is the third version of this bug and the reason the
+ * comment is long: PostgREST `eq.false` does not match NULL, and all three
+ * completion columns are nullable, so `.eq("is_sold", false)` silently drops
+ * every row that predates them. `.not(col, "is", true)` keeps NULL, which is
+ * what "not sold" actually means.
+ */
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { useDemo } from "@/contexts/DemoContext";
-import { useTranslation } from "react-i18next";
-import { ArrowRight } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { InsightUnlocksPanel } from "@/components/dashboard/InsightUnlocksPanel";
 
@@ -12,51 +41,20 @@ interface WelcomeHeaderProps {
   user: User | null;
 }
 
-interface QuickStats {
-  totalItems: number;
-  totalValue: number;
-  sharedItems: number;
-  recentlyAdded: number;
-}
-
-const getGreeting = () => {
-  const hour = new Date().getHours();
-  if (hour < 12) return "morning";
-  if (hour < 17) return "afternoon";
-  return "evening";
-};
-
-const getMotivationalMessage = (totalItems: number, sharedItems: number) => {
-  if (totalItems === 0) return "Ready to catalog your first item?";
-  if (totalItems < 10) return "Great start — keep adding to unlock insights.";
-  if (sharedItems === 0) return "Share an item with your community.";
-  if (totalItems < 50) return "You're on fire. Building a solid inventory.";
-  return "Inventory master. Your stuff is organized.";
-};
-
-const getNextMilestone = (count: number) => {
-  const milestones = [10, 25, 50, 100, 250, 500];
-  return milestones.find((m) => m > count) || 1000;
-};
-
 export const WelcomeHeader = ({ user }: WelcomeHeaderProps) => {
-  const { t } = useTranslation();
-  const navigate = useNavigate();
-  const { isDemoMode } = useDemo();
-  const [profile, setProfile] = useState<{ full_name: string | null } | null>(null);
-  const [stats, setStats] = useState<QuickStats>({
-    totalItems: 0,
-    totalValue: 0,
-    sharedItems: 0,
-    recentlyAdded: 0,
-  });
+  const { isDemoMode, demoItems } = useDemo();
+  const [totalItems, setTotalItems] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [addOpen, setAddOpen] = useState(false);
 
   useEffect(() => {
     if (isDemoMode) {
-      setProfile({ full_name: "Demo User" });
-      setStats({ totalItems: 42, totalValue: 2847, sharedItems: 8, recentlyAdded: 3 });
+      /* The same array /dashboard lists below. Counting it here instead of
+         stating a number means the header cannot disagree with the list. */
+      setTotalItems(
+        demoItems.filter(
+          (i: any) => !i.is_sold && !i.is_donated && !i.is_eliminated
+        ).length
+      );
       setLoading(false);
       return;
     }
@@ -66,68 +64,40 @@ export const WelcomeHeader = ({ user }: WelcomeHeaderProps) => {
       return;
     }
 
-    const fetchData = async () => {
-      const { data: profileData } = await supabase
-        .from("profiles")
-        .select("full_name")
-        .eq("id", user.id)
-        .single();
-      if (profileData) setProfile(profileData);
-
-      const { data: items } = await supabase
+    let cancelled = false;
+    (async () => {
+      /* head: true asks Postgres for the count and sends no rows — this
+         screen needs the number, not the things. */
+      const { count, error } = await supabase
         .from("inventory_items")
-        .select("quantity, original_price, is_available_for_sharing, created_at")
+        .select("id", { count: "exact", head: true })
         .eq("user_id", user.id)
-        // PostgREST `eq.false` does NOT match NULL, and all three of these
-        // columns are nullable. Every item with a NULL in any of them was
-        // being dropped from the count silently — so a user whose rows
-        // predate those columns saw a total lower than their real one.
-        // `.not(col, "is", true)` keeps NULL, which is what "not sold" means.
         .not("is_sold", "is", true)
         .not("is_donated", "is", true)
         .not("is_eliminated", "is", true);
 
-      if (items) {
-        const totalItems = items.reduce((sum, item) => sum + (item.quantity || 1), 0);
-        const totalValue = items.reduce(
-          (sum, item) => sum + ((item.original_price || 0) * (item.quantity || 1)),
-          0
-        );
-        const sharedItems = items.filter((item) => item.is_available_for_sharing).length;
-
-        const weekAgo = new Date();
-        weekAgo.setDate(weekAgo.getDate() - 7);
-        const recentlyAdded = items.filter(
-          (item) => new Date(item.created_at) > weekAgo
-        ).length;
-
-        setStats({ totalItems, totalValue, sharedItems, recentlyAdded });
-      }
-
+      if (cancelled) return;
+      /* On error the count stays 0 rather than becoming a guess. */
+      if (!error && typeof count === "number") setTotalItems(count);
       setLoading(false);
+    })();
+
+    return () => {
+      cancelled = true;
     };
-
-    fetchData();
-  }, [user, isDemoMode]);
-
-  const firstName =
-    profile?.full_name?.split(" ")[0] || user?.email?.split("@")[0] || "friend";
-  const greeting = getGreeting();
+  }, [user, isDemoMode, demoItems]);
 
   if (loading) {
     return (
       <div className="space-y-4">
         <Skeleton className="h-28 rounded-2xl" />
-        <Skeleton className="h-72 rounded-2xl" />
       </div>
     );
   }
 
-
-
   return (
     <div className="space-y-4">
-      <InsightUnlocksPanel totalItems={stats.totalItems} />
+      <InsightUnlocksPanel totalItems={totalItems} />
     </div>
   );
 };

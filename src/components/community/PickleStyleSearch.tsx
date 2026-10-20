@@ -1,3 +1,41 @@
+/**
+ * The community / marketplace browse grid.
+ *
+ * THIS FILE WAS LEAKING FRIENDS-ONLY ITEMS. It selected eleven columns,
+ * none of them `sharing_level`, and filtered only on
+ * `is_available_for_sharing = true` — which both add flows set to true for
+ * "Friends only" exactly as they do for "Public". /community and
+ * /marketplace have no auth guard, so every friends-only item in the
+ * database was on a public web page, under a heading inviting anonymous
+ * visitors to browse freely. The word `sharing_level` did not appear
+ * anywhere in this file.
+ *
+ * It now routes every row through src/lib/itemVisibility.ts, the app's own
+ * rule, ported. Three other things followed from using the real rule:
+ *
+ *   • FREE ITEMS COME BACK. `.not("is_donated", "is", true)` was excluding
+ *     them. In this schema `is_donated` means "offered free to anyone",
+ *     which is one of the three ways an item IS offered — the app counts it
+ *     as such and never filters it out of browse. The completed-giveaway
+ *     signal is `donated_date`. So the website was hiding precisely the
+ *     listings people are most likely to want.
+ *
+ *   • PHOTOLESS ITEMS GO. Loop's rule is that a thing is not visible until
+ *     it has a photo; the grid was rendering grey "No photo" tiles.
+ *
+ *   • NEVER-OFFERED ITEMS GO. Something catalogued but not listed to
+ *     borrow, sell or give is not for anyone — the grid was advertising
+ *     those as "Free to borrow".
+ *
+ * And the grid no longer shows you your own things, which the app's browse
+ * surfaces never do.
+ *
+ * WHY IT WAITS FOR `ready`. The friend and block sets have no database
+ * backstop (see useVisibilityContext), so rendering before they arrive
+ * would show a stranger a friend's item for one frame and keep showing a
+ * blocked person's items if the query failed. Nothing renders until the
+ * sets are known.
+ */
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -21,6 +59,8 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { ChevronRight, SlidersHorizontal, X, Lock, Globe, Users, Layers, ShoppingBag, HandHeart } from "lucide-react";
+import { isItemVisible } from "@/lib/itemVisibility";
+import { useVisibilityContext } from "@/hooks/useVisibilityContext";
 
 type Item = {
   id: string;
@@ -34,6 +74,14 @@ type Item = {
   original_price: number | null;
   sharing_price: number | null;
   category_id: string | null;
+  /* Read by isItemVisible. Selecting them is not optional: a missing
+     sharing_level makes every row look public. */
+  sharing_level: string | null;
+  is_for_sale: boolean | null;
+  is_for_borrow: boolean | null;
+  is_donated: boolean | null;
+  rent_price: number | null;
+  rent_window: string | null;
   owner_city: string | null;
   owner_state: string | null;
 };
@@ -62,7 +110,10 @@ export function PickleStyleSearch() {
   const [loading, setLoading] = useState(true);
   const [authed, setAuthed] = useState(false);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
-  const [friendIds, setFriendIds] = useState<Set<string>>(new Set());
+  /* One source for "who are my friends" and "who have I blocked", shared
+     with the visibility rule below. */
+  const vis = useVisibilityContext(currentUserId ?? undefined);
+  const friendIds = vis.friendSet;
   const [audience, setAudience] = useState<Audience>(
     (searchParams.get("audience") as Audience) || "all"
   );
@@ -93,22 +144,14 @@ export function PickleStyleSearch() {
   }, [searchParams]);
 
   useEffect(() => {
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
-      const uid = session?.user?.id ?? null;
+    supabase.auth.getSession().then(({ data: { session } }) => {
       setAuthed(!!session);
-      setCurrentUserId(uid);
-      if (uid) {
-        const { data: fr } = await supabase
-          .from("friendships")
-          .select("user_id, friend_id, status")
-          .eq("status", "accepted")
-          .or(`user_id.eq.${uid},friend_id.eq.${uid}`);
-        const ids = new Set<string>();
-        (fr ?? []).forEach((f: any) => {
-          ids.add(f.user_id === uid ? f.friend_id : f.user_id);
-        });
-        setFriendIds(ids);
-      }
+      setCurrentUserId(session?.user?.id ?? null);
+      /* The friendships query that used to live here is gone: friend ids
+         now come from useVisibilityContext, so the audience filter below
+         and the visibility rule read the SAME set. Two copies of "who are
+         my friends" on one screen is how the audience toggle and the
+         privacy check drift apart. */
     });
     supabase
       .from("categories")
@@ -121,15 +164,23 @@ export function PickleStyleSearch() {
     let cancelled = false;
     (async () => {
       setLoading(true);
-      const { data: rows } = await supabase
+      /* Over-fetch, because isItemVisible below will drop rows and a grid
+         that renders 40 of 200 because the filter ate the rest is still a
+         full page. The app's equivalent over-fetches for the same reason. */
+      let q = supabase
         .from("inventory_items")
         .select(
-          "id, user_id, name, image_urls, condition, brand, color, size, original_price, sharing_price, category_id"
+          "id, user_id, name, image_urls, condition, brand, color, size, original_price, sharing_price, category_id, sharing_level, is_for_sale, is_for_borrow, is_donated, rent_price, rent_window"
         )
         .eq("is_available_for_sharing", true)
-        .not("is_donated", "is", true)
+        /* NOT filtering is_donated — see the header. It means "offered
+           free", not "already gone". */
         .not("is_sold", "is", true)
         .not("is_eliminated", "is", true)
+        .not("admin_hidden", "is", true);
+      /* Browse is other people's things. The app's never shows you yours. */
+      if (currentUserId) q = q.neq("user_id", currentUserId);
+      const { data: rows } = await q
         .order("created_at", { ascending: false })
         .limit(200);
 
@@ -159,7 +210,10 @@ export function PickleStyleSearch() {
     return () => {
       cancelled = true;
     };
-  }, []);
+    /* currentUserId is a real dependency: the query excludes your own rows,
+       so it has to re-run once the session resolves. Leaving it out is how
+       a signed-in visitor kept seeing their own things in browse. */
+  }, [currentUserId]);
 
   // Build dynamic filter facets from data
   const facets = useMemo(() => {
@@ -186,7 +240,20 @@ export function PickleStyleSearch() {
   }, [items]);
 
   const filtered = useMemo(() => {
-    let list = items;
+    /* THE PRIVACY GATE, FIRST, BEFORE ANY UI FILTER.
+       Order matters: putting this after the audience/search filters would
+       mean a search could surface a row the rule excludes. Nothing below
+       can widen what this allows. */
+    let list = vis.ready
+      ? items.filter((it) =>
+          isItemVisible(it, {
+            friendSet: vis.friendSet,
+            muteSet: vis.muteSet,
+            requirePhoto: true,
+            requireOffered: true,
+          })
+        )
+      : [];
     // Audience filter: 'all' shows everyone, 'public' = strangers (not friends, not me),
     // 'friends' = only my accepted friends
     if (audience === "friends") {
@@ -244,7 +311,7 @@ export function PickleStyleSearch() {
         break;
     }
     return list;
-  }, [items, query, sizes, brands, colors, cats, conditions, locations, priceMin, priceMax, chips, sort, audience, offer, friendIds, currentUserId]);
+  }, [items, query, sizes, brands, colors, cats, conditions, locations, priceMin, priceMax, chips, sort, audience, offer, friendIds, currentUserId, vis.ready, vis.friendSet, vis.muteSet]);
 
   const toggleSet = <T,>(setter: React.Dispatch<React.SetStateAction<Set<T>>>, value: T) => {
     setter((prev) => {
@@ -520,7 +587,11 @@ export function PickleStyleSearch() {
                   </SheetContent>
                 </Sheet>
                 <span className="text-sm text-muted-foreground">
-                  {loading ? "Loading…" : `${filtered.length} ${filtered.length === 1 ? "item" : "items"}`}
+                  {loading || !vis.ready
+                    ? vis.failed
+                      ? "Couldn't load who you're connected to"
+                      : "Loading…"
+                    : `${filtered.length} ${filtered.length === 1 ? "item" : "items"}`}
                 </span>
               </div>
               <Select value={sort} onValueChange={setSort}>
@@ -583,8 +654,10 @@ export function PickleStyleSearch() {
               </div>
             )}
 
-            {/* Grid */}
-            {loading ? (
+            {/* Grid.
+                `!vis.ready` counts as loading: until the friend and block
+                sets are known there is no safe set of rows to draw. */}
+            {loading || !vis.ready ? (
               <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-4 gap-y-8">
                 {Array.from({ length: 8 }).map((_, i) => (
                   <div key={i} className="space-y-2">

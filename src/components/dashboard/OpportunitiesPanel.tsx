@@ -1,3 +1,35 @@
+/**
+ * OpportunitiesPanel — "what could you do with this stuff?", on /dashboard.
+ *
+ * TWO THINGS WERE WRONG HERE, AND BOTH WERE DOLLAR FIGURES OR COUNTS
+ * SOMEONE WOULD BELIEVE.
+ *
+ * 1. THE RESALE ESTIMATE WAS A FLAT 60% OF WHAT YOU PAID.
+ *    The app estimates the same number with three multipliers — condition,
+ *    category and age (src/lib/valuation.ts). On a six-year-old laptop
+ *    bought for $2,000 the app says $144 and this panel said $1,200. Same
+ *    row, same database, 8x apart, and the bigger number was the one shown
+ *    next to a "View items" button. It now calls the app's model, so the
+ *    phone and the web quote the same price.
+ *
+ * 2. DEMO MODE WAS FOUR HARDCODED CARDS, ONE OF WHICH WAS ABOUT AN ITEM
+ *    THE DEMO HOUSEHOLD DOES NOT OWN. It announced "Excess: 12 coffee
+ *    cups"; the demo inventory is a laptop, headphones, a jacket, a mixer,
+ *    a bike, a tent, a shelf, a drill, a record collection, running shoes,
+ *    a skillet and a denim jacket. No cups. A visitor clicking around
+ *    before signing up was being shown an invented finding about invented
+ *    stuff, on the first screen, which is the screen that has to be true.
+ *
+ *    Demo mode now runs the real analysis over the real demo inventory.
+ *    Same function, same thresholds, same valuation as a signed-in
+ *    account — only the rows differ. If it finds nothing, it says so,
+ *    which is a better demo than a fake finding.
+ *
+ * The excess check still only runs for signed-in accounts: it reads
+ * household benchmarks and WRITES insight rows server-side, and a demo
+ * that nothing saves must not write. That is a stated gap, not a silent
+ * one — the empty state is honest about having looked.
+ */
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,8 +42,9 @@ import {
 import { useDemo } from "@/contexts/DemoContext";
 import { formatCurrency } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
-import { findDuplicates } from "@/lib/duplicateDetection";
 import { analyzeInventoryForExcess, createExcessInsights } from "@/lib/excessDetection";
+import { estimateWorthToday } from "@/lib/valuation";
+import { groupDuplicates } from "@/lib/realInsights";
 import { toast } from "sonner";
 
 interface Opportunity {
@@ -34,65 +67,152 @@ const colorMap: Record<string, { bg: string; text: string; border: string }> = {
   blue: { bg: "bg-blue-500/10", text: "text-blue-600", border: "border-blue-500/20" },
 };
 
+/* ─── The analysis, as a pure function ──────────────────────────────────
+   Taking (items, categories) rather than a user id is the whole point: the
+   demo household and a real account go through this same code, so a demo
+   can no longer claim something the analysis would never have said. */
+
+type AnalysisItem = {
+  name?: string | null;
+  original_price?: number | string | null;
+  condition?: string | null;
+  category_id?: string | null;
+  purchase_date?: string | null;
+  usage_frequency?: string | null;
+};
+
+type AnalysisCategory = { id: string; name: string };
+
+const MONTH_MS = 1000 * 60 * 60 * 24 * 30;
+
+function monthsSince(date: string | null | undefined, now: number): number | null {
+  if (!date) return null;
+  const t = Date.parse(date);
+  if (Number.isNaN(t)) return null;
+  return (now - t) / MONTH_MS;
+}
+
+function findOpportunities(
+  items: AnalysisItem[],
+  categories: AnalysisCategory[]
+): Opportunity[] {
+  const out: Opportunity[] = [];
+  const now = Date.now();
+
+  /* Sellable: owned a while, barely used, and worth more than pocket
+     change. An item with no purchase_date is NOT assumed old — that is the
+     same "blank means today" guess that was corrupting purchase dates on
+     the add form. No date, no claim about age. */
+  const sellable = items.filter((item) => {
+    const months = monthsSince(item.purchase_date, now);
+    if (months === null || months < 6) return false;
+    if (item.usage_frequency !== "rarely") return false;
+    return Number(item.original_price ?? 0) > 20;
+  });
+
+  if (sellable.length > 0) {
+    /* The app's model, not a flat percentage. Items it cannot price
+       (no original_price) contribute null and are skipped, so the total
+       is "across the ones we could price" rather than a padded zero. */
+    const priced = sellable
+      .map((item) => estimateWorthToday(item, categories))
+      .filter((v): v is number => typeof v === "number" && v > 0);
+    const potentialValue = priced.reduce((sum, v) => sum + v, 0);
+
+    if (potentialValue > 0) {
+      out.push({
+        id: "sell",
+        type: "sell",
+        title: `${sellable.length} ${sellable.length === 1 ? "thing" : "things"} could sell for about ${formatCurrency(potentialValue)}`,
+        description:
+          priced.length === sellable.length
+            ? "Barely used, and still worth something"
+            : `Barely used · estimated across the ${priced.length} we could price`,
+        potentialValue,
+        itemCount: sellable.length,
+        icon: DollarSign,
+        color: "emerald",
+        action: "View items",
+      });
+    }
+  }
+
+  const donatable = items.filter((item) => {
+    const months = monthsSince(item.purchase_date, now);
+    if (months === null || months < 12) return false;
+    if (item.condition === "poor") return false;
+    return Number(item.original_price ?? 0) < 50;
+  });
+  if (donatable.length >= 2) {
+    out.push({
+      id: "donate",
+      type: "donate",
+      title: `${donatable.length} things someone else could use`,
+      description: "Had them a year, still in good shape",
+      itemCount: donatable.length,
+      icon: Gift,
+      color: "pink",
+      action: "Review",
+    });
+  }
+
+  /* Duplicates from the same pure grouper /insights uses, so the two
+     screens count the same piles. */
+  const piles = groupDuplicates(items);
+  if (piles.length > 0) {
+    out.push({
+      id: "duplicates",
+      type: "declutter",
+      title: `${piles.length} ${piles.length === 1 ? "thing" : "things"} you have more than one of`,
+      description: piles
+        .slice(0, 3)
+        .map((pile) => `${pile.count} x ${pile.label}`)
+        .join(" · "),
+      itemCount: piles.reduce((sum, pile) => sum + pile.count, 0),
+      icon: Copy,
+      color: "amber",
+      action: "Analyze",
+    });
+  }
+
+  return out;
+}
+
 export const OpportunitiesPanel = () => {
   const navigate = useNavigate();
-  const { isDemoMode } = useDemo();
+  const { isDemoMode, demoItems, demoCategories } = useDemo();
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [analyzing, setAnalyzing] = useState(false);
   const [hasAnalyzed, setHasAnalyzed] = useState(false);
 
   useEffect(() => {
-    if (isDemoMode) {
-      setOpportunities([
-        {
-          id: "1",
-          type: "sell",
-          title: "5 items could sell for ~$320",
-          description: "Rarely used electronics and gear with good resale value",
-          potentialValue: 320,
-          itemCount: 5,
-          icon: DollarSign,
-          color: "emerald",
-          action: "View items",
-        },
-        {
-          id: "2",
-          type: "donate",
-          title: "3 items perfect for donation",
-          description: "Clothing and books in great condition",
-          itemCount: 3,
-          icon: Gift,
-          color: "pink",
-          action: "Review",
-        },
-        {
-          id: "3",
-          type: "declutter",
-          title: "2 duplicate item groups found",
-          description: "Similar items that could be consolidated",
-          itemCount: 2,
-          icon: Copy,
-          color: "amber",
-          action: "Analyze",
-        },
-        {
-          id: "4",
-          type: "declutter",
-          title: "Excess: 12 coffee cups",
-          description: "Most households only need 6–8 cups. Consider donating extras!",
-          itemCount: 12,
-          icon: AlertTriangle,
-          color: "orange",
-          action: "Review",
-        },
-      ]);
-      setHasAnalyzed(true);
-    }
-  }, [isDemoMode]);
+    if (!isDemoMode) return;
+    /* The real analysis over the real demo inventory. Whatever it finds is
+       what a visitor sees; if it finds nothing, the empty state says so. */
+    setOpportunities(
+      findOpportunities(
+        demoItems as AnalysisItem[],
+        demoCategories as AnalysisCategory[]
+      )
+    );
+    setHasAnalyzed(true);
+  }, [isDemoMode, demoItems, demoCategories]);
 
   const handleAnalyze = async () => {
     if (isDemoMode) {
-      toast.info("In the full app, this analyzes your inventory for opportunities!");
+      /* Re-run the same analysis rather than apologising for being a demo.
+         It is the real function over the real demo rows either way. */
+      const found = findOpportunities(
+        demoItems as AnalysisItem[],
+        demoCategories as AnalysisCategory[]
+      );
+      setOpportunities(found);
+      setHasAnalyzed(true);
+      toast.info(
+        found.length > 0
+          ? `${found.length} ${found.length === 1 ? "thing" : "things"} worth a look.`
+          : "Nothing needs attention in the demo inventory."
+      );
       return;
     }
     setAnalyzing(true);
@@ -102,87 +222,28 @@ export const OpportunitiesPanel = () => {
         toast.error("Please sign in");
         return;
       }
-      const { data: items } = await supabase
-        .from("inventory_items")
-        .select("*")
-        .eq("user_id", user.id)
-        .not("is_sold", "is", true)
-        .not("is_donated", "is", true)
-        .not("is_eliminated", "is", true);
+      /* Categories come along because the valuation model needs them: the
+         category multiplier is looked up by NAME, and without the rows
+         every item silently falls back to the unknown-category figure. */
+      const [{ data: items }, { data: categoryRows }] = await Promise.all([
+        supabase
+          .from("inventory_items")
+          .select("*")
+          .eq("user_id", user.id)
+          .not("is_sold", "is", true)
+          .not("is_donated", "is", true)
+          .not("is_eliminated", "is", true),
+        supabase.from("categories").select("id, name"),
+      ]);
       if (!items || items.length === 0) {
         toast.info("Add some items first to get insights!");
         return;
       }
-      const newOpportunities: Opportunity[] = [];
-      const now = new Date();
-
-      const sellableItems = items.filter((item) => {
-        if (!item.purchase_date) return false;
-        const monthsSincePurchase =
-          (now.getTime() - new Date(item.purchase_date).getTime()) /
-          (1000 * 60 * 60 * 24 * 30);
-        return (
-          monthsSincePurchase >= 6 &&
-          item.usage_frequency === "rarely" &&
-          (item.original_price || 0) > 20
-        );
-      });
-      if (sellableItems.length > 0) {
-        const potentialValue = sellableItems.reduce(
-          (sum, item) =>
-            sum + (item.original_price || 0) * 0.6 * (item.quantity || 1),
-          0
-        );
-        newOpportunities.push({
-          id: "sell",
-          type: "sell",
-          title: `${sellableItems.length} items could sell for ~${formatCurrency(potentialValue)}`,
-          description: "Rarely used items with resale value",
-          potentialValue,
-          itemCount: sellableItems.length,
-          icon: DollarSign,
-          color: "emerald",
-          action: "View items",
-        });
-      }
-
-      const donatableItems = items.filter((item) => {
-        if (!item.purchase_date) return false;
-        const monthsSincePurchase =
-          (now.getTime() - new Date(item.purchase_date).getTime()) /
-          (1000 * 60 * 60 * 24 * 30);
-        return (
-          monthsSincePurchase >= 12 &&
-          (item.original_price || 0) < 50 &&
-          item.condition !== "poor"
-        );
-      });
-      if (donatableItems.length >= 2) {
-        newOpportunities.push({
-          id: "donate",
-          type: "donate",
-          title: `${donatableItems.length} items perfect for donation`,
-          description: "Older items in good condition others could use",
-          itemCount: donatableItems.length,
-          icon: Gift,
-          color: "pink",
-          action: "Review",
-        });
-      }
-
-      const duplicateGroups = await findDuplicates(user.id);
-      if (duplicateGroups.length > 0) {
-        newOpportunities.push({
-          id: "duplicates",
-          type: "declutter",
-          title: `${duplicateGroups.length} duplicate item groups found`,
-          description: "Similar items that could be consolidated",
-          itemCount: duplicateGroups.reduce((sum, g) => sum + g.items.length, 0),
-          icon: Copy,
-          color: "amber",
-          action: "Analyze",
-        });
-      }
+      /* Same function the demo runs, so the two cannot drift. */
+      const newOpportunities: Opportunity[] = findOpportunities(
+        (items ?? []) as AnalysisItem[],
+        (categoryRows ?? []) as AnalysisCategory[]
+      );
 
       const excessItems = await analyzeInventoryForExcess(user.id);
       await createExcessInsights(user.id);
