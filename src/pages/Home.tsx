@@ -153,9 +153,14 @@ export default function Home() {
         ) : (
           <>
             <section className="mt-6 rounded-2xl border border-border bg-card px-6 py-7">
-              <div className="flex items-center gap-7">
+              {/* Stacks on a phone. Side by side, the 184px ring plus its
+                  gap leaves 75px for a row reading "For sale ... 0" on a
+                  375px screen, which wraps into a mess. The reference this
+                  screen is modelled on was a phone preview, so this is the
+                  layout that has to be right, not the desktop one. */}
+              <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-7">
                 <Ring total={summary.total} shelves={summary.shelves} />
-                <div className="flex-1 min-w-0">
+                <div className="w-full sm:flex-1 min-w-0">
                   {summary.shelves.map((s) => (
                     <div key={s.key} className="flex items-center gap-3 mb-3.5">
                       <span
