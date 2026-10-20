@@ -1,106 +1,156 @@
-# Why login didn't work, and the one command that finishes the fix
+# Why login didn't work, and how to finish it
 
-## Two separate bugs. I fixed the first; the second needs you.
+## Three bugs stacked on each other
 
-### Bug 1 — the Google button went to a 404 (FIXED, deployed)
+**1. The Google button went to a 404.** FIXED, deployed.
 
-`src/pages/Auth.tsx` called a Lovable wrapper that navigates the browser
-to `/~oauth/initiate?provider=google&...`. **That path exists only on
-Lovable's own hosting.** Anywhere else — Cloudflare Pages,
-celebrateloop.com, localhost — it hits the SPA fallback and the app
-renders its own 404. I watched it happen in a browser; the console said:
+`Auth.tsx` called a Lovable wrapper that navigates to
+`/~oauth/initiate?provider=google&...` — a path that exists **only on
+Lovable's own hosting**. Anywhere else it hits the SPA fallback and the app
+renders its own 404. I watched it in a browser:
 
 ```
 404 Error: User attempted to access non-existent route: /~oauth/initiate
 ```
 
-Nothing throws, nothing logs to a server, you just land on a 404 page.
-That is why this never got caught.
+Nothing throws, nothing reaches a log. That's why it was never caught. It
+now uses Supabase's own `signInWithOAuth`.
 
-It now uses Supabase's own `signInWithOAuth`. No Lovable service in the
-path. Deployed.
-
-### Bug 2 — the website's database has no Google credentials (NEEDS YOU)
-
-Fixing the button revealed the real problem. Asking each project's auth
-endpoint directly:
+**2. The website's database has no Google credentials.** Asking each
+project's auth endpoint directly:
 
 ```
-WEBSITE  google -> 400 {"msg":"Unsupported provider: missing OAuth secret"}
-WEBSITE  apple  -> 400 {"msg":"Unsupported provider: provider is not enabled"}
+WEBSITE  google -> 400 "Unsupported provider: missing OAuth secret"
+WEBSITE  apple  -> 400 "Unsupported provider: provider is not enabled"
 APP      google -> 302 redirect to accounts.google.com      <-- works
-APP      apple  -> 400 {"msg":"Unsupported provider: missing OAuth secret"}
+APP      apple  -> 400 "Unsupported provider: missing OAuth secret"
 ```
 
-Google is *listed* as enabled on the website's project but has **no
-client secret**. Lovable was brokering Google through its own service, so
-the project never needed real Google credentials — and the moment you host
-anywhere but Lovable, there is no working way in at all:
+Google is *listed* as enabled on the website's project but has no client
+secret — Lovable brokered Google through its own service, so that project
+never needed real credentials. So on the website's project there is no way
+in at all: Google can't start, and a Google account has no password to
+fall back on.
 
-- Google can't start (no secret)
-- and anyone who signed up with Google has no password to fall back on
+**3. Neither project allows the website's address back in.** This is the
+one I got wrong in the first version of this file, and it's the one that
+actually blocks you.
 
-**On the app's project Google works right now, with nothing to
-configure.** That is also where your phone's items and your real account
-live. So this isn't a preference any more — it is the only project where
-the website can log anyone in.
+Supabase only returns you to an address on its allow-list; anything else
+is silently replaced by the project's Site URL. You can read that from
+outside with a deliberately invalid recovery token, which consumes nothing:
 
-## The command
+```
+APP project
+  https://celebrateloop.com/            -> http://localhost:3000   NOT allowed
+  https://loop-web-preview.pages.dev/   -> http://localhost:3000   NOT allowed
+  http://localhost:5173/                -> http://localhost:5173/  ALLOWED
+
+WEBSITE project
+  everything                            -> https://ecoinventory2026.lovable.app
+```
+
+So the app's project thinks it is still a localhost:3000 project, and the
+website's project still thinks it is the Lovable preview. **Repointing
+alone does not fix login** — Google would complete and then drop you on a
+dead localhost page. That is also why "Forgot password?" is broken today:
+the email link lands on the old Lovable domain.
+
+---
+
+## Finish it in two steps
+
+### Step 1 — prove it works, locally, in two minutes
+
+`http://localhost:5173` is **already allow-listed** on the app's project.
+So this works today with no dashboard changes:
 
 ```bash
 cd /Users/akexandravargas/Claude/ecoinventory2026-brand-preview && cp .env .env.website-project.backup && sed -i '' -e 's#^VITE_SUPABASE_PROJECT_ID=.*#VITE_SUPABASE_PROJECT_ID="taodxvqcgszqkqhtwkqt"#' -e 's#^VITE_SUPABASE_URL=.*#VITE_SUPABASE_URL="https://taodxvqcgszqkqhtwkqt.supabase.co"#' .env && grep -n VITE_SUPABASE .env
 ```
 
-That swaps the project id and URL and keeps a backup. It prints the result
-so you can see it worked. **It does not change the key** — you need to
-paste that one yourself, because it is the one value I shouldn't handle:
+Then paste the key: open `ecoinventory-mobile/.env`, copy
+`EXPO_PUBLIC_SUPABASE_ANON_KEY`, and put it in this repo's `.env` as
+`VITE_SUPABASE_PUBLISHABLE_KEY`. (It's a publishable key — it already
+ships inside your iOS app — it just isn't mine to copy around. Both `.env`
+edits were blocked for me, which is why this is a command and not done.)
 
-1. Open `ecoinventory-mobile/.env` and copy the value of
-   `EXPO_PUBLIC_SUPABASE_ANON_KEY`.
-2. Paste it as `VITE_SUPABASE_PUBLISHABLE_KEY` in
-   `ecoinventory2026-brand-preview/.env`.
+```bash
+cd /Users/akexandravargas/Claude/ecoinventory2026-brand-preview && npm run dev
+```
 
-(It is a publishable key — it already ships inside your iOS app — so this
-is not a secret leak. It is just not mine to copy around.)
+Open `http://localhost:5173`, click **Sign in with Google**. You should
+land back signed in, looking at *your* things — the ones on your phone.
 
-Then tell me and I will rebuild, redeploy, turn on the rent fields (the
-app's project has those columns), and check every page against the new
-database.
+If that works, the whole chain is proven and step 2 is just addresses.
 
-## One thing that may still bite, and the fix if it does
+### Step 2 — make the deployed site work (one dashboard field)
 
-After you sign in with Google you might land on a *different* domain than
-the one you started on — celebrateloop.com, or the old Lovable URL —
-still signed in, just the wrong site.
+Supabase → project `taodxvqcgszqkqhtwkqt` → **Authentication → URL
+Configuration**:
 
-That happens when the URL you came from isn't on the project's redirect
-allow-list: Supabase doesn't error, it silently falls back to the
-project's Site URL. I can't read the allow-list from outside (I tested —
-Supabase accepts any `redirect_to` at the start and only validates it at
-the end).
-
-If it happens: Supabase dashboard → project `taodxvqcgszqkqhtwkqt` → **Authentication → URL Configuration → Redirect URLs** → add
+- **Site URL**: change `http://localhost:3000` to `https://celebrateloop.com`
+- **Redirect URLs**: add
 
 ```
-https://loop-web-preview.pages.dev/**
 https://celebrateloop.com/**
+https://loop-web-preview.pages.dev/**
 http://localhost:5173/**
 ```
 
-One line each, save, try again.
+Then tell me and I'll rebuild and redeploy.
+
+---
+
+## What moving costs you
+
+I had five agents probe every table, column, function and bucket the live
+website touches against the app's project. Nothing crashes, but these stop
+working:
+
+| What dies | Why |
+|---|---|
+| AI "smart add" (photo + text) | `analyze-item` isn't deployed on the app's project |
+| Receipt scanning | `process-receipt` likewise |
+| Before You Buy | `before-you-buy` likewise |
+| "Find similar items" | `find-similar-items` likewise |
+| AI category suggestion | `suggest-category` likewise |
+| The inventory assistant | exists on both, but the request shapes don't match |
+| Category parent/child UI | `categories.parent_id` and `user_id` don't exist there |
+
+All of those edge functions exist in **this** repo's `supabase/functions/`.
+They aren't lost — they just need deploying to the app's project, which is
+a `supabase functions deploy` each plus their API keys. Worth doing as a
+follow-up, not a blocker.
+
+Also: photos uploaded on the web go to a bucket called `inventory-images`
+while the app's photos live in `inventory-photos`. Both display fine (the
+full URL is stored), but they should be one bucket eventually.
+
+And the 10 accounts that exist only in the website's project stop working
+— they hold its 32 seeded items. Yours is one of them, which is why you
+have a login there at all; after the move you'd use your **app** account,
+which is the one with your real things.
+
+---
 
 ## Also fixed on the login page
 
-- **The Apple button only appears when the project can actually serve
-  it.** It used to render unconditionally while the website's project had
-  no Apple provider at all — a button that could only fail. It asks
-  `/auth/v1/settings` which providers are real and shows only those. (On
-  the website's project that means Apple is now hidden; on the app's
-  project Apple has no web secret either, because the iPhone signs in
+- **The Apple button only shows when the project can serve it.** It used
+  to render always, while the website's project had no Apple provider at
+  all — a button that could only fail. It asks `/auth/v1/settings` which
+  providers are real. (After the move Apple *is* enabled on the app's
+  project, though it has no web secret either, because the iPhone signs in
   with Apple natively through a different credential.)
 - **"Invalid login credentials" now says something useful.** Supabase
-  returns that same string whether the password is wrong *or* the account
-  has no password at all — which is every Google account. It used to send
-  you round the password-reset loop for an account that never had a
-  password. It now says: if you signed up with Google, use the Google
-  button.
+  returns that string whether the password is wrong *or* the account has
+  no password at all — which is every Google account. It used to send you
+  round the password-reset loop for an account that never had a password.
+
+## One thing to know about new signups after the move
+
+The app's project does **not** auto-confirm email addresses (the website's
+does). So someone signing up with email on the website will get no session
+until they click a confirmation email — and until step 2 is done, that
+link also goes to localhost:3000. Step 2 fixes both. Google signups are
+unaffected.
