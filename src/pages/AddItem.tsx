@@ -1,6 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import {
+  DEFAULT_RENT_WINDOW,
+  RENT_WINDOWS,
+  WINDOW_DESCRIPTION,
+  type RentWindow,
+} from "@/lib/rentWindow";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Camera, Receipt, PenTool, Package, Upload, Sparkles, Loader2, X, Mail } from "lucide-react";
 import { toast } from "sonner";
@@ -98,6 +104,10 @@ const AddItem = () => {
     is_for_borrow: false,
     is_for_sale: false,
     sharing_price: "",
+    /* Blank = lend free. The app draws the same distinction as Lend vs Rent;
+       here one toggle plus an optional rate says the same thing. */
+    rent_price: "",
+    rent_window: DEFAULT_RENT_WINDOW as RentWindow,
     tags: [] as string[],
   };
 
@@ -155,6 +165,10 @@ const AddItem = () => {
     is_for_borrow: false,
     is_for_sale: false,
     sharing_price: "",
+    /* Blank = lend free. The app draws the same distinction as Lend vs Rent;
+       here one toggle plus an optional rate says the same thing. */
+    rent_price: "",
+    rent_window: DEFAULT_RENT_WINDOW as RentWindow,
     tags: [] as string[],
   });
 
@@ -283,6 +297,19 @@ const AddItem = () => {
           sharing_price: formData.is_for_sale && formData.sharing_price
             ? parseFloat(formData.sharing_price)
             : null,
+          /* rent_price and rent_window travel TOGETHER or not at all.
+             rent_price is the price for ONE window, and rentWindow.ts is
+             explicit that an unknown window must not fall back to "day"
+             because that overcharges — a $250/month item would bill $250 x 30.
+             So a price with no window is never written. */
+          rent_price:
+            formData.is_for_borrow && formData.rent_price
+              ? parseFloat(formData.rent_price)
+              : null,
+          rent_window:
+            formData.is_for_borrow && formData.rent_price
+              ? formData.rent_window
+              : null,
         },
       ]).select("id, name");
 
@@ -1337,6 +1364,58 @@ const AddItem = () => {
                       }
                     />
                   </div>
+                  {/* The rate. Blank is the honest default: Loop's "Lend" and
+                      "Rent" are the same offer with and without a price, so
+                      this is one optional field rather than two modes.
+                      The window is NOT optional once a price is set —
+                      rent_price prices ONE window, so an unknown window
+                      silently billed as "day" turns $250/month into $7,500. */}
+                  {formData.is_for_borrow && (
+                    <div className="space-y-1.5">
+                      <Label htmlFor="rent_price" className="text-sm">
+                        Rent rate (USD)
+                        <span className="ml-2 font-normal text-muted-foreground">
+                          optional
+                        </span>
+                      </Label>
+                      <div className="flex gap-2">
+                        <Input
+                          id="rent_price"
+                          type="number"
+                          min="0"
+                          step="0.01"
+                          placeholder="Blank = lend it free"
+                          value={formData.rent_price}
+                          onChange={(e) =>
+                            setFormData({ ...formData, rent_price: e.target.value })
+                          }
+                          className="flex-1"
+                        />
+                        <Select
+                          value={formData.rent_window}
+                          onValueChange={(v) =>
+                            setFormData({ ...formData, rent_window: v as RentWindow })
+                          }
+                        >
+                          <SelectTrigger className="w-[150px] shrink-0">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {RENT_WINDOWS.map((w) => (
+                              <SelectItem key={w} value={w}>
+                                per {w}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        {formData.rent_price
+                          ? WINDOW_DESCRIPTION[formData.rent_window]
+                          : "No rate means you're happy to lend it for nothing."}
+                      </p>
+                    </div>
+                  )}
                   <div className="flex items-center justify-between gap-3">
                     <div>
                       <p className="text-sm font-medium">For sale</p>
