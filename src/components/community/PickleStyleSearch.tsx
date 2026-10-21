@@ -772,6 +772,19 @@ function Pill({ label, onRemove }: { label: string; onRemove: () => void }) {
 
 function ProductCard({ item, onOpen }: { item: Item; onOpen: () => void }) {
   const cover = item.image_urls?.[0];
+  /* FOUR OF THE TWENTY-TWO PHOTOS IN THIS DATABASE ARE HEIC — iPhone's
+     format, uploaded straight from the phone and stored with a
+     content-type of image/jpeg that lies about it. No browser renders
+     HEIC, so those items showed the browser's broken-image glyph: a grey
+     box with a torn-page icon, which looks like the site is broken rather
+     than like a photo that did not load.
+
+     The real fix is to transcode on upload, in the app. Supabase's own
+     image-transformation endpoint would also do it on the fly, but it
+     returns FeatureNotEnabled on this plan. Until one of those happens,
+     a failed image falls back to the same honest placeholder a photoless
+     item gets. */
+  const [coverFailed, setCoverFailed] = useState(false);
   /* THE PRICE LABEL used to be derived from sharing_price alone, so every
      item with no SALE price printed "Free to borrow" — paid rentals
      included, which the website could not even set until today. It also
@@ -814,16 +827,17 @@ function ProductCard({ item, onOpen }: { item: Item; onOpen: () => void }) {
   return (
     <Link to={`/profile/${item.user_id}`} onClick={onOpen} className="group block">
       <div className="relative aspect-[3/4] overflow-hidden rounded-xl mb-3 bg-secondary/40 ring-1 ring-border/60 group-hover:ring-foreground/20 group-hover:shadow-xl transition-all duration-300">
-        {cover ? (
+        {cover && !coverFailed ? (
           <img
             src={cover}
             alt={item.name}
             loading="lazy"
+            onError={() => setCoverFailed(true)}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-xs text-muted-foreground">
-            No photo
+          <div className="w-full h-full flex items-center justify-center px-3 text-center text-xs text-muted-foreground">
+            {coverFailed ? "Photo won't load" : "No photo"}
           </div>
         )}
 
