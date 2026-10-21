@@ -48,27 +48,42 @@ const DashboardNav = () => {
 
   const loggedIn = isDemoMode || isAuthed === true;
 
-  const myEstateItems: NavItem[] = [
-    /* Home and Insights lead, matching the app's tab order: what you own
-       first, the tools after. Both read the same rows as the phone. */
-    { path: "/home", label: "Home", icon: Home },
-    { path: "/insights", label: "Everything you own", icon: BarChart3 },
-    { path: "/me", label: "My Profile", icon: User },
-    { path: "/dashboard", label: t('dashboard.analytics'), icon: BarChart3, tab: "analytics" },
-    { path: "/dashboard", label: t('dashboard.myInventory'), icon: Package, tab: "inventory" },
+  /* THE ACTIVE SIGNAL IS CLARET, AND IT IS DEFINED ONCE.
+     It was `text-foreground font-medium border-b border-foreground/80`,
+     copy-pasted at five sites — so the only cue in the whole nav was a
+     slightly darker grey with a grey underline, indistinguishable at a
+     glance. Claret is 8.1:1 on white and appeared nowhere in the signed-in
+     chrome, which is the mechanical reason it read "white and boring"
+     while the landing page does not. */
+  const NAV_BASE =
+    "h-8 px-1 gap-1.5 text-[13px] font-normal tracking-wide shrink-0 hover:bg-transparent border-b rounded-none";
+  const NAV_ON = "text-claret font-medium border-claret";
+  const NAV_OFF =
+    "text-muted-foreground hover:text-foreground border-transparent";
+
+  /* TWO GROUPS, IN LOOP'S OWN NOUNS.
+     This was three: "Unlock Your Stuff" (marketing copy in a wayfinding
+     slot), "My Network" (LinkedIn-speak), and "Other" — a menu named
+     after the absence of a name, holding everything nobody could
+     categorise. The nouns below are the phone's: home, discover, people,
+     insights, things.
+
+     Two /dashboard entries also went, "Impact & Achievements" and "My
+     Stuff". Both resolved to /dashboard?tab=..., and Dashboard's Tabs is
+     uncontrolled (defaultValue="gallery", no value prop), so the param
+     did nothing and both links landed on the identical screen. One
+     entry now, labelled for what it is. */
+  const thingsItems: NavItem[] = [
+    { path: "/dashboard", label: "Everything", icon: Package },
     { path: "/dashboard/before-you-buy", label: "Before you buy", icon: Search },
+    { path: "/me", label: "Public profile", icon: User },
   ];
 
-  const friendsItems: NavItem[] = [
-    { path: "/people", label: "People", icon: Compass },
-    { path: "/friends", label: t('nav.friends'), icon: Users },
-    { path: "/messages", label: t('nav.messages'), icon: MessageSquare },
-  ];
-
-  const otherItems: NavItem[] = [
+  const peopleItems: NavItem[] = [
+    { path: "/people", label: "Nearby", icon: Compass },
+    { path: "/friends", label: "Friends", icon: Users },
+    { path: "/messages", label: "Messages", icon: MessageSquare },
     { path: "/events", label: "Events", icon: Calendar },
-    { path: "/articles", label: t('nav.articles'), icon: FileText },
-    { path: "/how-it-works", label: t('nav.about'), icon: Info },
   ];
 
   const isActiveInGroup = (items: NavItem[]) => {
@@ -111,14 +126,10 @@ const DashboardNav = () => {
           <Button
             variant="ghost"
             size="sm"
-            className={`h-8 px-1 gap-1.5 text-[13px] font-normal tracking-wide shrink-0 hover:bg-transparent ${
-              isActive 
-                ? "text-foreground font-medium border-b border-foreground/80 rounded-none" 
-                : "text-muted-foreground hover:text-foreground border-b border-transparent rounded-none"
-            }`}
+            className={`${NAV_BASE} ${isActive ? NAV_ON : NAV_OFF}`}
           >
             <Icon className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">{label}</span>
+            <span>{label}</span>
             <ChevronDown className="w-3 h-3 opacity-50" />
           </Button>
         </DropdownMenuTrigger>
@@ -154,11 +165,7 @@ const DashboardNav = () => {
             asChild
             variant="ghost"
             size="sm"
-            className={`h-8 px-1 gap-1.5 text-[13px] font-normal tracking-wide shrink-0 hover:bg-transparent ${
-              location.pathname === "/how-it-works"
-                ? "text-foreground font-medium border-b border-foreground/80 rounded-none"
-                : "text-muted-foreground hover:text-foreground border-b border-transparent rounded-none"
-            }`}
+            className={`${NAV_BASE} ${location.pathname === "/how-it-works" ? NAV_ON : NAV_OFF}`}
           >
             <Link to="/how-it-works">
               <Info className="w-3.5 h-3.5" />
@@ -172,34 +179,62 @@ const DashboardNav = () => {
 
   return (
     <div className="relative">
-      <nav className="flex items-center gap-5 py-2 px-1">
-        {/* Three dropdown menus */}
-        <NavDropdown label="Unlock Your Stuff" icon={LayoutDashboard} items={myEstateItems} />
+      {/* FIVE ITEMS, LEFT TO RIGHT, ALL LABELLED.
+          Was four dropdowns whose labels were slogans, every one carrying
+          an icon AND a chevron — four labels, eight glyphs. And every
+          label was wrapped in `hidden sm:inline`, so below 640px the nav
+          became four unlabelled grey icons: nobody can guess that a
+          compass means "Events, Articles and How it works".
+          "Home · Discover · People · Insights · My things" is 38
+          characters and fits a 375px screen at 13px, so the labels stay. */}
+      <nav className="flex items-center gap-4 py-2 px-1 -mx-1 overflow-x-auto">
+        <Button
+          asChild
+          variant="ghost"
+          size="sm"
+          className={`${NAV_BASE} ${location.pathname === "/home" ? NAV_ON : NAV_OFF}`}
+        >
+          <Link to="/home">
+            <Home className="w-3.5 h-3.5" />
+            <span>Home</span>
+          </Link>
+        </Button>
+
+        <Button
+          asChild
+          variant="ghost"
+          size="sm"
+          className={`${NAV_BASE} ${location.pathname === "/marketplace" ? NAV_ON : NAV_OFF}`}
+        >
+          {/* "Discover" is the phone's word for this screen. It was
+              "Borrow & Buy" — the only title-cased compound in the bar. */}
+          <Link to="/marketplace">
+            <Compass className="w-3.5 h-3.5" />
+            <span>Discover</span>
+          </Link>
+        </Button>
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
               size="sm"
-              className={`h-8 px-1 gap-1.5 text-[13px] font-normal tracking-wide shrink-0 hover:bg-transparent ${
-                isActiveInGroup(friendsItems)
-                  ? "text-foreground font-medium border-b border-foreground/80 rounded-none"
-                  : "text-muted-foreground hover:text-foreground border-b border-transparent rounded-none"
-              }`}
+              className={`${NAV_BASE} ${isActiveInGroup(peopleItems) ? NAV_ON : NAV_OFF}`}
             >
               <Users className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">{t('nav.friends')}</span>
+              <span>People</span>
               <ChevronDown className="w-3 h-3 opacity-50" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-48">
-            {friendsItems.map((item) => {
+            {peopleItems.map((item) => {
               const ItemIcon = item.icon;
               const active = isItemActive(item);
               return (
                 <DropdownMenuItem key={item.path} asChild>
                   <Link
                     to={getItemPath(item)}
-                    className={`flex items-center gap-2 ${active ? "bg-primary/5 text-primary" : ""}`}
+                    className={`flex items-center gap-2 ${active ? "bg-champagne text-claret" : ""}`}
                   >
                     <ItemIcon className="w-4 h-4" />
                     {item.label}
@@ -216,26 +251,24 @@ const DashboardNav = () => {
               className="flex items-center gap-2 cursor-pointer"
             >
               <UserPlus className="w-4 h-4" />
-              Invite neighbors
+              Invite neighbours
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+
         <Button
           asChild
           variant="ghost"
           size="sm"
-          className={`h-8 px-1 gap-1.5 text-[13px] font-normal tracking-wide shrink-0 hover:bg-transparent ${
-            location.pathname === "/marketplace"
-              ? "text-foreground font-medium border-b border-foreground/80 rounded-none"
-              : "text-muted-foreground hover:text-foreground border-b border-transparent rounded-none"
-          }`}
+          className={`${NAV_BASE} ${location.pathname === "/insights" ? NAV_ON : NAV_OFF}`}
         >
-          <Link to="/marketplace">
-            <ShoppingBag className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Borrow & Buy</span>
+          <Link to="/insights">
+            <BarChart3 className="w-3.5 h-3.5" />
+            <span>Insights</span>
           </Link>
         </Button>
-        <NavDropdown label="Other" icon={Compass} items={otherItems} />
+
+        <NavDropdown label="My things" icon={Package} items={thingsItems} />
 
         {/* Admin link if applicable */}
         {isAdmin && !loading && (
@@ -243,11 +276,7 @@ const DashboardNav = () => {
             asChild
             variant="ghost"
             size="sm"
-            className={`h-8 px-1 gap-1.5 text-[13px] font-normal tracking-wide shrink-0 hover:bg-transparent ${
-              location.pathname === "/admin" 
-                ? "text-foreground font-medium border-b border-foreground/80 rounded-none" 
-                : "text-muted-foreground hover:text-foreground border-b border-transparent rounded-none"
-            }`}
+            className={`${NAV_BASE} ${location.pathname === "/admin" ? NAV_ON : NAV_OFF}`}
           >
             <Link to="/admin">
               <Shield className="w-3.5 h-3.5" />
