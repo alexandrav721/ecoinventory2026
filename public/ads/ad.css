@@ -1,0 +1,161 @@
+/* Loop ad creative — shared frame.
+ *
+ * Built at 1080x1350, Instagram's 4:5 feed size (the tallest the feed
+ * allows, so it occupies the most screen). Each ad is one idea, one line,
+ * one picture. The line always comes from the founder's own words.
+ *
+ * NO PHOTOGRAPHY, DELIBERATELY. Generated lifestyle imagery is the single
+ * clearest "this was made by AI" tell, and licensed stock has already been
+ * rejected twice on this brand. These are typographic and built from the
+ * same colour-from-the-object system as the site, so they are
+ * unmistakably Loop and cannot be mistaken for anyone else's ad.
+ *
+ * Fonts load from Google Fonts, so render these in a browser rather than
+ * rasterising the markup locally — Instrument Serif is not installed on
+ * the machine and a fallback serif loses the whole look.
+ */
+
+:root {
+  --paper: #ffffff;
+  --champagne: #f7f2ea;
+  --claret: #8c2e48;
+  --ink: #1b1917;
+  --muted: #5f5a54;
+  --hairline: #e5e1dc;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 1080px;
+  height: 1350px;
+  overflow: hidden;
+}
+
+body {
+  font-family: Archivo, system-ui, -apple-system, sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+.ad {
+  width: 1080px;
+  height: 1350px;
+  padding: 84px 84px 72px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+}
+
+.ad--champagne {
+  background: var(--champagne);
+}
+
+.eyebrow {
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--claret);
+}
+
+.display {
+  font-family: "Instrument Serif", Georgia, serif;
+  font-weight: 400;
+  line-height: 0.98;
+  letter-spacing: -0.01em;
+  font-size: 118px;
+}
+
+.display em {
+  font-style: italic;
+  color: var(--claret);
+}
+
+.sub {
+  font-size: 30px;
+  line-height: 1.45;
+  color: #4a4540;
+  max-width: 24ch;
+  margin-top: 34px;
+}
+
+/* The footer lockup: mark, wordmark, and where it is. */
+.foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--hairline);
+  padding-top: 30px;
+}
+
+.lockup {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.lockup .word {
+  font-family: "Instrument Serif", Georgia, serif;
+  font-style: italic;
+  font-size: 46px;
+  line-height: 1;
+}
+
+.foot .where {
+  font-size: 20px;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+}
+
+/* Things, in the colour the thing actually is. */
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.tile {
+  aspect-ratio: 1 / 1.1;
+  border-radius: 22px;
+  padding: 20px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.tile .name {
+  font-size: 21px;
+  font-weight: 600;
+  line-height: 1.15;
+  max-width: 9ch;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  color: var(--ink);
+  border: 1px solid var(--hairline);
+  border-radius: 7px;
+  padding: 6px 11px;
+  font-size: 19px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  align-self: flex-start;
+}
+
+.tag--rent {
+  background: var(--claret);
+  color: #fff;
+  border-color: var(--claret);
+}

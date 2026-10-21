@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Loop ad creative</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Archivo:wght@400;600&display=swap">
+<style>
+  :root { --claret:#8C2E48; --ink:#1B1917; --muted:#5F5A54; --line:#E5E1DC; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:Archivo,system-ui,sans-serif; background:#fff; color:var(--ink); padding:48px 24px 80px; }
+  .wrap { max-width:1040px; margin:0 auto; }
+  h1 { font-family:"Instrument Serif",Georgia,serif; font-size:44px; font-weight:400; }
+  h1 em { font-style:italic; color:var(--claret); }
+  p.lede { color:var(--muted); margin-top:14px; max-width:62ch; line-height:1.6; }
+  ol { margin:40px 0 0; padding-left:20px; display:grid; gap:14px; }
+  li a { color:var(--claret); font-weight:600; text-decoration:none; }
+  li a:hover { text-decoration:underline; }
+  li span { color:var(--muted); }
+  .how { margin-top:46px; border-top:1px solid var(--line); padding-top:26px; color:var(--muted); line-height:1.7; max-width:62ch; }
+  code { background:#F7F2EA; padding:2px 6px; border-radius:4px; font-size:.92em; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Loop <em>ad creative</em></h1>
+  <p class="lede">Five frames at 1080&times;1350 — Instagram's 4:5 feed size, the tallest
+  the feed allows. Each is one line and one picture, and every line is yours.
+  No photography and no generated imagery: those are the two fastest ways to
+  look like everyone else.</p>
+
+  <ol>
+    <li><a href="./1-four-umbrellas.html">You already own four umbrellas.</a> <span>— the one you were about to buy</span></li>
+    <li><a href="./2-hours.html">You paid for this in hours.</a> <span>— the cost in time, not money</span></li>
+    <li><a href="./3-the-pile.html">Everything here has a price tag.</a> <span>— the pile, tagged</span></li>
+    <li><a href="./4-earns.html">Your closet is a shop you already paid for.</a> <span>— lending</span></li>
+    <li><a href="./5-ask-your-block.html">Somebody on your block already owns one.</a> <span>— asking</span></li>
+  </ol>
+
+  <div class="how">
+    <strong style="color:var(--ink)">To export at full resolution:</strong> open a frame,
+    make the browser window 1080 wide, and screenshot it — or use
+    <code>Cmd&nbsp;+&nbsp;Shift&nbsp;+&nbsp;4</code> then Space to grab the window.
+    The markup is the master, so any of it can be changed: the line, the colours,
+    the prices on the tags. Each frame is one small HTML file in
+    <code>public/ads/</code>.
+  </div>
+</div>
+</body>
+</html>
