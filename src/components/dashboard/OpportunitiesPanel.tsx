@@ -329,7 +329,7 @@ export const OpportunitiesPanel = () => {
         ) : opportunities.length === 0 && hasAnalyzed ? (
           <div className="text-center py-8">
             <Sparkles className="w-10 h-10 mx-auto text-emerald-500 mb-3" />
-            <p className="font-medium text-emerald-600">Your inventory looks great! 🎉</p>
+            <p className="font-medium text-emerald-600">Nothing needs attention.</p>
             <p className="text-sm text-muted-foreground mt-1">
               No immediate actions needed. Check back later!
             </p>

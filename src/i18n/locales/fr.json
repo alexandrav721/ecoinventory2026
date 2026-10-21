@@ -33,7 +33,7 @@
   },
   "welcome": {
     "morning": "Bonjour",
-    "afternoon": "Bon après-midi", 
+    "afternoon": "Bon après-midi",
     "evening": "Bonsoir",
     "hey": "Salut, {{name}} !",
     "subtitle": "Voici ce qui se passe avec vos affaires",

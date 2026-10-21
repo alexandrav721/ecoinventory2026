@@ -6,10 +6,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
-import { Leaf, Apple, Facebook, Phone, ArrowLeft } from "lucide-react";
+import { Apple, Phone, ArrowLeft } from "lucide-react";
 import { z } from "zod";
 import { useTranslation } from "react-i18next";
-import authHero from "@/assets/auth-hero.jpg";
+import { CHAMPAGNE, CLARET, HAIRLINE, INK, LoopLockup, LoopMark, MUTED } from "@/components/brand";
 
 const authSchema = z.object({
   email: z.string().trim().email("Please enter a valid email address").max(255, "Email must be less than 255 characters"),
@@ -235,36 +235,83 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen grid lg:grid-cols-2 bg-background">
-      {/* Editorial image panel */}
-      <div className="relative hidden lg:block overflow-hidden">
-        <img
-          src={authHero}
-          alt="A curated still-life of borrowable household items in warm light"
-          className="absolute inset-0 w-full h-full object-cover"
-          width={1024}
-          height={1536}
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
-        <div className="absolute top-8 left-8 right-8 flex items-center justify-between text-white/90">
+      {/* THE LEFT PANEL USED TO BE A STOCK PHOTOGRAPH — a woman holding a
+          camera and a plant, under a black gradient, with "§ 01 — Welcome"
+          over it. Two problems: literal stock photography is the exact
+          thing that came back as "kind of gross", and it belonged to the
+          old eco-inventory product, not to Loop.
+
+          It is now built the way the landing page is built: colour from
+          the objects themselves. Each tile is a thing in the colour that
+          thing actually is, so the panel is cheerful without an asset that
+          can be badly chosen. Nothing here is a photo, an illustration or
+          a gradient. */}
+      <div
+        className="relative hidden lg:flex lg:flex-col lg:justify-between overflow-hidden p-10"
+        style={{ background: CHAMPAGNE }}
+      >
+        <div className="flex items-center justify-between">
+          <Link to="/" className="inline-flex items-center gap-2.5 hover:opacity-70">
+            <LoopLockup size={30} type={24} />
+          </Link>
           <Link
             to="/"
-            className="inline-flex items-center gap-2 text-sm hover:text-white transition-colors"
+            className="inline-flex items-center gap-2 text-sm hover:opacity-70"
+            style={{ color: MUTED }}
           >
             <ArrowLeft className="w-4 h-4" />
             {t('nav.home')}
           </Link>
-          <span className="text-xs uppercase tracking-[0.2em]">§ 01 — Welcome</span>
         </div>
-        <div className="absolute bottom-10 left-10 right-10 text-white">
-          <p className="text-xs uppercase tracking-[0.25em] mb-4 opacity-80">A neighborhood library of things</p>
-          <h2 className="font-display text-4xl xl:text-5xl leading-[1.05] tracking-tight">
-            Own less.<br />
-            <span className="italic font-light">Share more.</span>
+
+        <div className="max-w-md">
+          <h2
+            className="text-[clamp(2.2rem,3.6vw,3.2rem)] leading-[1.05]"
+            style={{ fontFamily: "Instrument Serif, Georgia, serif", color: INK }}
+          >
+            You already own
+            <br />
+            <span className="italic" style={{ color: CLARET }}>
+              four umbrellas
+            </span>
+            .
           </h2>
-          <p className="mt-4 text-sm max-w-sm opacity-90">
-            Join a community treating their stuff like a library — beautiful, useful, and shared.
+          <p className="mt-5 text-[15px] leading-relaxed" style={{ color: "#4A4540" }}>
+            Loop remembers what you have, so you stop buying it twice.
           </p>
+
+          {/* A quiet echo of the landing page's pile — same idea, smaller,
+              and it reads as the same product rather than a second one. */}
+          <div className="mt-9 grid grid-cols-4 gap-2" style={{ maxWidth: 360 }}>
+            {[
+              ["Dutch oven", "#C65A33", "#FFFFFF"],
+              ["Stand mixer", "#E8C45C", INK],
+              ["Steam cleaner", "#2E6F6B", "#FFFFFF"],
+              ["Throw", "#E7DCC6", INK],
+              ["Espresso", "#9FC2D6", INK],
+              ["Suitcase", "#3E4C7A", "#FFFFFF"],
+              ["Drill", "#D9823B", "#FFFFFF"],
+              ["Tent", "#4F7F4A", "#FFFFFF"],
+            ].map(([name, fill, ink]) => (
+              <div
+                key={name}
+                className="rounded-xl p-2"
+                style={{ background: fill, aspectRatio: "1 / 1.12" }}
+              >
+                <p
+                  className="text-[10px] font-semibold leading-tight"
+                  style={{ color: ink }}
+                >
+                  {name}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
+
+        <p className="text-xs" style={{ color: MUTED }}>
+          Borrow, lend and rent on your block. FiDi, New York.
+        </p>
       </div>
 
       {/* Form panel */}
@@ -278,14 +325,23 @@ const Auth = () => {
             {t('nav.home')}
           </Link>
         </div>
-      <Card className="w-full max-w-md shadow-soft">
+      {/* No shadow: index.css calls blurry drop shadows a 2014 card
+          metaphor that reads cheap. A hairline does the same job. */}
+      <Card
+        className="w-full max-w-md shadow-none"
+        style={{ border: `1px solid ${HAIRLINE}` }}
+      >
         <CardHeader className="text-center space-y-2">
-          <div className="flex justify-center mb-4">
-            <div className="w-16 h-16 rounded-full bg-gradient-eco flex items-center justify-center">
-              <Leaf className="w-8 h-8 text-white" />
-            </div>
+          <div className="flex justify-center mb-5">
+            {/* The real Loop mark. This was a leaf glyph in a green
+                gradient circle — the old eco-inventory badge, a different
+                company's logo on Loop's sign-in page. */}
+            <LoopMark size={48} />
           </div>
-          <CardTitle className="text-2xl font-bold">
+          <CardTitle
+            className="text-[28px] font-normal italic leading-tight"
+            style={{ fontFamily: "Instrument Serif, Georgia, serif" }}
+          >
             {isForgotPassword ? "Reset your password" : isLogin ? t('auth.welcomeBack') : t('auth.joinEco')}
           </CardTitle>
           <CardDescription>

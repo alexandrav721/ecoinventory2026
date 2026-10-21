@@ -166,7 +166,7 @@ const InviteNeighborsDialog = ({ open, onOpenChange }: InviteNeighborsDialogProp
             {/* Not "near you": there is no location predicate in the
                 count above and never was. It is everything publicly
                 listed to borrow. */}
-            🏘 {displayCount} {displayCount === 1 ? "thing" : "things"} on Loop to borrow right now
+            {displayCount} {displayCount === 1 ? "thing" : "things"} on Loop to borrow right now
           </div>
           <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
             Every neighbor you invite means more things available on your street.

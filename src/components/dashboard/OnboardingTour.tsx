@@ -10,13 +10,13 @@ const steps: Step[] = [
   {
     target: "body",
     placement: "center",
-    title: "Welcome to Loop 🌱",
+    title: "Welcome to Loop",
     content:
       "A 60-second tour of the things that matter most. Track what you own, share with neighbors, and avoid duplicate buys.",
   },
   {
     target: '[data-tour="add-item"]',
-    title: "Add items, your way ✨",
+    title: "Add things, your way",
     content:
       'Tap the + button to add items by camera, photo, or manual entry. Smart Add uses AI to fill in the details for you.',
     placement: "left",

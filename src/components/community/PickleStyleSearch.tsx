@@ -443,23 +443,16 @@ export function PickleStyleSearch() {
 
   return (
     <div className="bg-background">
-      {/* Colorful hero strip */}
-      <div className="relative overflow-hidden border-b">
-        <div
-          className="absolute inset-0 -z-10"
-          style={{
-            background:
-              "linear-gradient(115deg, hsl(217 91% 60% / 0.12), hsl(330 85% 65% / 0.10) 35%, hsl(45 96% 60% / 0.12) 70%, hsl(160 70% 50% / 0.12))",
-          }}
-        />
-        <div
-          className="absolute -top-24 -right-24 w-72 h-72 rounded-full blur-3xl -z-10 opacity-50"
-          style={{ background: "hsl(330 85% 70%)" }}
-        />
-        <div
-          className="absolute -bottom-24 -left-24 w-72 h-72 rounded-full blur-3xl -z-10 opacity-40"
-          style={{ background: "hsl(199 89% 60%)" }}
-        />
+      {/* A plain champagne band.
+          This was a four-stop rainbow gradient (blue -> pink -> yellow ->
+          green) with two 288px blurred pink and blue blobs floating over
+          it. None of those colours is in Loop's palette, and blurred
+          colour blobs are the 2021-SaaS look index.css rules out. The band
+          now does the one job it had: separate the header from the grid. */}
+      <div
+        className="relative overflow-hidden border-b"
+        style={{ background: "hsl(var(--champagne))" }}
+      >
         <div className="container mx-auto px-4 py-5 md:py-6">
           <nav className="flex items-center gap-1.5 text-xs text-muted-foreground mb-2">
             <Link to="/welcome" className="hover:text-foreground">About Loop</Link>
@@ -496,8 +489,8 @@ export function PickleStyleSearch() {
             <div className="inline-flex rounded-full border border-border bg-background/80 backdrop-blur p-1">
               {([
                 { value: "all" as Offer, label: "All", Icon: Layers, tone: "" },
-                { value: "borrow" as Offer, label: "Borrow", Icon: HandHeart, tone: "hsl(160 70% 40%)" },
-                { value: "buy" as Offer, label: "Buy", Icon: ShoppingBag, tone: "hsl(330 85% 55%)" },
+                { value: "borrow" as Offer, label: "Borrow", Icon: HandHeart, tone: "hsl(var(--success))" },
+                { value: "buy" as Offer, label: "Buy", Icon: ShoppingBag, tone: "hsl(var(--claret))" },
               ]).map(({ value, label, Icon, tone }) => (
                 <button
                   key={value}
@@ -845,8 +838,8 @@ function ProductCard({ item, onOpen }: { item: Item; onOpen: () => void }) {
             className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-white shadow-md backdrop-blur"
             style={{
               background: sellable
-                ? "linear-gradient(135deg, hsl(330 85% 55%), hsl(15 90% 60%))"
-                : "linear-gradient(135deg, hsl(160 70% 42%), hsl(180 65% 40%))",
+                ? "hsl(var(--claret))"
+                : "hsl(var(--success))",
             }}
           >
             {sellable ? <ShoppingBag className="w-3 h-3" /> : <HandHeart className="w-3 h-3" />}
@@ -861,7 +854,7 @@ function ProductCard({ item, onOpen }: { item: Item; onOpen: () => void }) {
         {photoCount > 1 && (
           <div className="absolute bottom-2.5 right-2.5">
             <span className="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium bg-black/60 text-white backdrop-blur">
-              📷 {photoCount}
+              {photoCount}
             </span>
           </div>
         )}
@@ -875,7 +868,7 @@ function ProductCard({ item, onOpen }: { item: Item; onOpen: () => void }) {
             the literal string "null" in some brands and sizes. It is
             truthy, so it was printing as "NULL" above the item name. */}
         {displayText(item.brand) && (
-          <p className="text-[10px] uppercase tracking-[0.14em] font-semibold" style={{ color: "hsl(217 91% 50%)" }}>
+          <p className="text-[10px] uppercase tracking-[0.14em] font-semibold" style={{ color: "hsl(var(--subtle))" }}>
             {displayText(item.brand)}
           </p>
         )}
@@ -896,18 +889,18 @@ function ProductCard({ item, onOpen }: { item: Item; onOpen: () => void }) {
                 no rate", a free GIVEAWAY (is_donated, no sale price) fell
                 through to it and would have thrown on null. */}
             {rentLabel ? (
-              <span className="text-base font-bold" style={{ color: "hsl(160 70% 38%)" }}>
+              <span className="text-base font-bold" style={{ color: "hsl(var(--success))" }}>
                 {rentLabel}
               </span>
             ) : isFree ? (
-              <span className="text-base font-bold" style={{ color: "hsl(160 70% 38%)" }}>Free to borrow</span>
+              <span className="text-base font-bold" style={{ color: "hsl(var(--success))" }}>Free to borrow</span>
             ) : isGiveaway ? (
               /* The app's word for is_donated is "Free" (see
                  useNearbyItems.nearbyAction). Not "donated", which on the
                  website still reads as "already gone". */
-              <span className="text-base font-bold" style={{ color: "hsl(160 70% 38%)" }}>Free</span>
+              <span className="text-base font-bold" style={{ color: "hsl(var(--success))" }}>Free</span>
             ) : price !== null ? (
-              <span className="text-base font-bold" style={{ color: "hsl(330 85% 50%)" }}>
+              <span className="text-base font-bold" style={{ color: "hsl(var(--claret))" }}>
                 ${price.toFixed(0)}
               </span>
             ) : null}

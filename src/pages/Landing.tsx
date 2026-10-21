@@ -1,4 +1,15 @@
 import { Link } from "react-router-dom";
+/* The palette and the mark moved to src/components/brand.tsx so the
+   sign-in page stops drawing its own badge. Same literals, one home. */
+import {
+  CHAMPAGNE,
+  CLARET,
+  HAIRLINE,
+  INK,
+  LoopMark,
+  MUTED,
+  PAPER,
+} from "@/components/brand";
 import {
   FifthOne,
   Hours,
@@ -44,37 +55,6 @@ const SUPPORT_EMAIL = "[SUPPORT EMAIL]";
  * logged-out visitors and is styled inline throughout; the rest of the site
  * reads hsl(var(--…)) from src/index.css. If the palette moves again, it
  * moves in tokens.ts first and gets copied here. */
-const PAPER = "#FFFFFF";
-const CLARET = "#8C2E48";
-const INK = "#1B1917";
-const CHAMPAGNE = "#F7F2EA";
-const HAIRLINE = "#E5E1DC";
-const MUTED = "#5F5A54";
-
-/** The app mark — same geometry as the iOS icon. */
-function LoopMark({ size = 34 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 1024 1024" aria-hidden>
-      <rect width="1024" height="1024" rx="230" fill={CLARET} />
-      <path
-        d="M 805 405 A 312 312 0 1 1 619 219"
-        fill="none"
-        stroke={CHAMPAGNE}
-        strokeWidth="30"
-        strokeLinecap="round"
-      />
-      <path
-        d="M 380 326 L 380 698 L 658 698"
-        fill="none"
-        stroke={PAPER}
-        strokeWidth="88"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
 function GetTheApp({ dark = false }: { dark?: boolean }) {
   const href = APP_STORE_URL || TESTFLIGHT_URL;
   const label = APP_STORE_URL

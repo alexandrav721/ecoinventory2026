@@ -15,7 +15,13 @@ import BeforeYouBuyPanel from "@/components/dashboard/BeforeYouBuyPanel";
 import DashboardNav from "@/components/DashboardNav";
 import { InventoryAssistant } from "@/components/dashboard/InventoryAssistant";
 import { OnboardingTour } from "@/components/dashboard/OnboardingTour";
-import AnalyticsOnboarding, { useAnalyticsOnboarding } from "@/components/dashboard/AnalyticsOnboarding";
+/* AnalyticsOnboarding removed from this page. It was a four-step modal
+   that opened over the dashboard to teach "Quick Insights" — and
+   QuickInsights.tsx is dead code that nothing renders, so step four said
+   "Look for the Quick Insights section on your dashboard" about a section
+   that is not on the dashboard. It also stacked on top of OnboardingTour,
+   so a new user met two modals before seeing anything. The component file
+   is left in place; only its use here is gone. */
 import { useTranslation } from "react-i18next";
 import { QuirkyLoader } from "@/components/QuirkyLoader";
 import { FunFactOnMount } from "@/components/FunFactToast";
@@ -36,7 +42,6 @@ const Dashboard = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get("tab") || "inventory";
   const { t } = useTranslation();
-  const { showOnboarding: showAnalyticsOnboarding, handleComplete: handleAnalyticsOnboardingComplete } = useAnalyticsOnboarding();
   const { isDemoMode, exitDemoMode } = useDemo();
 
   useEffect(() => {
@@ -198,7 +203,6 @@ const Dashboard = () => {
       <OnboardingTour open={showOnboarding} onComplete={handleOnboardingComplete} />
       
       {/* Analytics Onboarding */}
-      <AnalyticsOnboarding open={showAnalyticsOnboarding} onComplete={handleAnalyticsOnboardingComplete} />
       
       {/* Fun Facts (shows occasionally) */}
       <FunFactOnMount />

@@ -69,7 +69,9 @@ function Ring({
           cy={SIZE / 2}
           r={R}
           fill="none"
-          stroke="hsl(var(--muted))"
+          /* A barely-there track. At the old weight it competed with the
+             data it was supposed to sit behind. */
+          stroke="hsl(var(--champagne))"
           strokeWidth={STROKE}
         />
         {arcs.map((a) => {

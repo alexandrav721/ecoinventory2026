@@ -63,7 +63,7 @@ export const FloatingAddButton = () => {
       }
 
       if (data?.success && data.data) {
-        toast.success("✨ Photo analyzed! Taking you to review...");
+        toast.success("Photo read. Taking you to review.");
         
         // Navigate to add item page with the analyzed data
         navigate("/dashboard/add-item", { 

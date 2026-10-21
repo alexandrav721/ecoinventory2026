@@ -39,7 +39,7 @@
   },
   "welcome": {
     "morning": "Good morning",
-    "afternoon": "Good afternoon", 
+    "afternoon": "Good afternoon",
     "evening": "Good evening",
     "hey": "Hey, {{name}}!",
     "subtitle": "Here's what's happening with your stuff",
@@ -150,9 +150,9 @@
     "uploading": "Uploading..."
   },
   "csv": {
-    "templateDownloaded": "Got It! ✨",
+    "templateDownloaded": "Got It!",
     "templateDesc": "Use this template to format your stuff.",
-    "uploadComplete": "All Done! 🎉",
+    "uploadComplete": "All Done!",
     "uploadSuccess": "Added {{count}} items to your collection",
     "uploadFailed": "{{count}} didn't work",
     "uploadError": "Oops, Something Went Wrong",
@@ -175,15 +175,15 @@
     "email": "Email",
     "password": "Password",
     "fullName": "Full Name",
-    "welcomeBack": "Hey, Welcome Back! 👋",
+    "welcomeBack": "Welcome back",
     "joinEco": "Join Loop",
-    "signInDesc": "Sign in to see your stuff",
-    "createAccountDesc": "Let's get you set up",
-    "pleaseWait": "One sec...",
+    "signInDesc": "Sign in to see your things",
+    "createAccountDesc": "Takes about a minute",
+    "pleaseWait": "One moment",
     "noAccount": "New here? Sign up",
     "haveAccount": "Already have an account? Sign in",
-    "signInSuccess": "You're in! Welcome back 🎉",
-    "signUpSuccess": "Account created! Let's go ✨",
+    "signInSuccess": "You're in.",
+    "signUpSuccess": "Account created.",
     "authError": "Something went wrong"
   },
   "common": {
@@ -218,12 +218,12 @@
   },
   "empty": {
     "inventory": {
-      "title": "Your inventory is looking pretty empty... 🤔",
+      "title": "Your inventory is looking pretty empty...",
       "description": "Let's fix that! Add your first item and start tracking what you own.",
       "action": "Add Your First Thing"
     },
     "search": {
-      "title": "Nope, couldn't find that 🔍",
+      "title": "Nope, couldn't find that",
       "description": "Try searching for something else, or maybe it's time to add that item!"
     },
     "category": {
@@ -232,20 +232,20 @@
     }
   },
   "errors": {
-    "generic": "Oops! Something went sideways 😅",
+    "generic": "Oops! Something went sideways",
     "network": "Can't reach the internet right now... Are you in a cave?",
-    "notFound": "We looked everywhere and couldn't find that 🤷",
+    "notFound": "We looked everywhere and couldn't find that",
     "unauthorized": "Whoa there! You need to log in first.",
     "deleteConfirm": "Are you sure? This item will be gone forever (like, really forever)."
   },
   "funFacts": [
-    "💡 The average person owns over 10,000 items!",
-    "🌱 Sharing just one item can reduce waste significantly.",
-    "📦 Most people use only 20% of what they own regularly.",
-    "♻️ Every item you share keeps something out of a landfill.",
-    "🎯 Organized spaces = organized mind. Science says so!",
-    "🤝 People who share their stuff are generally happier.",
-    "💰 The average household has $7,000 worth of unused items.",
-    "🌍 If everyone shared one item, we'd save millions of resources."
+    "The average person owns over 10,000 items!",
+    "Sharing just one item can reduce waste significantly.",
+    "Most people use only 20% of what they own regularly.",
+    "Every item you share keeps something out of a landfill.",
+    "Organized spaces = organized mind. Science says so!",
+    "People who share their stuff are generally happier.",
+    "The average household has $7,000 worth of unused items.",
+    "If everyone shared one item, we'd save millions of resources."
   ]
 }

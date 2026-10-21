@@ -82,7 +82,7 @@ export const AddSuccessModal = ({
 
         <div className="px-6 pt-8 pb-6 space-y-5">
           <div className="text-center space-y-2">
-            <div className="text-4xl">🎉</div>
+            
             <h2 className="font-display text-2xl leading-tight tracking-tight">
               <span className="font-semibold">{itemName}</span> added!
             </h2>
