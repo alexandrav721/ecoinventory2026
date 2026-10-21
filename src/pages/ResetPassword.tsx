@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { HAIRLINE, LoopMark } from "@/components/brand";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -67,10 +68,31 @@ const ResetPassword = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-subtle px-4 py-8">
-      <Card className="w-full max-w-md shadow-soft">
+    /* The one page in the flow that nobody looked at. It kept the old
+       design after /auth was rebuilt: a drop-shadowed card that lifted
+       under the cursor, floating on a grey-to-beige gradient, with an
+       upright serif title and no Loop mark anywhere — so the page you
+       land on from your own password-reset email looked like a different
+       product from the one that sent it. Paper, hairline, the real mark,
+       Instrument Serif italic. */
+    <div
+      className="min-h-screen flex flex-col items-center justify-center px-4 py-8"
+      style={{ background: "hsl(var(--champagne))" }}
+    >
+      <Card
+        className="w-full max-w-md shadow-none"
+        style={{ border: `1px solid ${HAIRLINE}` }}
+      >
         <CardHeader className="text-center space-y-2">
-          <CardTitle className="font-display text-3xl">Set a new password</CardTitle>
+          <div className="flex justify-center mb-4">
+            <LoopMark size={44} />
+          </div>
+          <CardTitle
+            className="text-[26px] font-normal italic leading-tight"
+            style={{ fontFamily: "Instrument Serif, Georgia, serif" }}
+          >
+            Set a new password
+          </CardTitle>
           <CardDescription>
             {isValidSession
               ? "Choose a strong password you'll remember."

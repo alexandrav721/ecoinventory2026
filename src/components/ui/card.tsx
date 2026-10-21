@@ -3,7 +3,18 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("rounded-lg border bg-card text-card-foreground shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1", className)} {...props} />
+  /* EVERY CARD IN THE APP CAME THROUGH HERE WEARING A DROP SHADOW AND A
+     HOVER LIFT. `shadow-sm ... hover:shadow-lg hover:-translate-y-1` meant
+     static content — a summary panel, a stat tile, the sign-in form —
+     floated up a pixel and gained a shadow when the cursor merely passed
+     over it, as though all of it were clickable. index.css is explicit
+     that blurry drop shadows are a 2014 card metaphor that reads cheap.
+
+     A hairline separates just as well and costs nothing. Anything that IS
+     clickable should say so itself, locally, rather than every card
+     claiming it globally. Radius goes to `rounded-xl` to sit with the
+     landing page's 2xl panels rather than against them. */
+  <div ref={ref} className={cn("rounded-xl border border-border bg-card text-card-foreground", className)} {...props} />
 ));
 Card.displayName = "Card";
 

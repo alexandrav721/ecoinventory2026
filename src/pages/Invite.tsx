@@ -1,4 +1,12 @@
 import { useParams } from "react-router-dom";
+import {
+  CHAMPAGNE,
+  CLARET,
+  HAIRLINE,
+  INK,
+  LoopMark,
+  MUTED,
+} from "@/components/brand";
 
 /**
  * /invite/:token — where every referral link in the app lands.
@@ -19,35 +27,19 @@ import { useParams } from "react-router-dom";
 
 const APP_STORE_URL = ""; // same placeholder as Landing.tsx
 
-const CREAM = "#FAF6EE";
-const SAGE = "#2F5C43";
-const PINE = "#182820";
-const CLAY = "#FFD9B9";
-const LINE = "#E7E1D6";
-const MUTED = "#7C7A6E";
+/* THIS PAGE WAS A DIFFERENT COMPANY.
+   It carried a complete private copy of the pre-September palette —
+   cream / sage / pine / clay — and drew its OWN Loop mark in SAGE GREEN,
+   the old logo. That is the first page an invited neighbour ever sees,
+   arriving from celebrateloop.com/invite/<token>, and it was branded as
+   something other than Loop.
 
-function LoopMark({ size = 44 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 1024 1024" aria-hidden>
-      <rect width="1024" height="1024" rx="230" fill={SAGE} />
-      <path
-        d="M 805 405 A 312 312 0 1 1 619 219"
-        fill="none"
-        stroke={CLAY}
-        strokeWidth="30"
-        strokeLinecap="round"
-      />
-      <path
-        d="M 380 326 L 380 698 L 658 698"
-        fill="none"
-        stroke={CREAM}
-        strokeWidth="88"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
+   Palette and mark now come from src/components/brand.tsx, the same ones
+   the landing page and the sign-in page use. */
+const CREAM = CHAMPAGNE;
+const SAGE = CLARET;
+const PINE = INK;
+const LINE = HAIRLINE;
 
 const Invite = () => {
   const { token } = useParams<{ token: string }>();

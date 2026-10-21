@@ -203,25 +203,32 @@ export default function PublicProfile({ selfMode = false }: Props) {
           <ArrowLeft className="w-4 h-4 mr-1" />Back
         </Button>
 
-        {/* Premium hero */}
-        <section className="relative overflow-hidden rounded-3xl bg-slate-950 text-white shadow-2xl animate-fade-in">
-          {/* Decorative gradient + grain */}
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,hsl(var(--primary)/0.35),transparent_55%),radial-gradient(ellipse_at_bottom_right,hsl(var(--accent)/0.30),transparent_60%)]" />
-          <div className="absolute inset-0 opacity-[0.04] mix-blend-overlay [background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22120%22 height=%22120%22><filter id=%22n%22><feTurbulence baseFrequency=%220.9%22/></filter><rect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22/></svg>')]" />
-          <div className="absolute -top-24 -right-24 w-72 h-72 rounded-full bg-accent/20 blur-3xl" />
+        {/* PAPER, NOT A BLACK SLAB.
+            This hero was bg-slate-950 with shadow-2xl, two radial gradient
+            washes, an feTurbulence noise-grain overlay at 4% and a 288px
+            blurred glow blob in the corner — four decorative layers on the
+            page you open most. It is the same heavy slab the landing page
+            was rebuilt to remove, and slate-950 is a blue-black that
+            belongs to no Loop palette.
 
+            Paper ground, a hairline, and the name in Instrument Serif
+            italic. The person is the subject; the panel was competing. */}
+        <section
+          className="relative overflow-hidden rounded-3xl border border-border"
+          style={{ background: "hsl(var(--champagne))" }}
+        >
           <div className="relative px-6 sm:px-10 py-10 sm:py-14">
             {/* Eyebrow */}
-            <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.28em] text-white/60 mb-6">
-              <span className="h-px w-8 bg-white/30" />
+            <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.28em] text-muted-foreground mb-6">
+              <span className="h-px w-8 bg-border" />
               {isSelf ? "Your Loop" : "Member profile"}
-              {isFriend && <Badge className="ml-2 bg-white/15 text-white hover:bg-white/20 border-0 tracking-normal">Connected</Badge>}
+              {isFriend && <Badge className="ml-2 bg-claret/10 text-claret hover:bg-claret/15 border-0 tracking-normal">Connected</Badge>}
             </div>
 
             <div className="flex flex-col sm:flex-row gap-8 items-start">
-              <Avatar className="h-28 w-28 ring-2 ring-white/30 ring-offset-4 ring-offset-slate-950 shadow-2xl">
+              <Avatar className="h-28 w-28 ring-1 ring-border ring-offset-4 ring-offset-[hsl(var(--champagne))]">
                 <AvatarImage src={profile.avatar_url ?? undefined} />
-                <AvatarFallback className="text-3xl font-display font-semibold text-white bg-gradient-to-br from-primary via-primary/80 to-accent">
+                <AvatarFallback className="text-3xl font-display text-white bg-claret">
                   {(profile.display_name ?? "")
                     .split(" ")
                     .filter(Boolean)
@@ -235,10 +242,10 @@ export default function PublicProfile({ selfMode = false }: Props) {
               <div className="flex-1 min-w-0 space-y-4">
                 <div>
                   <h1 className="font-display text-4xl sm:text-5xl font-semibold leading-[1.05] tracking-tight">
-                    {isSelf ? <>Hello, <em className="italic text-white/95">{profile.display_name?.split(" ")[0]}</em>.</> : <em className="italic">{profile.display_name}</em>}
+                    {isSelf ? <>Hello, <em className="italic text-claret">{profile.display_name?.split(" ")[0]}</em>.</> : <em className="italic">{profile.display_name}</em>}
                   </h1>
                   {(profile.city || profile.state) && (
-                    <p className="text-sm text-white/60 flex items-center gap-1.5 mt-3">
+                    <p className="text-sm text-muted-foreground flex items-center gap-1.5 mt-3">
                       <MapPin className="w-3.5 h-3.5" />
                       {[profile.city, profile.state].filter(Boolean).join(", ")}
                     </p>
@@ -247,17 +254,17 @@ export default function PublicProfile({ selfMode = false }: Props) {
 
                 {/* Inline pill chips */}
                 <div className="flex flex-wrap gap-2 pt-1">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[12px] text-white/80">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-claret/10 border border-white/15 text-[12px] text-muted-foreground">
                     <strong className="font-semibold text-white tabular-nums">{totalOwned}</strong>
-                    <span className="text-white/60">items owned</span>
+                    <span className="text-muted-foreground">items owned</span>
                   </span>
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[12px] text-white/80">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-claret/10 border border-white/15 text-[12px] text-muted-foreground">
                     <strong className="font-semibold text-white tabular-nums">{visibleItems.length}</strong>
-                    <span className="text-white/60">shared</span>
+                    <span className="text-muted-foreground">shared</span>
                   </span>
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[12px] text-white/80">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-claret/10 border border-white/15 text-[12px] text-muted-foreground">
                     <strong className="font-semibold text-white tabular-nums">{followerCount}</strong>
-                    <span className="text-white/60">in network</span>
+                    <span className="text-muted-foreground">in network</span>
                   </span>
                 </div>
               </div>
@@ -268,7 +275,7 @@ export default function PublicProfile({ selfMode = false }: Props) {
                     <Button asChild size="sm" className="bg-white text-slate-900 hover:bg-white/90 shadow-md">
                       <Link to="/dashboard/add-item"><Sparkles className="w-4 h-4 mr-1.5" />Add an item</Link>
                     </Button>
-                    <Button asChild size="icon" variant="ghost" aria-label="Edit profile" title="Edit profile" className="text-white/80 hover:bg-white/10 hover:text-white h-9 w-9">
+                    <Button asChild size="icon" variant="ghost" aria-label="Edit profile" title="Edit profile" className="text-muted-foreground hover:bg-claret/10 hover:text-white h-9 w-9">
                       <Link to="/profile-settings"><Settings className="w-4 h-4" /></Link>
                     </Button>
                   </>
@@ -277,7 +284,7 @@ export default function PublicProfile({ selfMode = false }: Props) {
                     size="sm"
                     onClick={handleToggle}
                     className={isFollowing(profile.id)
-                      ? "bg-transparent border border-white/30 text-white hover:bg-white/10"
+                      ? "bg-transparent border border-white/30 text-white hover:bg-claret/10"
                       : "bg-white text-slate-900 hover:bg-white/90 shadow-md"}
                   >
                     {isFollowing(profile.id) ? <><UserCheck className="w-4 h-4 mr-1.5" />In your network</> : <><UserPlus className="w-4 h-4 mr-1.5" />Add to network</>}
@@ -291,121 +298,20 @@ export default function PublicProfile({ selfMode = false }: Props) {
         {isSelf && <ProfileStatsHub userId={profile.id} />}
 
         {/* Activity / notifications — editorial cards */}
-        {isSelf && (
-          <section className="space-y-5 animate-fade-in">
-            <div className="flex items-end justify-between gap-4 border-b border-border/60 pb-3">
-              <div>
-                <div className="text-[10px] uppercase tracking-[0.28em] text-muted-foreground mb-1">
-                  Recent activity
-                </div>
-                <h2 className="font-display text-2xl sm:text-3xl font-semibold tracking-tight">
-                  What's <em className="italic">happening</em> around you
-                </h2>
-              </div>
-              <Link to="/notifications" className="text-sm text-muted-foreground hover:text-foreground transition-colors hidden sm:block">
-                View all →
-              </Link>
-            </div>
+        {/* THE "RECENT ACTIVITY" FEED THAT WAS HERE WAS ENTIRELY INVENTED.
+            115 lines of hard-coded fiction shown only to you, on your own
+            profile: "Maya R. wants to borrow your Dyson V11", "3 neighbors
+            are interested in your Canon EOS R", an "est. $180 resale".
+            None of it came from the database. There are no Maya R., no
+            Dyson and no Canon in this account, and the resale figure is a
+            number the product refuses to state even when it CAN compute a
+            depreciation estimate.
 
-            <div className="rounded-xl border border-border/70 bg-card divide-y divide-border/60 overflow-hidden">
-              {/* Borrow request */}
-              <div className="group flex items-start gap-3 px-4 py-3 hover:bg-muted/40 transition-colors">
-                <div className="h-7 w-7 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
-                  <Inbox className="h-3.5 w-3.5 text-primary" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm leading-snug text-foreground truncate">
-                    <strong className="font-semibold">Maya R.</strong> wants to borrow your <strong className="font-semibold">Dyson V11</strong>
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    Requested for next weekend · 2h ago
-                  </p>
-                </div>
-                <Button size="sm" className="h-7 text-xs px-3 shrink-0">Respond</Button>
-              </div>
-
-              {/* New follower */}
-              <div className="group flex items-start gap-3 px-4 py-3 hover:bg-muted/40 transition-colors">
-                <div className="h-7 w-7 rounded-full bg-accent/10 flex items-center justify-center shrink-0 mt-0.5">
-                  <Heart className="h-3.5 w-3.5 text-accent-foreground" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm leading-snug text-foreground truncate">
-                    <strong className="font-semibold">Alex K.</strong> from Park Slope started following you
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    3 mutual neighbors · 5h ago
-                  </p>
-                </div>
-                <Button size="sm" variant="outline" className="h-7 text-xs px-3 shrink-0">Follow back</Button>
-              </div>
-
-              {/* Trending */}
-              <div className="group flex items-start gap-3 px-4 py-3 hover:bg-muted/40 transition-colors">
-                <div className="h-7 w-7 rounded-full bg-muted flex items-center justify-center shrink-0 mt-0.5">
-                  <TrendingUp className="h-3.5 w-3.5 text-foreground/70" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm leading-snug text-foreground truncate">
-                    <strong className="font-semibold">7 neighbors</strong> searched for a <strong className="font-semibold">Peloton</strong> this week
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    In Brooklyn · updated daily
-                  </p>
-                </div>
-                <Button size="sm" variant="outline" className="h-7 text-xs px-3 shrink-0">List yours</Button>
-              </div>
-
-              {/* Buy interest */}
-              <div className="group flex items-start gap-3 px-4 py-3 hover:bg-muted/40 transition-colors">
-                <div className="h-7 w-7 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
-                  <Sparkles className="h-3.5 w-3.5 text-primary" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm leading-snug text-foreground truncate">
-                    <strong className="font-semibold">3 neighbors</strong> are interested in your <strong className="font-semibold">Canon EOS R</strong>
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    Listed at $650 · 1d ago
-                  </p>
-                </div>
-                <Button size="sm" className="h-7 text-xs px-3 shrink-0">Review</Button>
-              </div>
-
-              {/* Declutter tip */}
-              <div className="group flex items-start gap-3 px-4 py-3 hover:bg-muted/40 transition-colors">
-                <div className="h-7 w-7 rounded-full bg-muted flex items-center justify-center shrink-0 mt-0.5">
-                  <Package className="h-3.5 w-3.5 text-foreground/70" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm leading-snug text-foreground truncate">
-                    You own <strong className="font-semibold">3 similar</strong> vacuum cleaners
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    Consider decluttering one · est. $180 resale
-                  </p>
-                </div>
-                <Button size="sm" variant="outline" className="h-7 text-xs px-3 shrink-0">View</Button>
-              </div>
-
-              {/* Nearby match */}
-              <div className="group flex items-start gap-3 px-4 py-3 hover:bg-muted/40 transition-colors border-l-2 border-l-primary">
-                <div className="h-7 w-7 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
-                  <MapPin className="h-3.5 w-3.5 text-primary" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm leading-snug text-foreground truncate">
-                    Someone nearby is searching for a <strong className="font-semibold">pressure washer</strong>
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    You own one that matches · 0.4 mi away
-                  </p>
-                </div>
-                <Button size="sm" className="h-7 text-xs px-3 shrink-0">View</Button>
-              </div>
-            </div>
-          </section>
-        )}
+            Deleted rather than rebuilt. A real activity feed means reading
+            borrowing_requests, item_likes and notifications for this user
+            and rendering what is actually there — worth doing, and not
+            something to fake in the meantime. An honest blank is better
+            than a convincing lie about your own account. */}
 
 
         {/* Items: editorial gallery */}
