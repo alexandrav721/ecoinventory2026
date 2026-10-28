@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
 import { Logo } from "@/components/Logo";
+import { SUPPORT_EMAIL } from "@/lib/contact";
 
 /**
  * Public Support / contact page (celebrateloop.com/support) — required as the
- * App Store listing's Support URL. Fill the [BRACKETED] support email.
+ * App Store listing's Support URL. The address comes from
+ * src/lib/contact.ts, so it cannot drift from the other legal pages again.
  */
 const Support = () => (
   <div className="min-h-screen bg-background">
@@ -26,8 +28,8 @@ const Support = () => (
         <h2 className="text-xl font-semibold text-foreground pt-2">Contact us</h2>
         <p>
           Email{" "}
-          <a href="mailto:[SUPPORT EMAIL]" className="underline font-medium">
-            [SUPPORT EMAIL]
+          <a href={`mailto:${SUPPORT_EMAIL}`} className="underline font-medium">
+            {SUPPORT_EMAIL}
           </a>{" "}
           with your question. If it's about a specific item or transaction,
           include the item name and the date so we can find it fast.
@@ -59,8 +61,8 @@ const Support = () => (
         <h2 className="text-xl font-semibold text-foreground pt-2">Report a problem</h2>
         <p>
           For safety concerns, abuse, or a transaction dispute, email{" "}
-          <a href="mailto:[SUPPORT EMAIL]" className="underline font-medium">
-            [SUPPORT EMAIL]
+          <a href={`mailto:${SUPPORT_EMAIL}`} className="underline font-medium">
+            {SUPPORT_EMAIL}
           </a>{" "}
           and we'll review it promptly.
         </p>

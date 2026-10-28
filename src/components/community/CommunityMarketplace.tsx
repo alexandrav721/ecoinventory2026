@@ -119,9 +119,25 @@ export function CommunityMarketplace() {
       const ownerIds = Array.from(new Set(rows.map((r) => r.user_id)));
       let owners: Record<string, OwnerProfile> = {};
       if (ownerIds.length) {
+        /* Owners' home coordinates are requested ONLY when we can
+           actually use them. distance is computed from `location`, which
+           useViewerLocation loads from the signed-in viewer's own profile
+           — so a logged-out visitor always had location === null, every
+           distance came out null, and the latitude/longitude of every
+           seller was pulled into their browser for nothing.
+
+           That was the client half of a real exposure: precise home
+           coordinates for item owners, handed to anybody who opened the
+           page. Asking for the columns conditionally closes it without
+           changing anything a signed-in neighbour sees, and it is what
+           lets the database revoke those columns from the anonymous role
+           (see docs/STEP-4-lock-down-profiles.sql). */
+        const ownerCols =
+          "id, city, public_display_name, full_name, public_avatar_url, avatar_url" +
+          (location ? ", latitude, longitude" : "");
         const { data: profiles } = await supabase
           .from("profiles")
-          .select("id, city, latitude, longitude, public_display_name, full_name, public_avatar_url, avatar_url")
+          .select(ownerCols)
           .in("id", ownerIds);
         (profiles || []).forEach((p: any) => { owners[p.id] = p; });
       }

@@ -1,10 +1,13 @@
 import { Link } from "react-router-dom";
 import { Logo } from "@/components/Logo";
+import { EFFECTIVE_DATE, LEGAL_ENTITY, SUPPORT_EMAIL } from "@/lib/contact";
 
 /**
  * Public Terms of Service page (celebrateloop.com/terms). Content mirrors
- * legal/terms-of-service.md in the mobile repo. Fill the [BRACKETED]
- * placeholders and have a lawyer review before launch.
+ * legal/terms-of-service.md in the mobile repo.
+ *
+ * Contact details come from src/lib/contact.ts; LEGAL_ENTITY is the one
+ * placeholder left on purpose. Still wants a lawyer's read before launch.
  */
 const Terms = () => (
   <div className="min-h-screen bg-background">
@@ -20,8 +23,8 @@ const Terms = () => (
       <article className="space-y-5 text-foreground/90 leading-relaxed">
         <h1 className="font-display-italic text-[34px] leading-[44px]  text-foreground">Terms of Service</h1>
         <p className="text-sm text-muted-foreground">
-          Effective date: [EFFECTIVE DATE] · Operator: [LEGAL ENTITY NAME] ·
-          Contact: [SUPPORT EMAIL]
+          Effective date: {EFFECTIVE_DATE} · Operator: {LEGAL_ENTITY} ·
+          Contact: {SUPPORT_EMAIL}
         </p>
         <p>
           By creating an account or using Loop (the "App"), you agree to these
@@ -72,30 +75,141 @@ const Terms = () => (
           a report.
         </p>
 
+        {/* Rewritten 28 Oct 2026. The previous version said funds "are held
+            by our payment processor", which is not what happens: Stripe
+            charges the card and the money lands in LOOP's own balance, where
+            it stays until both sides confirm. Loop takes custody. Saying
+            otherwise understated what Loop does with other people's money.
+            It also said only that "Loop charges a service fee disclosed at
+            checkout", which omitted the $1 floor — the thing that actually
+            surprises people, because below $10 the real share is above 10%.
+            The table states it outright. */}
         <h2 className="text-xl font-semibold text-foreground pt-4">
-          5. Transactions, payments &amp; fees
+          5. Money: who holds it, what we take, when it moves
         </h2>
+        <p>
+          <strong className="text-foreground">Loop holds your money.</strong>{" "}
+          This is the part worth understanding. When you pay for something, the
+          money does not go to the seller and it does not sit with Stripe on
+          their behalf. Stripe charges your card and the funds land in Loop's
+          own account. We hold them, and we only pass them to the seller when
+          the conditions below are met. We chose this because borrows can run
+          for weeks and a card authorization expires in seven days — holding
+          real money is the only way to make a three-week rental safe for both
+          sides.
+        </p>
+        <p>
+          <strong className="text-foreground">What Loop charges.</strong> Our
+          fee is 10% of the item price, with a minimum of $1.00 per
+          transaction, and it comes out of the seller's payout. The buyer pays
+          the listed price and no buyer fee. The $1 minimum matters most on
+          cheap things, so here it is plainly:
+        </p>
+        <div className="overflow-x-auto rounded-lg border">
+          <table className="w-full min-w-[480px] border-collapse text-sm">
+            <thead>
+              <tr className="bg-muted/40 text-left">
+                <th className="p-3 font-semibold text-foreground">Price</th>
+                <th className="p-3 font-semibold text-foreground">Loop's fee</th>
+                <th className="p-3 font-semibold text-foreground">Seller gets</th>
+                <th className="p-3 font-semibold text-foreground">Loop's share</th>
+              </tr>
+            </thead>
+            <tbody className="tabular-nums">
+              {[
+                ["$2.00", "$1.00", "$1.00", "50%"],
+                ["$5.00", "$1.00", "$4.00", "20%"],
+                ["$10.00", "$1.00", "$9.00", "10%"],
+                ["$25.00", "$2.50", "$22.50", "10%"],
+                ["$200.00", "$20.00", "$180.00", "10%"],
+              ].map((row) => (
+                <tr key={row[0]} className="border-t">
+                  {row.map((cell, i) => (
+                    <td key={i} className="p-3">
+                      {cell}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p>
+          On anything at $10 or above, the fee is a flat 10%. Below $10, the $1
+          floor takes over, so our share is higher than 10% — on a $2 rental it
+          is half. We would rather you see this in a table than discover it on
+          your payout screen. The fee is shown before you confirm, every time.
+          There is no listing fee, no monthly fee, and no fee if nothing sells.
+        </p>
+        <p>
+          <strong className="text-foreground">Courier delivery</strong> is
+          extra, paid by the buyer on top of the item price, and passed to the
+          courier company. It is not part of Loop's fee and we don't mark it up.
+        </p>
+        <p className="font-semibold text-foreground pt-2">
+          When the money is released to the seller
+        </p>
         <ul className="list-disc pl-6 space-y-1">
           <li>
-            Payments are processed by Stripe; by transacting you also agree to
-            Stripe's applicable terms. Payouts require Stripe Connect onboarding.
+            <strong className="text-foreground">Normally</strong> — when both of
+            you confirm the handoff in the app. You each tap Confirm; when the
+            second tap lands, the transfer goes out.
           </li>
           <li>
-            For paid transactions, funds are held by our payment processor and
-            released to the seller/owner after the buyer/borrower confirms
-            receipt or the item is returned, per the in-app flow.
+            <strong className="text-foreground">If you're the buyer</strong> and
+            you've got your item, you can confirm receipt on your own and
+            release the money without waiting for the seller.
           </li>
           <li>
-            Loop charges a service fee disclosed at checkout. Rental fees,
-            deposits, durations, and return conditions are set between users.
-          </li>
-          <li>
-            Refunds, cancellations, and disputes follow the in-app process. As
-            Loop is not a party to transactions, disputes about item condition
-            or completion are primarily between the users involved; Loop may, at
-            its discretion, help mediate.
+            <strong className="text-foreground">If a courier delivered it</strong>{" "}
+            and the buyer doesn't confirm within 72 hours of delivery, we
+            confirm on their behalf and pay the seller. A neutral courier has
+            already reported the item delivered; leaving the seller unpaid
+            forever isn't a fair outcome.
           </li>
         </ul>
+        <p className="font-semibold text-foreground pt-2">
+          When the money comes back to the buyer
+        </p>
+        <ul className="list-disc pl-6 space-y-1">
+          <li>
+            <strong className="text-foreground">Seller never responds</strong> —
+            if a paid sale sits waiting on the seller for more than 72 hours, we
+            refund the buyer automatically and relist the item.
+          </li>
+          <li>
+            <strong className="text-foreground">Borrow request dies</strong> — if
+            you paid a rental fee and the request is declined, cancelled or
+            expires, we refund the fee automatically.
+          </li>
+          <li>
+            <strong className="text-foreground">Payment never completes</strong>{" "}
+            — an unfinished payment is cleaned up after 24 hours.
+          </li>
+        </ul>
+        <p>You don't have to chase any of this. It runs on its own.</p>
+        <p>
+          <strong className="text-foreground">
+            If the seller hasn't set up payouts yet,
+          </strong>{" "}
+          they can still sell. The money stays held and transfers the moment
+          they finish their Stripe payout setup. Nothing is lost.
+        </p>
+        <p>
+          <strong className="text-foreground">Disputes freeze the money.</strong>{" "}
+          Either side can raise a dispute in the app. While a dispute is open
+          the funds stay with Loop — not released and not refunded — until it is
+          resolved. Loop is not a party to your transaction, so arguments about
+          an item's condition are primarily between the two of you; we will help
+          mediate, and we can refund or release, but we are not an insurer and
+          we do not guarantee any item.
+        </p>
+        <p>
+          <strong className="text-foreground">Stripe's terms.</strong> Payments
+          and payouts run through Stripe, so transacting on Loop means Stripe's
+          terms apply to you too. Receiving payouts requires completing Stripe's
+          seller onboarding, including their identity checks.
+        </p>
 
         <h2 className="text-xl font-semibold text-foreground pt-4">
           6. Rentals, returns &amp; responsibility
@@ -123,8 +237,8 @@ const Terms = () => (
           To the maximum extent permitted by law, Loop and its operators will
           not be liable for any indirect, incidental, special, or consequential
           damages, or for disputes, items, or conduct between users. Our total
-          liability for any claim is limited to [AMOUNT — e.g. the greater of
-          $100 or fees you paid Loop in the prior 6 months].
+          liability for any claim is limited to the greater of $100 or the fees you
+          paid Loop in the six months before the claim.
         </p>
 
         <h2 className="text-xl font-semibold text-foreground pt-4">
@@ -156,15 +270,15 @@ const Terms = () => (
           12. Governing law &amp; disputes
         </h2>
         <p>
-          These Terms are governed by the laws of [STATE / JURISDICTION], without
-          regard to conflict-of-laws rules. [Optional arbitration / venue clause
-          — have your attorney draft.]
+          These Terms are governed by the laws of the State of New York, without
+          regard to conflict-of-laws rules. Any dispute will be brought in the
+          state or federal courts located in New York County, New York.
         </p>
 
         <h2 className="text-xl font-semibold text-foreground pt-4">
           13. Contact
         </h2>
-        <p>[LEGAL ENTITY NAME] · [SUPPORT EMAIL]</p>
+        <p>{LEGAL_ENTITY} · {SUPPORT_EMAIL}</p>
 
         <p className="pt-6 text-sm text-muted-foreground">
           See also our{" "}

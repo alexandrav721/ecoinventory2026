@@ -1,0 +1,24 @@
+-- ############################################################################
+-- ##  DO NOT RUN THIS FILE. IT HAS BEEN REPLACED.                           ##
+-- ############################################################################
+--
+-- A review of this file on 28 Oct found a silent-failure risk:
+--
+--   Part 2 removed a policy by the name "Users can view items available for
+--   sharing". That name came from a DIFFERENT Supabase project
+--   (pxktgcwhisjdiquezvav — Lovable's, not hers). If the policy on THIS
+--   project is named anything else, "drop policy if exists" quietly does
+--   nothing, the script still reports Success, and all 8 friends-only items
+--   stay readable by anyone — while telling you the leak is closed.
+--
+-- It also could not be run twice (the second run errors with 42710), and its
+-- two trailing SELECTs meant the confirmation it told you to look for would
+-- not have been displayed.
+--
+-- USE THESE INSTEAD, in order:
+--
+--   STEP-1-email-form.sql    safe, creates the waitlist table
+--   STEP-2-inspect-only.sql  read-only, shows the real policy names
+--   STEP-3 is written once Step 2's output is known.
+--
+-- ############################################################################

@@ -14,8 +14,6 @@ import Friends from "./pages/Friends";
 import FriendProfile from "./pages/FriendProfile";
 import ProfileSettings from "./pages/ProfileSettings";
 import Admin from "./pages/Admin";
-import Promo from "./pages/Promo";
-import Founders from "./pages/Founders";
 import Community from "./pages/Community";
 import Swap from "./pages/Swap";
 import Events from "./pages/Events";
@@ -102,8 +100,6 @@ const App = () => (
             <Route path="/messages" element={<Messages />} />
             <Route path="/notifications" element={<Notifications />} />
             <Route path="/admin" element={<Admin />} />
-            <Route path="/promo" element={<Promo />} />
-            <Route path="/founders" element={<Founders />} />
             <Route path="/community" element={<Community />} />
             <Route path="/events" element={<Events />} />
             <Route path="/people" element={<People />} />

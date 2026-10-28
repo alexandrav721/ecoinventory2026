@@ -36,9 +36,14 @@ const Index = () => {
          Both tiles now read the one thing a visitor can honestly count.
          The real catalogue total needs a server-side aggregate (an RPC or
          a counts table); until that exists the page says what it knows. */
+      /* Counts id, not *. The profiles table is being locked down so an
+         anonymous visitor can no longer read emails, home coordinates or
+         push tokens, and that is done with column-level grants: asking for
+         "*" as anon would then be refused outright and this tile would go
+         blank. Counting one always-granted column is immune to that. */
       const { count: usersCount } = await supabase
         .from("profiles")
-        .select("*", { count: "exact", head: true });
+        .select("id", { count: "exact", head: true });
       const { count: sharedCount } = await supabase
         .from("inventory_items")
         .select("*", { count: "exact", head: true })
@@ -108,10 +113,6 @@ const Index = () => {
               </Link>
               <Link to="/articles" className="text-sm font-medium tracking-wide hover:text-primary transition-colors hidden sm:inline">
                 Articles
-              </Link>
-              <Link to="/founders" className="text-sm font-medium tracking-wide hover:text-primary transition-colors hidden md:flex items-center gap-1.5">
-                <Heart className="w-3.5 h-3.5" />
-                Founders
               </Link>
               <Button asChild size="sm" variant="outline" className="rounded-full border-foreground/30 hover:bg-foreground hover:text-background">
                 <Link to="/auth">Sign in</Link>

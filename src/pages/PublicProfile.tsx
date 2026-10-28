@@ -60,13 +60,25 @@ export default function PublicProfile({ selfMode = false }: Props) {
   useEffect(() => {
     (async () => {
       const { data: { user } } = await supabase.auth.getUser();
+      /* A PUBLIC profile page was bouncing the public to the login wall.
+         Every item card on /community links here (PickleStyleSearch.tsx:828),
+         so a logged-out visitor browsing the marketplace dead-ended on the
+         very first click, and the site's "browse freely" promise was false.
+
+         Only /me genuinely needs an account — it has no subject without
+         one, since targetId comes from meId in selfMode. A named profile
+         does not: `meId` is `string | null` and all eleven of its uses are
+         already null-guarded, so a signed-out viewer simply gets no follow
+         button, no friendship state and no self-view. The visibility rules
+         then treat them as a stranger, which is correct and is what the
+         database enforces anyway. */
       if (!user) {
-        navigate("/auth");
+        if (selfMode) navigate("/auth");
         return;
       }
       setMeId(user.id);
     })();
-  }, [navigate]);
+  }, [navigate, selfMode]);
 
   useEffect(() => {
     if (!targetId) return;
