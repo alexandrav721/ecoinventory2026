@@ -3,7 +3,8 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { Button } from "@/components/ui/button";
-import { Leaf, GraduationCap, Lightbulb, LayoutGrid, Search } from "lucide-react";
+import { GraduationCap, Lightbulb, LayoutGrid, Search } from "lucide-react";
+import { LoopMark } from "@/components/brand";
 import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -118,11 +119,12 @@ const Dashboard = () => {
             {/* Left cluster: Logo + Search */}
             <div className="flex items-center gap-4 flex-1 min-w-0">
               <div className="flex items-center gap-2.5 shrink-0">
-                <div className="w-8 h-8 rounded-lg bg-gradient-eco flex items-center justify-center shadow-sm">
-                  <Leaf className="w-4 h-4 text-white" />
-                </div>
+                {/* The real Loop mark. This was a white leaf in a
+                    `bg-gradient-eco` square — the old eco-inventory badge,
+                    still sitting at the top-left of the signed-in app. */}
+                <LoopMark size={32} />
                 <div className="flex items-center gap-2">
-                  <h1 className="text-lg font-bold">{t('dashboard.title')}</h1>
+                  <h1 className="font-display-wonk text-2xl leading-none">{t('dashboard.title')}</h1>
                   {isDemoMode && (
                     <span className="text-xs px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium">
                       Demo
@@ -172,7 +174,7 @@ const Dashboard = () => {
               <TabsList className="h-10 p-1 bg-muted/50 rounded-lg gap-1 w-fit flex-wrap">
                 <TabsTrigger value="gallery" className="h-8 px-4 gap-2 rounded-md text-sm data-[state=active]:bg-background data-[state=active]:shadow-sm">
                   <LayoutGrid className="w-4 h-4" />
-                  <span className="hidden sm:inline">My Assets</span>
+                  <span className="hidden sm:inline">Things</span>
                 </TabsTrigger>
                 <TabsTrigger value="opportunities" className="h-8 px-4 gap-2 rounded-md text-sm data-[state=active]:bg-background data-[state=active]:shadow-sm">
                   <Lightbulb className="w-4 h-4" />

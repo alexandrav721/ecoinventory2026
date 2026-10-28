@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { LoopMark } from "@/components/brand";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Leaf, LogOut, Calendar, MapPin, Users as UsersIcon, ExternalLink } from "lucide-react";
+import { LogOut, Calendar, MapPin, Users as UsersIcon, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
 import AppHeader from "@/components/AppHeader";
 import { useDemo } from "@/contexts/DemoContext";
@@ -114,9 +115,7 @@ const Events = () => {
       <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-10">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-eco flex items-center justify-center">
-              <Leaf className="w-5 h-5 text-white" />
-            </div>
+            <LoopMark size={40} />
             <div>
               <h1 className="text-xl font-bold">Loop</h1>
               {user && <p className="text-xs text-muted-foreground">{user.email}</p>}

@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { Leaf } from "lucide-react";
 import DashboardNav from "@/components/DashboardNav";
 import { HeaderSearch } from "@/components/HeaderSearch";
 import NotificationBell from "@/components/NotificationBell";

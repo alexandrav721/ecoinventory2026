@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Leaf, Package, Users, TrendingUp, MapPin, Share2, Download, BarChart3, Image as ImageIcon, Search } from "lucide-react";
+import { Package, Users, TrendingUp, MapPin, Share2, Download, BarChart3, Image as ImageIcon, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { LoopMark } from "@/components/brand";
 
 const Promo = () => {
   const navigate = useNavigate();
@@ -65,9 +66,7 @@ const Promo = () => {
         
         <div className="container mx-auto px-4 relative">
           <div className="max-w-4xl mx-auto text-center space-y-6">
-            <div className="w-16 h-16 rounded-full bg-gradient-eco flex items-center justify-center mx-auto mb-4">
-              <Leaf className="w-8 h-8 text-white" />
-            </div>
+            <LoopMark size={64} />
             
             <h1 className="font-display-wonk text-[clamp(2.6rem,7vw,4.4rem)] leading-[1.02] text-foreground">
               Loop
@@ -225,9 +224,7 @@ const Promo = () => {
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-gradient-eco flex items-center justify-center">
-                <Leaf className="w-4 h-4 text-white" />
-              </div>
+              <LoopMark size={32} />
               <span className="font-bold">Loop</span>
             </div>
             
