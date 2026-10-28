@@ -1100,7 +1100,7 @@ const AddItem = () => {
 
         <div className="container mx-auto px-4 py-8 max-w-2xl">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold mb-2">Upload Receipt</h1>
+            <h1 className="font-display-italic text-[34px] leading-[44px]  mb-2">Upload Receipt</h1>
             <p className="text-muted-foreground">
               Take a photo or upload an image of your receipt
             </p>
@@ -1165,7 +1165,7 @@ const AddItem = () => {
 
         <div className="container mx-auto px-4 py-8 max-w-6xl">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold mb-2">Loop Catalog</h1>
+            <h1 className="font-display-italic text-[34px] leading-[44px]  mb-2">Loop Catalog</h1>
             <p className="text-muted-foreground">
               Select multiple items to add to your inventory
             </p>
@@ -1203,7 +1203,7 @@ const AddItem = () => {
 
       <div className="container mx-auto px-4 py-8 max-w-2xl">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Add New Item</h1>
+          <h1 className="font-display-italic text-[34px] leading-[44px]  mb-2">Add New Item</h1>
           <p className="text-muted-foreground">Fill in the item details</p>
         </div>
 

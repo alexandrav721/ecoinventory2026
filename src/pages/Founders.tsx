@@ -161,7 +161,7 @@ const Founders = () => {
             <div className="md:col-span-3 space-y-6">
               <div className="flex items-start gap-3">
                 <Quote className="w-8 h-8 text-primary/30 shrink-0 rotate-180" />
-                <h2 className="text-2xl md:text-3xl font-bold">Why I'm Building This</h2>
+                <h2 className="font-display-italic text-[34px] leading-[44px] text-2xl md:">Why I'm Building This</h2>
               </div>
               
               <div className="space-y-4 text-muted-foreground leading-relaxed">
@@ -235,7 +235,7 @@ const Founders = () => {
                 <CardTitle className="text-xl">{tier.name}</CardTitle>
                 <CardDescription>{tier.description}</CardDescription>
                 <div className="mt-4">
-                  <span className="text-4xl font-bold">${tier.price}</span>
+                  <span className="font-display-italic text-[38px] leading-[50px]">${tier.price}</span>
                   <span className="text-muted-foreground ml-1">one-time</span>
                 </div>
               </CardHeader>

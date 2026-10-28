@@ -26,7 +26,7 @@ const OrganizingInventory = () => {
             <div className="w-16 h-16 rounded-xl bg-gradient-eco flex items-center justify-center">
               <Lightbulb className="w-8 h-8 text-white" />
             </div>
-            <h1 className="text-4xl font-bold">10 Tips for Organizing Your Home Inventory</h1>
+            <h1 className="font-display-italic text-[38px] leading-[50px]">10 Tips for Organizing Your Home Inventory</h1>
             <p className="text-muted-foreground text-lg">7 min read</p>
           </header>
 

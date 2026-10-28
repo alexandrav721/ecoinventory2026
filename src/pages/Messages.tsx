@@ -180,7 +180,7 @@ export default function Messages() {
       <AppHeader />
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-3xl font-bold mb-6">Messages</h1>
+          <h1 className="font-display-italic text-[34px] leading-[44px]  mb-6">Messages</h1>
 
           {loading ? (
             <p className="text-center text-muted-foreground">Loading conversations...</p>

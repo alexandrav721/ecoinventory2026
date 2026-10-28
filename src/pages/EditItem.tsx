@@ -304,7 +304,7 @@ const EditItem = () => {
 
       <div className="container mx-auto px-4 py-8 max-w-2xl">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Edit Item</h1>
+          <h1 className="font-display-italic text-[34px] leading-[44px]  mb-2">Edit Item</h1>
           <p className="text-muted-foreground">Update item details</p>
         </div>
 

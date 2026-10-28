@@ -32,7 +32,7 @@ export const HeaderSearch = () => {
     <form onSubmit={handleSubmit} className="relative w-full hidden md:block">
       <button
         type="submit"
-        aria-label="Search products"
+        aria-label="Search things on Loop"
         className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
       >
         <Search className="w-4 h-4" />
@@ -42,8 +42,8 @@ export const HeaderSearch = () => {
         onChange={(e) => setQ(e.target.value)}
         onFocus={handleFocusOrClick}
         onClick={handleFocusOrClick}
-        placeholder="Search products…"
-        className="h-9 pl-10 pr-4 rounded-full bg-secondary/60 border-transparent focus-visible:bg-background focus-visible:border-foreground/20 text-sm cursor-pointer"
+        placeholder="Search things on Loop"
+        className="h-9 pl-10 pr-4 rounded-full bg-background border-border focus-visible:bg-background focus-visible:border-claret text-sm cursor-pointer"
       />
     </form>
   );

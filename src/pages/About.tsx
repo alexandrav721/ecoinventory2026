@@ -61,7 +61,7 @@ const About = () => {
             <div className="flex justify-center mb-6">
               <Logo size="lg" showText={false} />
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold">How Loop Works</h1>
+            <h1 className="font-display-italic text-[38px] leading-[50px]">How Loop Works</h1>
             <p className="text-xl text-muted-foreground">
               Helping you own less, share more, and actually use what you have
             </p>
@@ -166,7 +166,7 @@ const About = () => {
 
           {/* Join Us */}
           <div className="text-center space-y-6 py-8">
-            <h2 className="text-3xl font-bold">Come Join Us!</h2>
+            <h2 className="font-display-italic text-[34px] leading-[44px]">Come Join Us!</h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Whether you want to get organized, help your neighbors, or just stop buying 
               stuff you already have—we're here to make it easy.

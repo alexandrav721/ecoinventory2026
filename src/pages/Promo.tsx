@@ -87,7 +87,7 @@ const Promo = () => {
       <section className="py-12 border-y bg-card/50">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold mb-6 text-center">What is Loop?</h2>
+            <h2 className="font-display-italic text-[34px] leading-[44px]  mb-6 text-center">What is Loop?</h2>
             <div className="space-y-4 text-lg text-muted-foreground">
               <p>
                 Loop is a comprehensive web application that helps you organize, track, and share your belongings while building a sustainable community network.
@@ -104,7 +104,7 @@ const Promo = () => {
       <section className="py-12">
         <div className="container mx-auto px-4">
           <div className="text-center mb-10">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            <h2 className="font-display-italic text-[38px] leading-[50px] md: mb-4">
               Key Features & Screenshots
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -152,7 +152,7 @@ const Promo = () => {
       <section className="py-12 bg-card/50 border-y">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold mb-8 text-center">Why Choose Loop?</h2>
+            <h2 className="font-display-italic text-[34px] leading-[44px]  mb-8 text-center">Why Choose Loop?</h2>
             <div className="grid md:grid-cols-3 gap-6">
               <Card>
                 <CardContent className="p-6 text-center">
@@ -194,7 +194,7 @@ const Promo = () => {
         
         <div className="container mx-auto px-4 relative">
           <div className="max-w-3xl mx-auto text-center space-y-6">
-            <h2 className="text-3xl md:text-4xl font-bold">
+            <h2 className="font-display-italic text-[38px] leading-[50px] md:">
               Get Started Today
             </h2>
             

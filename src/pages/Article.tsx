@@ -107,7 +107,7 @@ const Article = () => {
                 )}
               </div>
 
-              <h1 className="text-4xl font-bold">{article.title}</h1>
+              <h1 className="font-display-italic text-[38px] leading-[50px]">{article.title}</h1>
 
               {article.excerpt && (
                 <p className="text-xl text-muted-foreground">{article.excerpt}</p>

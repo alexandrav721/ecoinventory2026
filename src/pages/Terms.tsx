@@ -18,7 +18,7 @@ const Terms = () => (
 
     <main className="container mx-auto px-4 py-12 max-w-3xl">
       <article className="space-y-5 text-foreground/90 leading-relaxed">
-        <h1 className="text-3xl font-bold text-foreground">Terms of Service</h1>
+        <h1 className="font-display-italic text-[34px] leading-[44px]  text-foreground">Terms of Service</h1>
         <p className="text-sm text-muted-foreground">
           Effective date: [EFFECTIVE DATE] · Operator: [LEGAL ENTITY NAME] ·
           Contact: [SUPPORT EMAIL]

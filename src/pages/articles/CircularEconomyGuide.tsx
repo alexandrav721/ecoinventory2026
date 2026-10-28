@@ -26,7 +26,7 @@ const CircularEconomyGuide = () => {
             <div className="w-16 h-16 rounded-xl bg-gradient-eco flex items-center justify-center">
               <Recycle className="w-8 h-8 text-white" />
             </div>
-            <h1 className="text-4xl font-bold">The Circular Economy: A Beginner's Guide</h1>
+            <h1 className="font-display-italic text-[38px] leading-[50px]">The Circular Economy: A Beginner's Guide</h1>
             <p className="text-muted-foreground text-lg">5 min read</p>
           </header>
 

@@ -135,7 +135,7 @@ const Events = () => {
 
       <main className="container mx-auto px-4 py-8 max-w-6xl">
         <div className="mb-8">
-          <h2 className="text-3xl font-bold mb-2 flex items-center gap-2">
+          <h2 className="font-display-italic text-[34px] leading-[44px]  mb-2 flex items-center gap-2">
             <Calendar className="w-7 h-7 text-primary" />
             Community Events
           </h2>

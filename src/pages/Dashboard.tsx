@@ -25,7 +25,6 @@ import { OnboardingTour } from "@/components/dashboard/OnboardingTour";
    is left in place; only its use here is gone. */
 import { useTranslation } from "react-i18next";
 import { QuirkyLoader } from "@/components/QuirkyLoader";
-import { FunFactOnMount } from "@/components/FunFactToast";
 import { useDemo } from "@/contexts/DemoContext";
 import { DemoBanner } from "@/components/demo/DemoBanner";
 import ProfileDropdown from "@/components/ProfileDropdown";
@@ -207,7 +206,15 @@ const Dashboard = () => {
       {/* Analytics Onboarding */}
       
       {/* Fun Facts (shows occasionally) */}
-      <FunFactOnMount />
+      {/* FunFactOnMount removed. Three seconds after the dashboard loaded
+          it fired, 20% of the time, asserting one of eight unsourced
+          statistics as fact — "The average person owns over 10,000
+          items!", "Organized spaces = organized mind. Science says so!",
+          "The average household has $7,000 worth of unused items." On the
+          product whose landing page promises "Nothing here is a guess" and
+          whose Insights screen refuses to state a figure without its
+          denominator. It is an unprompted interruption, not a feature, so
+          removing it costs no control. */}
       
       {/* Floating Add Button for Mobile */}
       <FloatingAddButton />

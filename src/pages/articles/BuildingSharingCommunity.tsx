@@ -26,7 +26,7 @@ const BuildingSharingCommunity = () => {
             <div className="w-16 h-16 rounded-xl bg-gradient-eco flex items-center justify-center">
               <BookOpen className="w-8 h-8 text-white" />
             </div>
-            <h1 className="text-4xl font-bold">Building a Sharing Community</h1>
+            <h1 className="font-display-italic text-[38px] leading-[50px]">Building a Sharing Community</h1>
             <p className="text-muted-foreground text-lg">8 min read</p>
           </header>
 

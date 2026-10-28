@@ -17,7 +17,7 @@ const Support = () => (
 
     <main className="container mx-auto px-4 py-12 max-w-2xl">
       <article className="space-y-5 text-foreground/90 leading-relaxed">
-        <h1 className="text-3xl font-bold text-foreground">Help &amp; Support</h1>
+        <h1 className="font-display-italic text-[34px] leading-[44px]  text-foreground">Help &amp; Support</h1>
         <p>
           Need a hand with Loop? We're happy to help — most questions get a reply
           within a day.

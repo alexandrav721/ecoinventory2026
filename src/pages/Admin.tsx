@@ -100,7 +100,7 @@ const Admin = () => {
       <main className="container mx-auto px-4 py-8 space-y-8">
         <div className="flex items-center gap-2 mb-6">
           <Shield className="w-6 h-6 text-primary" />
-          <h2 className="text-3xl font-bold">Admin Panel</h2>
+          <h2 className="font-display-italic text-[34px] leading-[44px]">Admin Panel</h2>
         </div>
         
         <AdminManagement />
