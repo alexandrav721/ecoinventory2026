@@ -108,7 +108,7 @@ const Articles = () => {
           <>
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-3xl font-bold mb-2">Learn Some Cool Stuff 📚</h2>
+                <h2 className="font-display-wonk text-[clamp(1.9rem,4.2vw,2.9rem)] leading-[1.05] mb-2">Worth reading</h2>
                 <p className="text-muted-foreground">
                   Tips on organizing, sharing, and living more sustainably
                 </p>

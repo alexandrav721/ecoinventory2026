@@ -582,7 +582,7 @@ const EditItem = () => {
                     </div>
                   )}
                   {!formData.is_for_borrow && !formData.is_for_sale && (
-                    <p className="text-xs text-amber-600">
+                    <p className="text-xs text-claret">
                       Pick at least one — otherwise the item won't appear in the marketplace.
                     </p>
                   )}

@@ -60,9 +60,9 @@ interface Opportunity {
 }
 
 const colorMap: Record<string, { bg: string; text: string; border: string }> = {
-  emerald: { bg: "bg-emerald-500/10", text: "text-emerald-600", border: "border-emerald-500/20" },
+  emerald: { bg: "bg-success/10", text: "text-success", border: "border-success/30" },
   pink: { bg: "bg-pink-500/10", text: "text-pink-600", border: "border-pink-500/20" },
-  amber: { bg: "bg-amber-500/10", text: "text-amber-600", border: "border-amber-500/20" },
+  amber: { bg: "bg-champagne", text: "text-claret", border: "border-border" },
   orange: { bg: "bg-orange-500/10", text: "text-orange-600", border: "border-orange-500/20" },
   blue: { bg: "bg-blue-500/10", text: "text-blue-600", border: "border-blue-500/20" },
 };
@@ -281,7 +281,7 @@ export const OpportunitiesPanel = () => {
   };
 
   return (
-    <Card className="border-2 border-dashed border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
+    <Card className="border-border bg-card">
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div className="flex items-center gap-3">
@@ -328,8 +328,8 @@ export const OpportunitiesPanel = () => {
           </div>
         ) : opportunities.length === 0 && hasAnalyzed ? (
           <div className="text-center py-8">
-            <Sparkles className="w-10 h-10 mx-auto text-emerald-500 mb-3" />
-            <p className="font-medium text-emerald-600">Nothing needs attention.</p>
+            <Sparkles className="w-10 h-10 mx-auto text-success mb-3" />
+            <p className="font-medium text-success">Nothing needs attention.</p>
             <p className="text-sm text-muted-foreground mt-1">
               No immediate actions needed. Check back later!
             </p>

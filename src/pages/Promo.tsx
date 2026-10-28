@@ -50,7 +50,7 @@ const Promo = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
+    <div className="min-h-screen bg-background">
       {/* Download PDF Button - Hidden in print */}
       <div className="print:hidden fixed top-20 right-4 z-50">
         <Button onClick={handleDownloadPDF} className="gap-2 shadow-lg">
@@ -124,7 +124,7 @@ const Promo = () => {
                   <CardContent className="p-0">
                     <div className="grid md:grid-cols-2 gap-0">
                       {/* Screenshot placeholder */}
-                      <div className="bg-gradient-to-br from-primary/10 to-primary/5 aspect-video md:aspect-auto flex items-center justify-center p-8 border-r">
+                      <div className="bg-champagne aspect-video md:aspect-auto flex items-center justify-center p-8 border-r">
                         <div className="text-center space-y-4">
                           <div className="w-16 h-16 rounded-xl bg-gradient-eco flex items-center justify-center mx-auto">
                             <Icon className="w-8 h-8 text-white" />

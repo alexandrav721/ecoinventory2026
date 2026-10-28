@@ -316,7 +316,7 @@ export const ItemDetailSheet = ({ itemId, open, onOpenChange }: ItemDetailSheetP
                     </p>
                     <p
                       className={`text-2xl font-semibold tabular-nums mt-1 ${
-                        isUp ? "text-emerald-600" : "text-destructive"
+                        isUp ? "text-success" : "text-destructive"
                       }`}
                     >
                       {worth > 0 ? formatCurrency(worth) : "—"}
@@ -327,7 +327,7 @@ export const ItemDetailSheet = ({ itemId, open, onOpenChange }: ItemDetailSheetP
                   <div className="flex items-center justify-between mt-3 text-xs">
                     <span
                       className={`inline-flex items-center gap-1 font-medium ${
-                        isUp ? "text-emerald-600" : "text-destructive"
+                        isUp ? "text-success" : "text-destructive"
                       }`}
                     >
                       {isUp ? (
@@ -348,13 +348,13 @@ export const ItemDetailSheet = ({ itemId, open, onOpenChange }: ItemDetailSheetP
 
               {/* AI INSIGHT */}
               <div className="px-5 pb-4">
-                <div className="rounded-xl border border-amber-300/60 bg-amber-50 dark:bg-amber-950/30 p-3 flex gap-3">
-                  <Sparkles className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                <div className="rounded-xl border border-border/60 bg-champagne dark:bg-champagne p-3 flex gap-3">
+                  <Sparkles className="w-4 h-4 text-claret shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-[10px] uppercase tracking-[0.15em] text-amber-700 dark:text-amber-400 font-semibold">
+                    <p className="text-[10px] uppercase tracking-[0.15em] text-claret dark:text-claret font-semibold">
                       Loop insight
                     </p>
-                    <p className="text-sm text-amber-900 dark:text-amber-100 mt-0.5 leading-snug">
+                    <p className="text-sm text-foreground dark:text-foreground mt-0.5 leading-snug">
                       {aiInsight(item)}
                     </p>
                   </div>

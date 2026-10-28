@@ -92,7 +92,7 @@ const Events = () => {
       return;
     }
     setRsvpedIds(new Set([...rsvpedIds, eventId]));
-    toast.success("You're going! 🎉");
+    toast.success("You're going.");
   };
 
   const handleSignOut = async () => {

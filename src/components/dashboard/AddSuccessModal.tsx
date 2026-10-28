@@ -88,7 +88,7 @@ export const AddSuccessModal = ({
             </h2>
             {estimatedValue != null && estimatedValue > 0 && (
               <div className="inline-flex items-center gap-1.5 text-sm text-muted-foreground">
-                <TrendingUp className="w-4 h-4 text-emerald-600" />
+                <TrendingUp className="w-4 h-4 text-success" />
                 Estimated worth:{" "}
                 <span className="font-semibold text-foreground tabular-nums">
                   {formatCurrency(estimatedValue)}
@@ -97,9 +97,9 @@ export const AddSuccessModal = ({
             )}
           </div>
 
-          <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 flex gap-3">
-            <Lightbulb className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-            <p className="text-sm text-amber-900 leading-snug">{hook}</p>
+          <div className="rounded-xl border border-border bg-champagne p-4 flex gap-3">
+            <Lightbulb className="w-5 h-5 text-claret shrink-0 mt-0.5" />
+            <p className="text-sm text-foreground leading-snug">{hook}</p>
           </div>
 
           <div className="flex flex-col gap-2">

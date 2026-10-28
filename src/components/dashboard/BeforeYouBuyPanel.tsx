@@ -21,9 +21,9 @@ type Result = {
 };
 
 const recoStyles = {
-  skip: { label: "Don't buy it", color: "bg-emerald-500/10 text-emerald-700 border-emerald-200", icon: XCircle },
+  skip: { label: "Don't buy it", color: "bg-success/10 text-success border-success/30", icon: XCircle },
   borrow: { label: "Borrow instead", color: "bg-blue-500/10 text-blue-700 border-blue-200", icon: Users },
-  consider: { label: "Consider carefully", color: "bg-amber-500/10 text-amber-700 border-amber-200", icon: Sparkles },
+  consider: { label: "Consider carefully", color: "bg-champagne text-claret border-border", icon: Sparkles },
   buy: { label: "Go ahead", color: "bg-muted text-foreground border-border", icon: CheckCircle2 },
 };
 

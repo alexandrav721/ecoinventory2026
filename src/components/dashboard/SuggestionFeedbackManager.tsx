@@ -151,7 +151,7 @@ export default function SuggestionFeedbackManager() {
   const getFeedbackIcon = (type: string) => {
     switch (type) {
       case "helpful":
-        return <CheckCircle className="w-4 h-4 text-green-500" />;
+        return <CheckCircle className="w-4 h-4 text-success" />;
       case "incorrect":
         return <XCircle className="w-4 h-4 text-red-500" />;
       case "no_suggestion":
@@ -204,7 +204,7 @@ export default function SuggestionFeedbackManager() {
                     </TableCell>
                     <TableCell className="text-center">
                       {stat.helpful_count > 0 && (
-                        <Badge className="bg-green-500">{stat.helpful_count}</Badge>
+                        <Badge className="bg-success">{stat.helpful_count}</Badge>
                       )}
                     </TableCell>
                     <TableCell className="text-center">

@@ -343,12 +343,12 @@ export function CategorySelector({ value, onChange, itemName = "", onFeedback }:
           Category
           {aiSuggesting && (
             <span className="ml-2 text-xs text-muted-foreground font-normal">
-              🤖 AI is suggesting...
+              Suggesting…
             </span>
           )}
           {!aiSuggesting && suggestedCategory && selectedParent && (
             <span className="ml-2 text-xs text-primary font-normal">
-              ✨ {aiSuggestionReasoning ? 'AI-suggested' : 'Auto-suggested'}
+              {aiSuggestionReasoning ? 'Suggested' : 'Auto-sorted'}
             </span>
           )}
         </Label>
@@ -372,7 +372,7 @@ export function CategorySelector({ value, onChange, itemName = "", onFeedback }:
             Subcategory
             {suggestedCategory && value && (
               <span className="ml-2 text-xs text-primary font-normal">
-                ✨ Suggested
+                Suggested
               </span>
             )}
           </Label>
@@ -403,7 +403,7 @@ export function CategorySelector({ value, onChange, itemName = "", onFeedback }:
               onClick={() => handleFeedback('helpful')}
               className="flex-1"
             >
-              👍 Yes, helpful
+              Yes, helpful
             </Button>
             <Button
               type="button"
@@ -412,7 +412,7 @@ export function CategorySelector({ value, onChange, itemName = "", onFeedback }:
               onClick={() => handleFeedback('incorrect')}
               className="flex-1"
             >
-              👎 No, incorrect
+              No, wrong
             </Button>
           </div>
         </div>
@@ -435,7 +435,7 @@ export function CategorySelector({ value, onChange, itemName = "", onFeedback }:
       
       <p className="text-xs text-muted-foreground">
         {suggestedCategory && aiSuggestionReasoning
-          ? `🤖 AI: ${aiSuggestionReasoning}`
+          ? `${aiSuggestionReasoning}`
           : suggestedCategory 
             ? "Auto-suggested from catalog and common keywords. You can change this if needed."
             : "Categories help organize your items"}

@@ -91,7 +91,7 @@ const Dashboard = () => {
       localStorage.setItem(`onboarding-tour-${user.id}`, 'completed');
     }
     setShowOnboarding(false);
-    toast.success("Welcome to Loop! 🎉");
+    toast.success("Welcome to Loop.");
   };
 
   const handleRestartTour = () => {

@@ -183,7 +183,7 @@ export const FloatingAddButton = () => {
           size="icon"
           className={cn(
             "w-14 h-14 rounded-full shadow-xl transition-all duration-300",
-            "bg-gradient-to-br from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70",
+            "bg-claret hover:bg-claret-deep",
             "hover:scale-110 active:scale-95",
             isExpanded && "rotate-45"
           )}

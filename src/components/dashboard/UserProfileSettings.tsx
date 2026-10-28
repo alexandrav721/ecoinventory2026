@@ -208,7 +208,7 @@ export function UserProfileSettings() {
         </div>
 
         <p className="text-xs text-muted-foreground">
-          💡 Tip: Your profile information helps us recommend household items that match your lifestyle and interests.
+          What you tell us here shapes what Loop suggests.
         </p>
       </CardContent>
     </Card>

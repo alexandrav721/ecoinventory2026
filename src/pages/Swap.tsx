@@ -257,8 +257,8 @@ const Swap = () => {
 
   const StatusBadge = ({ s }: { s: SwapOffer["status"] }) => {
     const map: Record<SwapOffer["status"], string> = {
-      pending: "bg-amber-100 text-amber-900",
-      accepted: "bg-green-100 text-green-900",
+      pending: "bg-champagne text-foreground",
+      accepted: "bg-success/10 text-green-900",
       declined: "bg-rose-100 text-rose-900",
       cancelled: "bg-muted text-muted-foreground",
       countered: "bg-blue-100 text-blue-900",

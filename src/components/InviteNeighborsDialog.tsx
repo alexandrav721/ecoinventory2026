@@ -146,7 +146,7 @@ const InviteNeighborsDialog = ({ open, onOpenChange }: InviteNeighborsDialogProp
         </DialogHeader>
 
         {/* Reward banner */}
-        <div className="rounded-lg border border-primary/30 bg-gradient-to-br from-primary/10 to-accent/10 p-4 flex items-start gap-3">
+        <div className="rounded-lg border border-border bg-champagne p-4 flex items-start gap-3">
           <div className="shrink-0 w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center">
             <Gift className="w-5 h-5" />
           </div>

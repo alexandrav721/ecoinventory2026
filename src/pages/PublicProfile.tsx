@@ -272,7 +272,7 @@ export default function PublicProfile({ selfMode = false }: Props) {
               <div className="flex flex-col gap-2 sm:items-end">
                 {isSelf ? (
                   <>
-                    <Button asChild size="sm" className="bg-white text-slate-900 hover:bg-white/90 shadow-md">
+                    <Button asChild size="sm" className="bg-claret text-white hover:bg-claret-deep">
                       <Link to="/dashboard/add-item"><Sparkles className="w-4 h-4 mr-1.5" />Add an item</Link>
                     </Button>
                     <Button asChild size="icon" variant="ghost" aria-label="Edit profile" title="Edit profile" className="text-muted-foreground hover:bg-claret/10 hover:text-white h-9 w-9">
@@ -285,7 +285,7 @@ export default function PublicProfile({ selfMode = false }: Props) {
                     onClick={handleToggle}
                     className={isFollowing(profile.id)
                       ? "bg-transparent border border-white/30 text-white hover:bg-claret/10"
-                      : "bg-white text-slate-900 hover:bg-white/90 shadow-md"}
+                      : "bg-claret text-white hover:bg-claret-deep"}
                   >
                     {isFollowing(profile.id) ? <><UserCheck className="w-4 h-4 mr-1.5" />In your network</> : <><UserPlus className="w-4 h-4 mr-1.5" />Add to network</>}
                   </Button>
@@ -353,7 +353,7 @@ export default function PublicProfile({ selfMode = false }: Props) {
               {visibleItems.map((it) => (
                 <Card
                   key={it.id}
-                  className="group overflow-hidden border-border/60 bg-white hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 rounded-2xl"
+                  className="group overflow-hidden border-border bg-card rounded-2xl"
                 >
                   <div className="aspect-square bg-stone-100 overflow-hidden relative">
                     {it.image_urls?.[0] ? (
@@ -368,7 +368,7 @@ export default function PublicProfile({ selfMode = false }: Props) {
                       </div>
                     )}
                     {(it.sharing_price === 0 || it.sharing_price === null) && it.is_available_for_sharing && (
-                      <Badge className="absolute top-2 left-2 bg-white/95 text-slate-900 hover:bg-white border-0 text-[10px] uppercase tracking-wider shadow-sm">
+                      <Badge className="absolute top-2 left-2 bg-white text-ink hover:bg-white border border-border text-[10px] uppercase tracking-wider">
                         Free
                       </Badge>
                     )}

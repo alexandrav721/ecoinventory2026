@@ -192,14 +192,14 @@ export const ProfileStatsHub = ({ userId }: Props) => {
                 value={`$${stats.portfolioValue.toLocaleString(undefined, { maximumFractionDigits: 0 })}`}
                 sub="Portfolio value"
                 icon={DollarSign}
-                iconClass="text-amber-600"
+                iconClass="text-claret"
               />
               <StatRow
                 label="Earned"
                 value={`$${stats.earnedFromSales.toLocaleString(undefined, { maximumFractionDigits: 0 })}`}
                 sub="From items sold"
                 icon={TrendingUp}
-                iconClass="text-emerald-600"
+                iconClass="text-success"
               />
               <StatRow
                 label="Interest"
@@ -215,10 +215,10 @@ export const ProfileStatsHub = ({ userId }: Props) => {
 
       {/* Hot picks: items people searched for */}
       {stats.topSearchedItems.length > 0 && (
-        <Card className="border-amber-200 bg-gradient-to-br from-amber-50/60 to-transparent">
+        <Card className="border-border bg-champagne">
           <CardContent className="p-5 space-y-3">
             <div className="flex items-center gap-2">
-              <Flame className="w-5 h-5 text-amber-600" />
+              <Flame className="w-5 h-5 text-claret" />
               <h3 className="font-display text-lg font-semibold">People are looking for these</h3>
             </div>
             <p className="text-sm text-muted-foreground">
@@ -290,7 +290,7 @@ export const ProfileStatsHub = ({ userId }: Props) => {
       )}
 
       {/* Add more CTA */}
-      <Card className="bg-gradient-to-br from-primary/10 via-primary/5 to-transparent border-primary/20">
+      <Card className="bg-champagne border-border">
         <CardContent className="p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4 justify-between">
           <div className="flex items-start gap-3">
             <div className="w-10 h-10 rounded-lg bg-primary text-primary-foreground flex items-center justify-center">

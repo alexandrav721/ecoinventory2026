@@ -117,7 +117,7 @@ const Quiz = () => {
         );
       }
 
-      toast.success(`Added ${itemsToInsert.length} items to your estate 🎉`, {
+      toast.success(`Added ${itemsToInsert.length} things`, {
         description: `Estimated value: $${totalSelectedValue.toLocaleString()}`,
       });
       navigate("/dashboard?tab=inventory");

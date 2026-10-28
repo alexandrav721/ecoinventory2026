@@ -361,7 +361,7 @@ const Declutter = () => {
               </div>
             )}
             {current.usage_frequency && RARELY_USED.has(current.usage_frequency) && (
-              <Badge className="absolute top-3 left-3 bg-amber-500/90 hover:bg-amber-500 text-white">
+              <Badge className="absolute top-3 left-3 bg-claret hover:bg-claret-deep text-white">
                 Rarely used
               </Badge>
             )}
@@ -398,7 +398,7 @@ const Declutter = () => {
             <div className="grid grid-cols-3 gap-2 pt-2">
               <Button
                 variant="outline"
-                className="h-auto py-4 flex-col gap-1 hover:bg-emerald-50 hover:border-emerald-300 hover:text-emerald-700 dark:hover:bg-emerald-950"
+                className="h-auto py-4 flex-col gap-1 hover:bg-success/10 hover:border-success/30 hover:text-success dark:hover:bg-success/20"
                 onClick={() => recordDecision("keep")}
               >
                 <Heart className="w-5 h-5" />
@@ -414,7 +414,7 @@ const Declutter = () => {
               </Button>
               <Button
                 variant="outline"
-                className="h-auto py-4 flex-col gap-1 hover:bg-amber-50 hover:border-amber-300 hover:text-amber-700 dark:hover:bg-amber-950"
+                className="h-auto py-4 flex-col gap-1 hover:bg-champagne hover:border-border hover:text-claret dark:hover:bg-champagne"
                 onClick={() => recordDecision("sell")}
               >
                 <DollarSign className="w-5 h-5" />

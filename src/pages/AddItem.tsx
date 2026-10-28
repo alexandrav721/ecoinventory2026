@@ -911,7 +911,7 @@ const AddItem = () => {
                         )}
                         {img.status === 'success' && (
                           <div className="space-y-1">
-                            <span className="text-green-600 font-medium block">✓ {img.result?.name}</span>
+                            <span className="text-success font-medium block">✓ {img.result?.name}</span>
                             <span className="text-muted-foreground text-[10px] block truncate">
                               {img.result?.category || 'No category'}
                             </span>
@@ -1464,7 +1464,7 @@ const AddItem = () => {
                     </div>
                   )}
                   {!formData.is_for_borrow && !formData.is_for_sale && (
-                    <p className="text-xs text-amber-600">
+                    <p className="text-xs text-claret">
                       Pick at least one — otherwise the item won't appear in the marketplace.
                     </p>
                   )}

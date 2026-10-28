@@ -20,7 +20,7 @@ const Founders = () => {
     setIsSubmitting(true);
     // TODO: Connect to backend for waitlist
     await new Promise(resolve => setTimeout(resolve, 1000));
-    toast.success("You're on the list! 🎉", {
+    toast.success("You're on the list.", {
       description: "We'll send you updates and early access invites."
     });
     setEmail("");
@@ -29,7 +29,7 @@ const Founders = () => {
 
   const handlePurchase = (tier: string, price: number) => {
     // TODO: Connect to Stripe
-    toast.info("Coming soon! 🚀", {
+    toast.info("Coming soon.", {
       description: `${tier} tier ($${price}) - Payment integration launching soon.`
     });
   };
@@ -90,7 +90,7 @@ const Founders = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-background to-muted/30">
+    <div className="min-h-screen bg-background">
       {/* Navigation */}
       <nav className="border-b bg-background/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
@@ -268,7 +268,7 @@ const Founders = () => {
         <Card className="max-w-2xl mx-auto bg-muted/50 border-dashed">
           <CardHeader>
             <CardTitle className="text-lg flex items-center gap-2">
-              <Crown className="w-5 h-5 text-amber-500" />
+              <Crown className="w-5 h-5 text-claret" />
               What this is (and isn't)
             </CardTitle>
           </CardHeader>
