@@ -27,8 +27,11 @@ export const InsightUnlocksPanel = ({ totalItems }: InsightUnlocksPanelProps) =>
 
   const remaining = allUnlocked ? 0 : next.threshold - totalItems;
   const actionLabel = allUnlocked
-    ? "All insights unlocked"
-    : `Add ${remaining} more to unlock ${next.title}`;
+    ? "Nothing left to unlock"
+    /* Was "Add 5 more to unlock duplicate finder" — game-mechanics
+       phrasing for what is only a count. Loop is not withholding a
+       feature; there is simply not enough yet for it to say anything. */
+    : `${remaining} more ${remaining === 1 ? "thing" : "things"} and Loop can find your duplicates`;
 
   return (
     <>
@@ -38,7 +41,7 @@ export const InsightUnlocksPanel = ({ totalItems }: InsightUnlocksPanelProps) =>
         </span>
         <div className="h-1.5 flex-1 rounded-full bg-muted overflow-hidden min-w-[40px]">
           <div
-            className="h-full bg-emerald-500 transition-all duration-700 ease-out rounded-full"
+            className="h-full bg-claret transition-all duration-700 ease-out rounded-full"
             style={{ width: `${progressPct}%` }}
           />
         </div>

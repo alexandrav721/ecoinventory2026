@@ -196,8 +196,15 @@ export default function People() {
             {isFriend && <Badge variant="secondary" className="text-xs">Friend</Badge>}
           </Link>
           <div className="flex items-center justify-between text-xs text-muted-foreground">
-            <span>{p.follower_count} in network</span>
-            <span>{p.available_count} shareable</span>
+            {/* The page had no claret anywhere. The counts are the one thing
+                worth looking at on a directory card, so they carry the
+                accent. "Shareable" is also not a word Loop uses. */}
+            <span>
+              <span className="font-semibold tabular-nums text-claret">{p.follower_count}</span> in network
+            </span>
+            <span>
+              <span className="font-semibold tabular-nums text-claret">{p.available_count}</span> to lend
+            </span>
           </div>
           <Button
             size="sm"
@@ -218,9 +225,9 @@ export default function People() {
       <main className="container max-w-6xl mx-auto px-4 py-6 space-y-8">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-display font-semibold">People</h1>
+            <h1 className="font-display-wonk text-[clamp(1.9rem,4.2vw,2.9rem)] leading-[1.05]">People</h1>
             <p className="text-muted-foreground text-sm mt-1">
-              Discover neighbors with stuff to lend, add inspiring members to your network, and see your trusted friends.
+              Neighbours with things to lend.
             </p>
           </div>
           <Button asChild variant="outline">
@@ -244,7 +251,7 @@ export default function People() {
           <>
             <section>
               <div className="flex items-baseline justify-between mb-3">
-                <h2 className="text-xl font-display">Suggested for you</h2>
+                <h2 className="font-display-wonk text-2xl">Near you</h2>
                 {myCity && (
                   <span className="text-xs text-muted-foreground">
                     Prioritizing {myCity}
@@ -261,7 +268,7 @@ export default function People() {
             </section>
 
             <section>
-              <h2 className="text-xl font-display mb-3">In your network ({followingList.length})</h2>
+              <h2 className="font-display-wonk text-2xl mb-3">In your network ({followingList.length})</h2>
               {followingList.length === 0 ? (
                 <p className="text-sm text-muted-foreground">No one in your network yet.</p>
               ) : (
@@ -272,7 +279,7 @@ export default function People() {
             </section>
 
             <section>
-              <h2 className="text-xl font-display mb-3">Friends ({friendsList.length})</h2>
+              <h2 className="font-display-wonk text-2xl mb-3">Friends ({friendsList.length})</h2>
               {friendsList.length === 0 ? (
                 <p className="text-sm text-muted-foreground">
                   No friends yet. Friendships are mutual and unlock shared items.{" "}

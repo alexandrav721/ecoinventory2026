@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
-import { ChevronDown, ChevronUp, X, AlertTriangle } from "lucide-react";
+/* Copy, not AlertTriangle. This styled a COUNT as a hazard — amber box,
+   warning triangle — when the product's own line is that the repeats are
+   a finding and not a verdict. Amber is also in no Loop palette. */
+import { ChevronDown, ChevronUp, X, Copy } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { groupDuplicates } from "@/lib/realInsights";
 
@@ -48,24 +51,24 @@ export const DuplicateAlertBanner = ({ itemNames, onViewItems }: Props) => {
   };
 
   return (
-    <div className="mb-4 rounded-xl border border-amber-200 bg-amber-50 overflow-hidden">
+    <div className="mb-4 rounded-xl border border-border bg-champagne overflow-hidden">
       <div className="flex items-center justify-between px-4 py-3">
         <button
           onClick={() => setCollapsed((c) => !c)}
           className="flex items-center gap-2 text-left flex-1 min-w-0"
         >
-          <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0" />
-          <span className="text-sm font-medium text-amber-900">
+          <Copy className="w-4 h-4 text-claret shrink-0" />
+          <span className="text-sm font-medium text-foreground">
             You may have duplicates
           </span>
-          <span className="text-xs text-amber-700/80">
+          <span className="text-xs text-subtle">
             · {activeGroups.length} group{activeGroups.length === 1 ? "" : "s"}
           </span>
         </button>
         <div className="flex items-center gap-1 shrink-0">
           <button
             onClick={() => setCollapsed((c) => !c)}
-            className="p-1 rounded hover:bg-amber-100 text-amber-700"
+            className="p-1 rounded hover:bg-claret/10 text-claret"
             aria-label={collapsed ? "Expand" : "Collapse"}
           >
             {collapsed ? (
@@ -76,7 +79,7 @@ export const DuplicateAlertBanner = ({ itemNames, onViewItems }: Props) => {
           </button>
           <button
             onClick={dismiss}
-            className="p-1 rounded hover:bg-amber-100 text-amber-700"
+            className="p-1 rounded hover:bg-claret/10 text-claret"
             aria-label="Dismiss"
           >
             <X className="w-4 h-4" />
@@ -93,12 +96,12 @@ export const DuplicateAlertBanner = ({ itemNames, onViewItems }: Props) => {
           {activeGroups.map((g) => (
             <li
               key={g.id}
-              className="flex items-center justify-between text-sm text-amber-900/90"
+              className="flex items-center justify-between text-sm text-foreground"
             >
               <span>{g.message}</span>
               <button
                 onClick={() => onViewItems(g.hits)}
-                className="text-xs font-medium text-amber-700 hover:text-amber-900 underline underline-offset-2"
+                className="text-xs font-medium text-claret hover:text-claret-deep underline underline-offset-2"
               >
                 View items
               </button>

@@ -39,9 +39,9 @@ const Founders = () => {
       name: "Founding Member",
       price: 49,
       icon: Sprout,
-      color: "text-green-500",
-      bgColor: "bg-green-500/10",
-      borderColor: "border-green-500/20",
+      color: "text-success",
+      bgColor: "bg-success/10",
+      borderColor: "border-success/20",
       description: "Best default option",
       features: [
         "Early access to Loop",
@@ -57,9 +57,9 @@ const Founders = () => {
       name: "Supporting Founder",
       price: 99,
       icon: Leaf,
-      color: "text-emerald-500",
-      bgColor: "bg-emerald-500/10",
-      borderColor: "border-emerald-500/20",
+      color: "text-claret",
+      bgColor: "bg-claret/10",
+      borderColor: "border-claret/20",
       description: "For people who want to go further",
       features: [
         "Everything in Founding Member",
@@ -109,8 +109,12 @@ const Founders = () => {
           Limited Early Access
         </Badge>
         
-        <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary via-green-500 to-emerald-500 bg-clip-text text-transparent">
-          Help Build the Anti-Consumption Economy
+        {/* Was a green-to-emerald gradient headline — bold sans, clipped
+            to transparent text — left over from the eco-inventory era.
+            index.css:71 says flatly that the app has no gradients, and
+            green is in no Loop palette at all. */}
+        <h1 className="font-display-wonk text-[clamp(2.4rem,6vw,4rem)] leading-[1.05] text-foreground mb-6">
+          Help build the <span className="text-claret">anti-consumption</span> economy
         </h1>
         
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-4">
@@ -143,7 +147,7 @@ const Founders = () => {
           <div className="grid md:grid-cols-5 gap-8 items-start">
             {/* Photo placeholder */}
             <div className="md:col-span-2 flex flex-col items-center">
-              <div className="w-48 h-48 rounded-2xl bg-gradient-to-br from-primary/20 via-green-500/20 to-emerald-500/20 flex items-center justify-center border-2 border-dashed border-primary/30 mb-4">
+              <div className="w-48 h-48 rounded-2xl bg-champagne flex items-center justify-center border border-dashed border-border mb-4">
                 <div className="text-center">
                   <Users className="w-12 h-12 text-primary/50 mx-auto mb-2" />
                   <span className="text-xs text-muted-foreground">Your photo here</span>
@@ -191,7 +195,7 @@ const Founders = () => {
                   <p className="text-xs font-medium">Know What You Own</p>
                 </div>
                 <div className="text-center p-3 rounded-xl bg-muted/50">
-                  <Recycle className="w-5 h-5 mx-auto mb-2 text-green-500" />
+                  <Recycle className="w-5 h-5 mx-auto mb-2 text-success" />
                   <p className="text-xs font-medium">Buy Less Stuff</p>
                 </div>
                 <div className="text-center p-3 rounded-xl bg-muted/50">
@@ -210,8 +214,10 @@ const Founders = () => {
           {tiers.map((tier) => (
             <Card 
               key={tier.name}
-              className={`relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${
-                tier.popular ? 'ring-2 ring-primary shadow-lg scale-[1.02]' : ''
+              /* No lift, no shadow, no scale. The ring alone marks the
+                 popular tier. */
+              className={`relative overflow-hidden ${
+                tier.popular ? 'ring-2 ring-claret' : ''
               } ${tier.borderColor}`}
             >
               {tier.popular && (

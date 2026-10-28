@@ -294,12 +294,11 @@ const InventoryPickleView = () => {
   }
 
   if (items.length === 0) {
-    return (
-      <LowInventoryPreviewBanner
-        itemCount={0}
-        onAddItem={() => window.dispatchEvent(new CustomEvent("open-add-item-modal"))}
-      />
-    );
+    /* QuizPrompt already owns the zero-item state and has the real quiz
+       link; rendering the banner here too stacked two onboarding blocks
+       saying the same thing, one above the other, on the first screen a
+       new user sees. The 1-4 item banner further down stays. */
+    return null;
   }
 
   const showAdvancedFilters = items.length >= 5;
@@ -537,7 +536,11 @@ const InventoryPickleView = () => {
         {items.length > 0 && items.length < 5 && (
           <LowInventoryPreviewBanner
             itemCount={items.length}
-            onAddItem={() => window.dispatchEvent(new CustomEvent("open-add-item-modal"))}
+            /* Was dispatching an "open-add-item-modal" event. The only
+               listener is AddItemModal.tsx, which nothing renders — so on
+               a nearly-empty dashboard the single call to action did
+               nothing at all, for exactly the user who needs it. */
+            onAddItem={() => navigate("/dashboard/add-item")}
           />
         )}
 
@@ -603,7 +606,11 @@ const ItemCard = ({
       className={cn(
         "group text-left flex flex-col gap-2 focus:outline-none rounded-md transition-all",
         highlighted &&
-          "ring-2 ring-amber-400 ring-offset-2 ring-offset-background animate-pulse",
+          /* Claret, and no pulse. Amber is in no Loop palette, and a
+             pulsing ring treats "you own two of these" as an alarm — the
+             product's own line is that the count is the finding, not a
+             verdict. */
+          "ring-2 ring-claret ring-offset-2 ring-offset-background",
       )}
     >
       <div className="aspect-[4/5] w-full bg-secondary/40 overflow-hidden relative">

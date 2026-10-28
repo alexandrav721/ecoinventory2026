@@ -82,9 +82,13 @@ function Figure({
   note: string;
   thin?: boolean;
 }) {
+  /* A ruled strip, not four boxes. Each figure sits under its own hairline
+     so the row reads as one strip broken by clean gaps — "not everything is
+     a card", and a bordered box around a number adds chrome without adding
+     meaning. */
   return (
-    <div className="rounded-xl border border-border bg-card px-5 py-4">
-      <p className="text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+    <div className="border-t border-border pt-3">
+      <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
         {label}
       </p>
       <p className="font-display text-[34px] leading-[44px] text-foreground mt-1 tabular-nums">
@@ -207,7 +211,7 @@ export default function Insights() {
           </section>
         ) : (
           <>
-            <div className="mt-6 grid grid-cols-2 lg:grid-cols-4 gap-3">
+            <div className="mt-6 grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-7">
               <Figure
                 value={String(total)}
                 label="Things"
@@ -235,7 +239,12 @@ export default function Insights() {
               />
               <Figure
                 value={String(piles.length)}
-                label="Things you have more than one of"
+                /* "Repeats" is the house word — the landing page is built on "Loop
+                 counts the repeats" and the component is literally called
+                 Repeats. The old label wrapped to two lines and broke the
+                 baseline the other three tiles sit on; the note underneath
+                 already explains it. */
+              label="Repeats"
                 note={
                   piles.length === 0
                     ? "No repeats by name"

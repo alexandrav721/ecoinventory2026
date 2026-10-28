@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Sparkles, ArrowRight, Plus, ChevronDown, ChevronUp } from "lucide-react";
+import { ArrowRight, Plus, ChevronDown, ChevronUp } from "lucide-react";
 import { useDemo } from "@/contexts/DemoContext";
 
 /**
@@ -60,8 +60,7 @@ export const QuizPrompt = () => {
           aria-expanded="false"
         >
           <div className="flex items-center gap-2 text-sm">
-            <Sparkles className="w-4 h-4 text-primary shrink-0" />
-            <span className="text-xs uppercase tracking-[0.2em] text-primary font-medium">
+            <span className="text-xs uppercase tracking-[0.2em] text-claret font-medium">
               Recommended start
             </span>
             <span className="text-muted-foreground hidden sm:inline">
@@ -73,8 +72,12 @@ export const QuizPrompt = () => {
       );
     }
 
+    /* Flat champagne and a hairline. This card was
+       `border-primary/30 bg-gradient-to-br from-primary/5 via-background
+       to-accent/5` — a three-stop gradient on the first card a new user
+       sees, and index.css says plainly that the app has no gradients. */
     return (
-      <Card className="relative overflow-hidden border-primary/30 bg-gradient-to-br from-primary/5 via-background to-accent/5 p-10">
+      <Card className="relative overflow-hidden border-border bg-champagne p-8">
         <button
           type="button"
           onClick={toggleCollapsed}
@@ -86,12 +89,11 @@ export const QuizPrompt = () => {
         </button>
         <div className="flex flex-col md:flex-row items-start md:items-center gap-8">
           <div className="flex-1 space-y-3">
-            <div className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-primary">
-              <Sparkles className="w-3.5 h-3.5" />
+            <div className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-claret">
               Recommended start
             </div>
-            <h2 className="font-display text-3xl md:text-4xl leading-tight tracking-tight">
-              Start with your <em className="font-display-wonk">big-ticket items</em>
+            <h2 className="font-display-wonk text-3xl md:text-4xl leading-tight tracking-tight">
+              Start with your <em className="text-claret">big-ticket items</em>
             </h2>
             <p className="text-muted-foreground max-w-xl">
               Tracking a $400 espresso machine matters more than tracking a
@@ -124,10 +126,8 @@ export const QuizPrompt = () => {
   return (
     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 px-4 py-3 rounded-lg border bg-muted/40">
       <div className="flex items-center gap-2 text-sm">
-        <Sparkles className="w-4 h-4 text-primary shrink-0" />
         <span>
-          <strong>Tip:</strong> Let our AI help you build your inventory — just
-          chat naturally.
+          Say what you have and Loop writes it down.
         </span>
       </div>
       <div className="flex items-center gap-2">

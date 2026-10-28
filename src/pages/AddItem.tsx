@@ -424,7 +424,7 @@ const AddItem = () => {
             original_price: aiData.estimatedPrice ? aiData.estimatedPrice.toString() : "",
             quantity: aiData.quantity || 1,
           });
-          toast.success("✨ AI found 1 item — review and save.");
+          toast.success("Found 1 item. Review and save.");
           setMode("manual");
           setSmartInput("");
           return;
@@ -488,7 +488,7 @@ const AddItem = () => {
           image_urls: smartImage ? [smartImage] : [],
         });
 
-        toast.success("✨ AI analyzed your item! Review and adjust the details.");
+        toast.success("Read your item. Check the details.");
         setMode("manual");
         setSmartInput("");
         setSmartImage(null);
@@ -573,7 +573,7 @@ const AddItem = () => {
 
     setBulkAnalyzing(false);
     const successCount = updatedImages.filter(img => img.status === 'success').length;
-    toast.success(`✨ Analyzed ${successCount} of ${updatedImages.length} photos!`);
+    toast.success(`Read ${successCount} of ${updatedImages.length} photos.`);
   };
 
   const handleSaveBulkItems = async () => {
@@ -850,7 +850,7 @@ const AddItem = () => {
 
         <div className="container mx-auto px-4 py-8 max-w-6xl">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold mb-2">📸 Bulk Photo Upload</h1>
+            <h1 className="font-display-wonk text-[clamp(1.9rem,4.2vw,2.9rem)] leading-[1.05] mb-2">Add photos in bulk</h1>
             <p className="text-muted-foreground">
               Upload 5-10 photos and AI will analyze each item automatically
             </p>
@@ -939,7 +939,7 @@ const AddItem = () => {
                       </>
                     ) : (
                       <>
-                        ✨ Analyze All Photos
+                        Read all photos
                       </>
                     )}
                   </Button>
@@ -985,7 +985,7 @@ const AddItem = () => {
 
         <div className="container mx-auto px-4 py-8 max-w-2xl">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold mb-2">✨ Smart Add with AI</h1>
+            <h1 className="font-display-wonk text-[clamp(1.9rem,4.2vw,2.9rem)] leading-[1.05] mb-2">Smart add</h1>
             <p className="text-muted-foreground">
               Snap a photo, or describe one item — or many at once — and AI does the rest
             </p>
@@ -994,7 +994,7 @@ const AddItem = () => {
           <div className="space-y-6">
             <Tabs defaultValue="photo" className="w-full">
               <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="photo">📷 Photo</TabsTrigger>
+                <TabsTrigger value="photo">Photo</TabsTrigger>
                 <TabsTrigger value="text">✏️ Description</TabsTrigger>
               </TabsList>
               
@@ -1071,7 +1071,7 @@ const AddItem = () => {
                 </>
               ) : (
                 <>
-                  ✨ Analyze with AI
+                  Read it
                 </>
               )}
             </Button>

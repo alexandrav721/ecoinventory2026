@@ -69,7 +69,7 @@ const Promo = () => {
               <Leaf className="w-8 h-8 text-white" />
             </div>
             
-            <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-foreground to-primary bg-clip-text text-transparent leading-tight">
+            <h1 className="font-display-wonk text-[clamp(2.6rem,7vw,4.4rem)] leading-[1.02] text-foreground">
               Loop
             </h1>
             

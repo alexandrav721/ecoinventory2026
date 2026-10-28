@@ -8,7 +8,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowLeft, MapPin, HandHeart, ShoppingCart, MessageCircle, Sparkles } from "lucide-react";
+import { ArrowLeft, MapPin, HandHeart, ShoppingCart, MessageCircle } from "lucide-react";
+import AppHeader from "@/components/AppHeader";
 import { toast } from "sonner";
 import { BorrowRequestDialog } from "@/components/friends/BorrowRequestDialog";
 
@@ -271,7 +272,7 @@ export default function MarketplaceItem() {
   if (!item) {
     return (
       <div className="container mx-auto px-4 py-16 max-w-2xl text-center">
-        <h1 className="text-2xl font-semibold mb-2">Item not available</h1>
+        <h1 className="font-display-wonk text-3xl mb-2">Item not available</h1>
         <p className="text-muted-foreground mb-6">
           This item isn't being shared right now.
         </p>
@@ -293,8 +294,16 @@ export default function MarketplaceItem() {
     item.owner?.public_avatar_url || item.owner?.avatar_url || undefined;
   const cover = item.image_urls?.[activeImage] ?? item.image_urls?.[0];
 
+  /* A HEADER, so the page carries the Loop mark. This was the only
+     item-detail surface with no chrome at all — a visitor arriving on a
+     shared link saw a product page with nothing identifying whose product
+     it was, and no way anywhere else. AppHeader is already live on four
+     other surfaces, so nothing new is built here. The Back button stays:
+     it does something the header does not. */
   return (
-    <div className="container mx-auto px-4 py-6 max-w-6xl">
+    <div className="min-h-screen bg-background">
+      <AppHeader />
+      <main className="container mx-auto px-4 py-6 max-w-6xl">
       <Button
         variant="ghost"
         size="sm"
@@ -340,7 +349,7 @@ export default function MarketplaceItem() {
         {/* Details */}
         <div className="space-y-5">
           <div>
-            <h1 className="text-2xl md:text-3xl font-semibold leading-tight">
+            <h1 className="font-display-wonk text-[clamp(2rem,5vw,3rem)] leading-[1.05]">
               {item.name}
             </h1>
             {item.brand && (
@@ -448,10 +457,7 @@ export default function MarketplaceItem() {
 
       {/* Similar items */}
       <section className="mt-12 pt-8 border-t">
-        <div className="flex items-center gap-2 mb-5">
-          <Sparkles className="w-5 h-5 text-primary" />
-          <h2 className="text-xl font-semibold">Similar items</h2>
-        </div>
+        <h2 className="font-display-wonk text-2xl mb-5">Similar</h2>
 
         {similarLoading ? (
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -467,7 +473,7 @@ export default function MarketplaceItem() {
           </div>
         ) : similar.length === 0 ? (
           <p className="text-sm text-muted-foreground">
-            No similar items right now — check back soon.
+            Nothing similar yet.
           </p>
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -533,6 +539,7 @@ export default function MarketplaceItem() {
         open={borrowOpen}
         onOpenChange={setBorrowOpen}
       />
+      </main>
     </div>
   );
 }

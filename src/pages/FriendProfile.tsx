@@ -17,7 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Package, MapPin, Search, Filter, Users, ArrowLeft, MessageSquare } from "lucide-react";
+import { MapPin, Search, ArrowLeft, MessageSquare } from "lucide-react";
 import { toast } from "sonner";
 import { ChatDialog } from "@/components/chat/ChatDialog";
 
@@ -311,7 +311,7 @@ export default function FriendProfile() {
                 </Avatar>
                 
                 <div className="flex-1">
-                  <h1 className="text-3xl font-bold mb-2">{profile.display_name || "Anonymous User"}</h1>
+                  <h1 className="font-display-wonk text-[clamp(1.9rem,4.2vw,2.9rem)] leading-[1.05] mb-2">{profile.display_name || "Anonymous User"}</h1>
                   {profile.city && profile.state && (
                     <div className="flex items-center gap-2 text-muted-foreground mb-2">
                       <MapPin className="w-4 h-4" />
@@ -338,7 +338,6 @@ export default function FriendProfile() {
             <Card className="mb-6">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Users className="w-5 h-5" />
                   Mutual Friends ({mutualFriends.length})
                 </CardTitle>
               </CardHeader>
@@ -368,7 +367,6 @@ export default function FriendProfile() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Package className="w-5 h-5" />
                 Shared Items ({filteredItems.length} of {visible.length})
               </CardTitle>
             </CardHeader>
@@ -376,7 +374,6 @@ export default function FriendProfile() {
               {items.length > 0 && (
                 <div className="space-y-4 mb-6 p-4 border rounded-lg bg-muted/50">
                   <div className="flex items-center gap-2 mb-2">
-                    <Filter className="w-4 h-4" />
                     <span className="font-medium text-sm">Filters</span>
                   </div>
                   

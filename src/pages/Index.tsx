@@ -3,11 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowRight, Heart, Play, Search } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import { Pile } from "@/components/landing/Pile";
 import { supabase } from "@/integrations/supabase/client";
 import DashboardNav from "@/components/DashboardNav";
 import { useTranslation } from "react-i18next";
 import { Logo } from "@/components/Logo";
-import heroBg from "@/assets/hero-community.jpg";
 
 const Index = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -123,34 +123,39 @@ const Index = () => {
 
       {/* HERO — Full-bleed editorial with search */}
       <section className="relative overflow-hidden border-b border-border/60 bg-background">
-        {/* Background image */}
-        <div className="absolute inset-0">
-          <img
-            src={heroBg}
-            alt=""
-            width={1920}
-            height={1080}
-            className="w-full h-full object-cover object-right"
-          />
-          {/* Left-to-right fade so left side stays clean for type */}
-          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/85 to-background/10" />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/40" />
-        </div>
+        {/* THE STOCK PHOTOGRAPH IS GONE. It was a full-bleed
+            hero-community.jpg — four people laughing on a brownstone stoop
+            holding a camera, a moka pot, a vinyl record, a stack of books
+            and a bicycle — behind two gradient scrims to keep the type
+            readable. Generic lifestyle stock with visible generation
+            artifacts in the book-spine lettering: exactly the category
+            that came back as "kind of gross", and the thing that makes a
+            page look machine-made.
 
-        <div className="relative container mx-auto px-6 pt-10 pb-24 md:pt-14 md:pb-40 min-h-[480px] md:min-h-[560px] flex flex-col">
+            Paper, like the landing page and the rebuilt sign-in panel.
+            The headline carries it alone. */}
+
+        <div className="relative container mx-auto grid items-center gap-12 px-6 pb-20 pt-10 md:grid-cols-[1fr_0.95fr] md:pb-28 md:pt-14">
 
           {/* Top-left: massive headline */}
-          <div className="max-w-4xl">
+          <div>
             <h1 className="font-display text-[clamp(3rem,9vw,7.5rem)] leading-[0.92] font-light text-foreground">
               Buy less.
               <br />
               <span className="italic font-display-wonk text-primary">Access more.</span>
             </h1>
             <p className="text-lg md:text-xl text-foreground/70 mt-8 max-w-xl leading-relaxed">
-              <span className="italic font-display-wonk">Rent</span>, <span className="italic font-display-wonk">donate</span>, and <span className="italic font-display-wonk">buy</span> from neighbors and the people you follow. Your next purchase is probably <span className="italic font-display-wonk">three doors down.</span>
+              {/* One italic moment per screen, which is the rule the
+                  landing page sets. This had four in one sentence and
+                  three in the next — the editorial accent used so often
+                  it stops being an accent. */}
+              Rent, borrow and buy from neighbours and the people you
+              follow. Your next purchase is probably{" "}
+              <span className="italic font-display-wonk">three doors down</span>.
             </p>
             <p className="text-base md:text-lg text-foreground/60 mt-5 max-w-xl leading-relaxed">
-              Track everything you already own — we'll flag the <span className="italic font-display-wonk text-foreground/80">duplicates</span>, the <span className="italic font-display-wonk text-foreground/80">excess</span>, and the things gathering dust — so you never re-buy what's already on a shelf.
+              Loop counts the repeats, so you stop re-buying what is already
+              on a shelf.
             </p>
 
             <div className="flex flex-col sm:flex-row flex-wrap gap-3 mt-10">
@@ -169,6 +174,14 @@ const Index = () => {
                 </Link>
               </Button>
             </div>
+          </div>
+
+          {/* The pile, from the landing page — already built, already
+              approved, and it makes this page read as the same product as
+              the front door. The slot the stock photograph left wanted
+              filling with the structural device, not a new asset. */}
+          <div className="hidden md:block">
+            <Pile />
           </div>
         </div>
       </section>

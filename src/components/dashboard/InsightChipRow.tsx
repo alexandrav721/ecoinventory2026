@@ -51,7 +51,7 @@ export const InsightChipRow = ({
         <button
           key={i}
           onClick={c.onClick}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-amber-50 border border-amber-200 text-amber-900 hover:bg-amber-100 transition-colors"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-champagne border border-border text-foreground hover:bg-accent transition-colors"
         >
           {c.icon}
           {c.label}
