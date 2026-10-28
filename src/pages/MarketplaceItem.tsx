@@ -61,6 +61,14 @@ export default function MarketplaceItem() {
 
   const [similar, setSimilar] = useState<Item[]>([]);
   const [similarLoading, setSimilarLoading] = useState(false);
+  /* "Nothing similar yet" and "we could not check" are different
+     sentences, and only one of them is true when the lookup fails. The
+     find-similar-items edge function is not deployed on this Supabase
+     project — it exists in this repo but was never pushed — so the fetch
+     fails CORS preflight and throws. The page used to answer that by
+     asserting there is nothing similar, which is the one thing it does
+     not know. */
+  const [similarUnavailable, setSimilarUnavailable] = useState(false);
 
   /* THE GATE for a direct item link — the most shareable URL on the site,
      and the one that most needed this: without sharing_level the page
@@ -164,6 +172,8 @@ export default function MarketplaceItem() {
         if (resp.ok) {
           const json = await resp.json();
           ids = Array.isArray(json.ids) ? json.ids : [];
+        } else if (!cancelled) {
+          setSimilarUnavailable(true);
         }
 
         if (cancelled || ids.length === 0) {
@@ -199,7 +209,12 @@ export default function MarketplaceItem() {
 
         if (!cancelled) setSimilar((ordered as Item[]).filter(gate));
       } catch (e) {
-        console.error("similar items error", e);
+        /* A thrown fetch means the same thing as a non-ok response: we
+           could not ask. Warn rather than error — a missing optional
+           feature is not a page fault, and an error in the console reads
+           as one. */
+        if (!cancelled) setSimilarUnavailable(true);
+        console.warn("similar items unavailable:", (e as Error)?.message);
       } finally {
         if (!cancelled) setSimilarLoading(false);
       }
@@ -473,7 +488,9 @@ export default function MarketplaceItem() {
           </div>
         ) : similar.length === 0 ? (
           <p className="text-sm text-muted-foreground">
-            Nothing similar yet.
+            {similarUnavailable
+              ? "Couldn't check for similar things just now."
+              : "Nothing similar yet."}
           </p>
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
