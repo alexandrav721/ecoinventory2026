@@ -42,7 +42,6 @@ type Listing = {
   image_urls: string[] | null;
   rent_price: number | null;
   sharing_price: number | null;
-  original_price: number | null;
   is_for_borrow: boolean | null;
 };
 
@@ -97,7 +96,7 @@ export function RealListings() {
     (async () => {
       const { data, error } = await supabase
         .from("inventory_items")
-        .select("id, name, brand, image_urls, rent_price, sharing_price, original_price, is_for_borrow")
+        .select("id, name, brand, image_urls, rent_price, sharing_price, is_for_borrow")
         .eq("sharing_level", "public")
         .eq("is_available_for_sharing", true)
         .not("is_sold", "is", true)

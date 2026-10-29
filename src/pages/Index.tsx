@@ -46,7 +46,7 @@ const Index = () => {
         .select("id", { count: "exact", head: true });
       const { count: sharedCount } = await supabase
         .from("inventory_items")
-        .select("*", { count: "exact", head: true })
+        .select("id", { count: "exact", head: true })
         .eq("is_available_for_sharing", true)
         .not("is_sold", "is", true)
         .not("is_eliminated", "is", true);
@@ -55,7 +55,7 @@ const Index = () => {
          is honestly countable from the browser. */
       const { count: borrowCount } = await supabase
         .from("inventory_items")
-        .select("*", { count: "exact", head: true })
+        .select("id", { count: "exact", head: true })
         .eq("is_available_for_sharing", true)
         .eq("is_for_borrow", true)
         .not("is_sold", "is", true)
