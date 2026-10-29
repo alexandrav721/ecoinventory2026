@@ -251,17 +251,24 @@ rejection). **Copyright:** `2026 Loop Max Your Stuff LLC`.
 
 None of these blocks you today, and all are mine rather than yours.
 
-- **The app's own privacy screen names four processors; the website now names
-  twelve.** They have to agree before you submit — two different disclosure
-  lists is its own problem at review.
-- **Every page shares one browser-tab title**, Privacy, Terms and Support
-  included. A reviewer opening your privacy policy sees a tab that doesn't say
-  Privacy.
 - **The app-link file is missing**, so every referral link your app sends
-  opens Safari instead of Loop. There's a trap in it too — served with the
-  wrong content type, iOS ignores it silently.
-- **`/demo` and a couple of old routes** still carry Unsplash stock photos,
-  which contradicts the landing page's "No stock, nothing generated".
+  opens Safari instead of Loop. I need your Apple Team ID to write it, and
+  there's a trap in it too — served with the wrong content type, iOS ignores
+  it silently, so it has to be checked after deploying.
+- **Your website `.env` is tracked by git** and the ignore rules don't cover
+  it. Nothing sensitive is in it today, which is the only reason this isn't
+  urgent — but anything secret added later would be committed automatically.
+
+**Done since:** the app's own privacy screen and `legal/privacy-policy.md` now
+name all twelve processors, so the app and the website finally say the same
+thing. Every page has its own browser-tab title — Privacy, Terms and Support
+included, which are the three a reviewer opens. The microphone permission
+prompt now tells people their recording is sent away to be transcribed, which
+it didn't.
+
+**Checked and left alone:** `/demo` uses stock photos, but it's behind a
+labelled demo banner, so it isn't claiming to be real inventory. Not a
+contradiction of "no stock" on the landing page.
 
 ## The honest part
 

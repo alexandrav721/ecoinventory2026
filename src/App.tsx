@@ -3,6 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { PageTitle } from "@/components/PageTitle";
 import { useEffect, useState } from "react";
 import { DemoProvider, useDemo } from "@/contexts/DemoContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -79,6 +80,9 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          {/* Inside the router so it can read the current route; renders
+              nothing. See PageTitle.tsx for why these three matter most. */}
+          <PageTitle />
           <Routes>
             <Route path="/" element={<RootRoute />} />
             <Route path="/marketplace" element={<Community />} />
