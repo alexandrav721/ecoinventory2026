@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { CHAMPAGNE, CLARET, HAIRLINE, MUTED } from "@/components/brand";
 import { displayText } from "@/lib/displayText";
@@ -42,7 +43,26 @@ type Listing = {
   rent_price: number | null;
   sharing_price: number | null;
   original_price: number | null;
+  is_for_borrow: boolean | null;
 };
+
+/**
+ * Is this thing actually on offer to anybody?
+ *
+ * The app's own visibility rule requires it (isItemVisible's requireOffered),
+ * and this band has to apply it too. Without it the fallthrough below labelled
+ * every price-less row "Free to borrow" — which put "Macbook pro · Free to
+ * borrow" in the shop window when its owner had offered it to nobody. Three
+ * of the fourteen public rows were in that state. A flat untruth, on the one
+ * page that promises "Nothing here is a guess".
+ */
+function isOffered(it: Listing): boolean {
+  return (
+    (it.rent_price != null && it.rent_price > 0) ||
+    (it.sharing_price != null && it.sharing_price > 0) ||
+    it.is_for_borrow === true
+  );
+}
 
 /**
  * One price grammar, three forms, nothing else.
@@ -59,6 +79,8 @@ function priceLabel(it: Listing): string {
     return `$${Math.round(it.rent_price)} / week`;
   if (it.sharing_price != null && it.sharing_price > 0)
     return `$${Math.round(it.sharing_price)} to buy`;
+  // Only reachable for rows where isOffered() already returned true, i.e.
+  // is_for_borrow is genuinely set. Never a fallthrough.
   return "Free to borrow";
 }
 
@@ -75,7 +97,7 @@ export function RealListings() {
     (async () => {
       const { data, error } = await supabase
         .from("inventory_items")
-        .select("id, name, brand, image_urls, rent_price, sharing_price, original_price")
+        .select("id, name, brand, image_urls, rent_price, sharing_price, original_price, is_for_borrow")
         .eq("sharing_level", "public")
         .eq("is_available_for_sharing", true)
         .not("is_sold", "is", true)
@@ -104,6 +126,8 @@ export function RealListings() {
              string "null", which this table genuinely contains. */
           const n = displayText(it.name);
           if (!n || /^untitled\b/i.test(n)) return false;
+          // Offered to somebody, or it has no business being in the window.
+          if (!isOffered(it)) return false;
           return true;
       });
       /* Put the things you would actually borrow first. A MacBook and a
@@ -190,6 +214,19 @@ export function RealListings() {
             );
           })}
         </ul>
+
+        {/* The band proves Loop is real, then used to dead-end. Browsing is
+            open to signed-out visitors (see PublicProfile), so the one piece
+            of evidence on the page should be reachable from it. */}
+        <div className="mt-8">
+          <Link
+            to="/community"
+            className="text-[15px] font-semibold hover:opacity-70"
+            style={{ color: CLARET }}
+          >
+            See everything on Loop &rarr;
+          </Link>
+        </div>
       </div>
     </section>
   );

@@ -137,7 +137,7 @@ const Landing = () => {
           understand before a visitor could do anything. */}
       <section className="mx-auto max-w-3xl px-5 pb-12 pt-12 text-center md:pb-16 md:pt-20">
         <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: CLARET }}>
-          Now in FiDi
+          FiDi first
         </p>
         <h1
           className="mx-auto mt-4 max-w-[13ch] text-[clamp(2.6rem,8vw,4.4rem)] font-medium leading-[1.02]"
@@ -224,7 +224,7 @@ const Landing = () => {
         >
           <h2 className="text-[15px] font-semibold">Nothing here is a guess.</h2>
           <ul className="mt-4 space-y-2.5 text-[14.5px] leading-relaxed" style={{ color: "#4A4540" }}>
-            <li>Every photograph on this page is a real thing someone in FiDi owns.</li>
+            <li>Every photograph on this page is a real thing a real member owns.</li>
             <li>Totals come from prices people typed. What's blank stays blank.</li>
             <li>No invented demand, no borrowed install counts, no reviews we didn't get.</li>
           </ul>
