@@ -114,6 +114,19 @@ source — which mattered, because the one component that read neighbours'
 coordinates turned out to be dead code that never ships. Every column being
 revoked is used only on signed-in screens.
 
+**While you're in there, two more**, same place, same method — both small,
+both the same shape, both checked the same way:
+
+- **[STEP-5-comments-and-likes.sql](STEP-5-comments-and-likes.sql)** — 6
+  comments and 10 likes are readable on items a stranger can't see. Run its
+  listing query and send me what it prints; I need the real policy names
+  before I give you the final line, for the same reason as last time.
+- **[STEP-6-private-item-fields.sql](STEP-6-private-item-fields.sql)** — the
+  private notes people write about their own belongings are readable by
+  anyone, along with purchase dates, love ratings and how often things get
+  used. `personal_notes` isn't requested anywhere on the website at all, so
+  revoking it costs nothing.
+
 ### 2. Fix password reset — 2 minutes
 
 Supabase → **Authentication** → **URL Configuration**. Site URL is still
@@ -234,10 +247,31 @@ rejection). **Copyright:** `2026 Loop Max Your Stuff LLC`.
 
 ---
 
+## Still on my list, not done
+
+None of these blocks you today, and all are mine rather than yours.
+
+- **The app's own privacy screen names four processors; the website now names
+  twelve.** They have to agree before you submit — two different disclosure
+  lists is its own problem at review.
+- **Every page shares one browser-tab title**, Privacy, Terms and Support
+  included. A reviewer opening your privacy policy sees a tab that doesn't say
+  Privacy.
+- **The app-link file is missing**, so every referral link your app sends
+  opens Safari instead of Loop. There's a trap in it too — served with the
+  wrong content type, iOS ignores it silently.
+- **`/demo` and a couple of old routes** still carry Unsplash stock photos,
+  which contradicts the landing page's "No stock, nothing generated".
+
 ## The honest part
 
-There are **nine browsable items from four people** in the whole app, and only
-five within reach of FiDi. Loop will pass review before it's ready to impress
+There are **seven genuinely offered items from three people** in the whole app,
+and **not one of your twelve members has FiDi as their area** — most are in
+New Jersey. That forced two corrections on the site today: the trust block
+claimed every photo was "a real thing someone in FiDi owns", and the hero said
+"Now in FiDi", which asserts Loop is operating there. Both now say something
+true — "a real member owns", and "FiDi first". If you want the page to say
+"Now in FiDi", the way to get there is members, not copy. Loop will pass review before it's ready to impress
 anyone. Seeding real FiDi inventory matters more to your launch than anything on
 Apple's checklist — and it's also what makes the website's photo band look
 alive, since it reads from the same place.
