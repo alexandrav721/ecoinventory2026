@@ -1,0 +1,23 @@
+# Cache policy. Added 30 Oct 2026, after pointing celebrateloop.com at this
+# app served STALE /privacy and /terms from Cloudflare's edge.
+#
+# WHAT WENT WRONG. Neither this site nor the static one it replaced shipped a
+# _headers file, so Cloudflare applied its own default to HTML and pinned it
+# with `s-maxage=604800` — seven days. The moment the domain switched, the old
+# static privacy.html and terms.html kept being served from the edge: /terms
+# was two days stale, /privacy fifteen minutes. Those are the two URLs an App
+# Store reviewer opens, and one of them was a policy that names neither
+# OpenAI nor Uber.
+#
+# THE RULE. An HTML file at a stable path whose contents change on every
+# deploy must be revalidated; a build asset whose filename contains a content
+# hash can be cached forever, because a new build produces a new filename.
+# Getting these the wrong way round is how a single-page app serves last
+# week's page from a fresh deploy.
+
+/*
+  Cache-Control: public, max-age=0, must-revalidate
+
+# Vite emits index-<hash>.js / index-<hash>.css — the hash IS the cache key.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
