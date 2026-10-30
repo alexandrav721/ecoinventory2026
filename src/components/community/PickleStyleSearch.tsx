@@ -454,14 +454,27 @@ export function PickleStyleSearch() {
         style={{ background: "hsl(var(--champagne))" }}
       >
         <div className="container mx-auto px-4 py-5 md:py-6">
-          <nav className="flex items-center gap-1.5 text-xs text-muted-foreground mb-2">
-            <Link to="/welcome" className="hover:text-foreground">About Loop</Link>
-            <ChevronRight className="w-3.5 h-3.5" />
-            <span className="text-foreground font-medium">Search</span>
-          </nav>
-          <h1 className="font-display text-xl md:text-2xl font-semibold tracking-tight leading-tight">
-            Search
-          </h1>
+          {/* Was a breadcrumb reading "About Loop > Search" above an H1
+              reading "Search" — the generic chrome of a search page, on the
+              one screen where a visitor who has just read the landing page
+              arrives. The landing page's whole argument is that Loop
+              publishes its real inventory; this is that inventory, so it
+              says so, in the same voice and the same face. */}
+          <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+            <h1
+              className="text-[26px] italic leading-none md:text-[32px]"
+              style={{ fontFamily: "Instrument Serif, Georgia, serif" }}
+            >
+              The register
+            </h1>
+            <Link
+              to="/"
+              className="text-xs hover:opacity-70"
+              style={{ color: "hsl(var(--muted-foreground))" }}
+            >
+              &larr; celebrateloop.com
+            </Link>
+          </div>
 
           <div className="mt-4 flex items-center gap-2 flex-wrap">
             {/* Audience */}
@@ -489,7 +502,7 @@ export function PickleStyleSearch() {
             <div className="inline-flex rounded-full border border-border bg-background/80 backdrop-blur p-1">
               {([
                 { value: "all" as Offer, label: "All", Icon: Layers, tone: "" },
-                { value: "borrow" as Offer, label: "Borrow", Icon: HandHeart, tone: "hsl(var(--success))" },
+                { value: "borrow" as Offer, label: "Borrow", Icon: HandHeart, tone: "hsl(var(--primary))" },
                 { value: "buy" as Offer, label: "Buy", Icon: ShoppingBag, tone: "hsl(var(--claret))" },
               ]).map(({ value, label, Icon, tone }) => (
                 <button
@@ -826,14 +839,19 @@ function ProductCard({ item, onOpen }: { item: Item; onOpen: () => void }) {
 
   return (
     <Link to={`/profile/${item.user_id}`} onClick={onOpen} className="group block">
-      <div className="relative aspect-[3/4] overflow-hidden rounded-xl mb-3 bg-secondary/40 ring-1 ring-border/60 group-hover:ring-foreground/20 group-hover:shadow-xl transition-all duration-300">
+      {/* A plate, not a card: 2px radius, a hairline, no shadow and no
+          zoom. The hover shadow and the scale-105 were the two remaining
+          "2014 card metaphor" behaviours index.css rules out, and a
+          photograph that grows under the cursor is the one thing that makes
+          an honest phone snapshot look like stock. */}
+      <div className="relative aspect-[3/4] overflow-hidden rounded-sm mb-3 bg-secondary/40 ring-1 ring-border/60 transition-colors duration-200 group-hover:ring-foreground/25">
         {cover && !coverFailed ? (
           <img
             src={cover}
             alt={item.name}
             loading="lazy"
             onError={() => setCoverFailed(true)}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            className="w-full h-full object-cover"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center px-3 text-center text-xs text-muted-foreground">
@@ -842,24 +860,14 @@ function ProductCard({ item, onOpen }: { item: Item; onOpen: () => void }) {
         )}
 
         {/* Top-left: Borrow / Buy chip */}
-        <div className="absolute top-2.5 left-2.5">
-          {/* The chip read `isFree ? "Borrow" : "Buy"` — inferred from the
-              price, never from the flags that say what an item is offered
-              for. So a paid rental was labelled "Buy", and an item that
-              was both printed only one of the two. `action` is the app's
-              own ladder, from useNearbyItems.nearbyAction. */}
-          <span
-            className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-white shadow-md backdrop-blur"
-            style={{
-              background: sellable
-                ? "hsl(var(--claret))"
-                : "hsl(var(--success))",
-            }}
-          >
-            {sellable ? <ShoppingBag className="w-3 h-3" /> : <HandHeart className="w-3 h-3" />}
-            {action}
-          </span>
-        </div>
+        {/* The BORROW / BUY chip used to be stamped on the photograph in a
+            coloured pill with an icon and a shadow. It now sits in type
+            under the plate, beside the price, where the difference belongs:
+            the words "a day" and "to buy" already carry it. `action` is
+            still the app's own ladder from useNearbyItems.nearbyAction —
+            the chip once read `isFree ? "Borrow" : "Buy"`, inferred from
+            the price rather than from the flags, so a paid rental was
+            labelled "Buy". */}
 
 
 
@@ -873,8 +881,10 @@ function ProductCard({ item, onOpen }: { item: Item; onOpen: () => void }) {
           </div>
         )}
 
-        {/* Hover gradient overlay */}
-        <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/40 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+        {/* The hover scrim is gone. It was a bg-gradient-to-t black wash
+            over the photograph — the only gradient left on the site, on a
+            brand whose stylesheet rules them out, darkening the one asset
+            these pages have. Nothing is overlaid on a plate. */}
       </div>
 
       <div className="space-y-1 px-0.5">
@@ -889,6 +899,14 @@ function ProductCard({ item, onOpen }: { item: Item; onOpen: () => void }) {
         <h3 className="text-sm font-medium leading-snug line-clamp-2 group-hover:underline">
           {item.name}
         </h3>
+        {action && (
+          <p
+            className="text-[10px] uppercase tracking-[0.14em] font-semibold"
+            style={{ color: "hsl(var(--primary))" }}
+          >
+            {action}
+          </p>
+        )}
         <p className="text-xs text-muted-foreground">
           {displayText(item.size) ? `Size ${displayText(item.size)}` : null}
           {displayText(item.size) && locText ? " · " : null}
@@ -903,16 +921,16 @@ function ProductCard({ item, onOpen }: { item: Item; onOpen: () => void }) {
                 no rate", a free GIVEAWAY (is_donated, no sale price) fell
                 through to it and would have thrown on null. */}
             {rentLabel ? (
-              <span className="text-base font-bold" style={{ color: "hsl(var(--success))" }}>
+              <span className="text-base font-bold" style={{ color: "hsl(var(--primary))" }}>
                 {rentLabel}
               </span>
             ) : isFree ? (
-              <span className="text-base font-bold" style={{ color: "hsl(var(--success))" }}>Free to borrow</span>
+              <span className="text-base font-bold" style={{ color: "hsl(var(--primary))" }}>Free to borrow</span>
             ) : isGiveaway ? (
               /* The app's word for is_donated is "Free" (see
                  useNearbyItems.nearbyAction). Not "donated", which on the
                  website still reads as "already gone". */
-              <span className="text-base font-bold" style={{ color: "hsl(var(--success))" }}>Free</span>
+              <span className="text-base font-bold" style={{ color: "hsl(var(--primary))" }}>Free</span>
             ) : price !== null ? (
               <span className="text-base font-bold" style={{ color: "hsl(var(--claret))" }}>
                 ${price.toFixed(0)}
