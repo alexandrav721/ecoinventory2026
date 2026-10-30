@@ -2,43 +2,47 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { CHAMPAGNE, CLARET, HAIRLINE, MUTED } from "@/components/brand";
+
+/* A 1px #E5E1DC rule on #F7F2EA is luminance 0.804 against 0.891 — a rule
+   that barely exists. Structure only reads if it changes value with its
+   ground, so rules on champagne step one tone darker. */
+const RULE_ON_CHAMPAGNE = "#D4CFC8";
 import { displayText } from "@/lib/displayText";
 
 /**
- * Real things, actually on Loop, photographed by the people who own them.
+ * Everything on Loop, right now — the real supply, as photography.
  *
- * WHY THIS EXISTS. The landing page had no photographs at all. It got there
- * honestly — three AI-generated images were removed because generated
- * lifestyle imagery is the clearest "a machine made this" tell there is, and
- * one of them (four people laughing on a brownstone stoop) had a hand merging
- * into a camera and gibberish on the book spines. But removing them and
- * putting back nothing was half a job: a marketplace with no pictures of
- * anything is a worse page than one with mediocre pictures.
+ * These are the only pictures on this site and they are the whole argument:
+ * real things, in real apartments, shot on their owners' phones. No stock
+ * (rejected twice on this brand), nothing generated. The uneven quality is
+ * the point — it is what proves nobody made them up.
  *
- * The answer was never stock. It is that Alexandra already has the best
- * possible photographs and they were sitting unused in her own database: 12
- * of the 14 public listings have real photos, taken on a phone, in real
- * apartments, in real daylight. One has the photographer reflected in an
- * espresso machine's screen. No stock library sells that, and no image
- * generator can fake it, because what it is selling is that a real person two
- * floors up owns this thing.
+ * WHAT CHANGED, AND WHY
  *
- * It reads live, so it can never go stale and can never be a lie about what
- * is on Loop. If the query returns nothing the section does not render at
- * all — an empty shelf is worse than no shelf, and inventing filler here
- * would break the promise the page itself makes further down ("Nothing here
- * is a guess").
+ * The band used to be six identical white cards in a four-column grid,
+ * which left a visible hole in row two and made ordinary objects look like
+ * weak e-commerce. Tiles are now deliberately unequal, sit directly on the
+ * champagne ground with no card and no shadow, and the row breaks are
+ * composed rather than wrapped.
  *
- * PRIVACY: this deliberately touches only `inventory_items` and never
- * `profiles`. It shows the thing, not its owner — no names, no avatars, no
- * neighbourhood. These are listings their owners already chose to make
- * public, and nothing here identifies who they belong to.
+ * The brand line is gone. It mostly repeated the first word of the name
+ * ("Shark Mop / Shark") and, on one live row, contradicted the photograph:
+ * an item titled "HP Monitor Ultrawide" whose picture plainly shows an LG
+ * bezel. That is the owner's own typo and not ours to silently edit, but a
+ * page promising "Nothing here is a guess" should not print a brand over a
+ * photograph of a different brand.
+ *
+ * The standfirst no longer says "in real FiDi apartments". Not one member
+ * has FiDi as their area; most are in New Jersey. It was false, and it sat
+ * one screen above the honesty promise.
+ *
+ * The counts in the standfirst are computed, not typed — see Ledger.tsx for
+ * why that is not fussiness.
  */
 
-type Listing = {
+export type Listing = {
   id: string;
   name: string | null;
-  brand: string | null;
   image_urls: string[] | null;
   rent_price: number | null;
   rent_window: string | null;
@@ -49,15 +53,11 @@ type Listing = {
 /**
  * How the owner priced it. NOT a guess.
  *
- * This said "/ week" for every rental, hardcoded. Every rental in the
- * database is priced per DAY, so the shop window advertised the workout
- * bench at "$50 / week" when its owner is asking $50 a day — a sevenfold
- * understatement, on the page that promises "Nothing here is a guess".
- *
- * An unrecognised window renders no period at all rather than falling back
- * to a day, for the reason the app's own rentWindow.ts gives: defaulting to
- * day is the OVERCHARGING direction, and a wrong price is worse than a
- * missing one in both directions.
+ * This hardcoded "/ week" for every rental while every rental in the
+ * database is priced per DAY — advertising a $50/day bench at $50 a week.
+ * An unrecognised window now renders no period at all rather than assuming
+ * a day: per the app's own rentWindow.ts, defaulting to day is the
+ * OVERCHARGING direction.
  */
 const WINDOW_LABEL: Record<string, string> = {
   day: "a day",
@@ -67,16 +67,18 @@ const WINDOW_LABEL: Record<string, string> = {
   event: "an event",
 };
 
-/**
- * Is this thing actually on offer to anybody?
- *
- * The app's own visibility rule requires it (isItemVisible's requireOffered),
- * and this band has to apply it too. Without it the fallthrough below labelled
- * every price-less row "Free to borrow" — which put "Macbook pro · Free to
- * borrow" in the shop window when its owner had offered it to nobody. Three
- * of the fourteen public rows were in that state. A flat untruth, on the one
- * page that promises "Nothing here is a guess".
- */
+export function priceLabel(it: Listing): string {
+  if (it.rent_price != null && it.rent_price > 0) {
+    const per = WINDOW_LABEL[(it.rent_window ?? "").toLowerCase()];
+    const amount = `$${Math.round(it.rent_price)}`;
+    return per ? `${amount} ${per}` : amount;
+  }
+  if (it.sharing_price != null && it.sharing_price > 0)
+    return `$${Math.round(it.sharing_price)} to buy`;
+  return "Free to borrow";
+}
+
+/** Offered to somebody — the app's requireOffered rule, applied here too. */
 function isOffered(it: Listing): boolean {
   return (
     (it.rent_price != null && it.rent_price > 0) ||
@@ -85,170 +87,260 @@ function isOffered(it: Listing): boolean {
   );
 }
 
-/**
- * One price grammar, three forms, nothing else.
- *
- * This previously had a fourth form, `was $1500`, falling back to the
- * original purchase price. In a shop window that reads as a price-drop on a
- * second-hand laptop, which is neither what Loop is nor what the owner
- * offered — the original price is what THEY paid, not what you would. It
- * also sat next to "$9 / weekend" and "$150", so four different sentences
- * were competing in one grid. Now: rent, buy, or free to borrow.
- */
-function priceLabel(it: Listing): string {
-  if (it.rent_price != null && it.rent_price > 0) {
-    const per = WINDOW_LABEL[(it.rent_window ?? "").toLowerCase()];
-    const amount = `$${Math.round(it.rent_price)}`;
-    return per ? `${amount} ${per}` : amount;
-  }
-  if (it.sharing_price != null && it.sharing_price > 0)
-    return `$${Math.round(it.sharing_price)} to buy`;
-  // Only reachable for rows where isOffered() already returned true, i.e.
-  // is_for_borrow is genuinely set. Never a fallthrough.
-  return "Free to borrow";
+/** Borrowable and rentable outrank buy-only: a thing you keep forever
+ *  quietly contradicts "the stuff you only need for a while". */
+function borrowable(it: Listing): boolean {
+  return (
+    (it.rent_price != null && it.rent_price > 0) || it.is_for_borrow === true
+  );
 }
 
-export function RealListings() {
-  const [items, setItems] = useState<Listing[] | null>(null);
-  /* A row can name a photo that no longer exists in storage. The browser
-     then draws its broken-image glyph, which looks worse on a landing page
-     than having one fewer thing. We cannot know which URLs are dead without
-     fetching them, so we let the browser tell us and drop those tiles. */
-  const [broken, setBroken] = useState<Set<string>>(new Set());
+/**
+ * One query, shared by the hero photograph and the band, so the two can
+ * never disagree about what Loop has.
+ */
+export type Offered = {
+  items: Listing[];
+  offeredCount: number;
+  /** On offer, but with no photograph — so invisible, by Loop's own rule. */
+  hidden: Listing[];
+};
+
+export function useOfferedListings() {
+  const [state, setState] = useState<Offered | null>(null);
 
   useEffect(() => {
     let cancelled = false;
     (async () => {
       const { data, error } = await supabase
         .from("inventory_items")
-        .select("id, name, brand, image_urls, rent_price, rent_window, sharing_price, is_for_borrow")
+        .select(
+          "id, name, image_urls, rent_price, rent_window, sharing_price, is_for_borrow"
+        )
         .eq("sharing_level", "public")
         .eq("is_available_for_sharing", true)
         .not("is_sold", "is", true)
         .not("is_eliminated", "is", true)
         .order("created_at", { ascending: false })
-        .limit(24);
-      /* Deliberately not filtered to borrowable-only in the query: the set
-         is small, and an empty shelf is worse than a mixed one. The sort
-         below does the preferring instead, so the band degrades gracefully
-         as inventory grows or shrinks. */
+        .limit(40);
 
       if (cancelled) return;
       if (error) {
-        /* Render nothing rather than an error. This is a marketing band on
-           a public page; a visitor should never be shown our plumbing. */
-        setItems([]);
+        setState({ items: [], offeredCount: 0, hidden: [] });
         return;
       }
-      /* The product's own rule: a thing without a photograph is not visible.
-         Enforced here too, so this band can never show an empty grey box. */
+
+      /* Everything genuinely on offer, photographed or not. The band shows
+         only the photographed ones and then SAYS how many it is not
+         showing — see the standfirst. Quietly displaying six and heading it
+         "everything" is the kind of small dishonesty this page exists to
+         not commit. */
+      const offeredAll = ((data ?? []) as Listing[]).filter(isOffered);
+
       const usable = ((data ?? []) as Listing[]).filter((it) => {
-          if (!Array.isArray(it.image_urls) || it.image_urls.length === 0)
-            return false;
-          /* "Untitled item" is a real row in the database and a bad thing
-             to put on a shop window. displayText already strips the literal
-             string "null", which this table genuinely contains. */
-          const n = displayText(it.name);
-          if (!n || /^untitled\b/i.test(n)) return false;
-          // Offered to somebody, or it has no business being in the window.
-          if (!isOffered(it)) return false;
-          return true;
+        if (!Array.isArray(it.image_urls) || it.image_urls.length === 0)
+          return false;
+        const n = displayText(it.name);
+        // "Untitled item" is a real row and a poor thing to put in a window.
+        if (!n || /^untitled\b/i.test(n)) return false;
+        return isOffered(it);
       });
-      /* Put the things you would actually borrow first. A MacBook and a
-         monitor in the window quietly contradict "the stuff you only need
-         for a while", so anything offered to rent or borrow outranks
-         anything that is only for sale. Stable within each group. */
-      const borrowable = (it: Listing) =>
-        (it.rent_price != null && it.rent_price > 0) ||
-        !(it.sharing_price != null && it.sharing_price > 0);
+
       usable.sort((a, b) => Number(borrowable(b)) - Number(borrowable(a)));
-      setItems(usable);
+
+      /* One editorial choice, stated plainly: the hero photograph leads.
+         Ordering which REAL photograph goes first is curation, which every
+         shop window does; inventing one would be the lie. Today the best
+         picture on Loop is the espresso machine — a warm kitchen, a
+         hand-painted cup, and the owner reflected in the screen, which is
+         the most efficient proof on the site that nobody generated these.
+         Left to created_at it would have opened on an air purifier against
+         a blank wall. If that listing ever goes, this falls through to
+         whatever is genuinely first; nothing breaks. */
+      const PREFERRED = /espresso|terra kaffe/i;
+      const lead = usable.findIndex((it) => PREFERRED.test(it.name ?? ""));
+      if (lead > 0) usable.unshift(usable.splice(lead, 1)[0]);
+
+      setState({
+        items: usable,
+        offeredCount: offeredAll.length,
+        hidden: offeredAll.filter(
+          (it) => !Array.isArray(it.image_urls) || it.image_urls.length === 0
+        ),
+      });
     })();
     return () => {
       cancelled = true;
     };
   }, []);
 
-  // Nothing yet, or nothing to show: render nothing at all.
-  if (!items || items.length === 0) return null;
+  return state;
+}
 
-  /* Six, not eight: two rows of three reads as a considered selection,
-     where eight read as whatever happened to be in the database. */
-  const shown = items.filter((it) => !broken.has(it.id)).slice(0, 6);
+/** A photograph plus its line. No card, no border box, no shadow. */
+function Plate({
+  it,
+  ratio,
+  onBroken,
+}: {
+  it: Listing;
+  ratio: string;
+  onBroken: (id: string) => void;
+}) {
+  const name = displayText(it.name) ?? "Something useful";
+  return (
+    <figure className="m-0">
+      <div
+        className="w-full overflow-hidden"
+        style={{
+          aspectRatio: ratio,
+          background: "#E3DED6",
+          borderRadius: 2,
+          border: `1px solid ${RULE_ON_CHAMPAGNE}`,
+        }}
+      >
+        <img
+          src={it.image_urls?.[0]}
+          alt={name}
+          loading="lazy"
+          decoding="async"
+          className="h-full w-full object-cover"
+          onError={() => onBroken(it.id)}
+        />
+      </div>
+      <figcaption className="pt-3">
+        <p className="text-[15px] font-semibold leading-tight">{name}</p>
+        <p
+          className="mt-1 text-[13px] font-semibold"
+          style={{ color: CLARET, fontVariantNumeric: "tabular-nums" }}
+        >
+          {priceLabel(it)}
+        </p>
+      </figcaption>
+    </figure>
+  );
+}
+
+export function RealListings({
+  items,
+  hidden,
+}: {
+  items: Listing[] | null;
+  hidden: Listing[];
+}) {
+  const [broken, setBroken] = useState<Set<string>>(new Set());
+  const drop = (id: string) =>
+    setBroken((p) => {
+      const n = new Set(p);
+      n.add(id);
+      return n;
+    });
+
+  if (!items || items.length === 0) return null;
+  const shown = items.filter((i) => !broken.has(i.id));
   if (shown.length === 0) return null;
 
+
+  // Composed, not wrapped: a 5/3/4 row then a 4/4/4 row. The unevenness is
+  // what stops seven ordinary objects reading as a product grid.
+  const spans = ["md:col-span-5", "md:col-span-3", "md:col-span-4"];
+  const ratios = ["4 / 5", "1 / 1", "1 / 1", "3 / 4", "3 / 4", "3 / 4"];
+
   return (
-    <section style={{ background: CHAMPAGNE }} className="px-5 py-16 md:py-20">
-      <div className="mx-auto max-w-6xl">
-        <div className="flex flex-wrap items-baseline justify-between gap-3">
+    <section
+      className="px-6 py-20 md:px-12 md:py-24"
+      style={{ background: CHAMPAGNE }}
+    >
+      <div className="mx-auto max-w-[1100px]">
+        <div className="md:flex md:items-baseline md:justify-between md:gap-10">
           <h2
-            className="text-[clamp(1.7rem,3.8vw,2.5rem)] font-medium leading-tight"
-            style={{ fontFamily: "Instrument Serif, Georgia, serif" }}
+            className="text-[30px] leading-[1.06] md:text-[40px]"
+            style={{
+              fontFamily: "Instrument Serif, Georgia, serif",
+              letterSpacing: "-0.015em",
+            }}
           >
-            On Loop <span className="italic" style={{ color: CLARET }}>right now</span>
+            Everything on Loop, right now.
           </h2>
-          <p className="max-w-sm text-sm" style={{ color: MUTED }}>
-            Real things in real apartments, photographed by the people who
-            own them. No stock, nothing generated.
+          <p
+            className="mt-4 max-w-[430px] text-[15px] leading-[1.5] md:mt-0"
+            style={{ color: MUTED }}
+          >
+            Photographed by the people who own them, on their own phones. No
+            stock, nothing generated.
           </p>
         </div>
 
-        <ul className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-          {shown.map((it) => {
-            const name = displayText(it.name) ?? "Something useful";
-            const brand = displayText(it.brand);
-            const src = it.image_urls?.[0];
-            return (
-              <li
-                key={it.id}
-                className="overflow-hidden rounded-2xl"
-                style={{ background: "#FFFFFF", border: `1px solid ${HAIRLINE}` }}
-              >
-                <div className="aspect-square w-full overflow-hidden" style={{ background: HAIRLINE }}>
-                  <img
-                    src={src}
-                    alt={name}
-                    loading="lazy"
-                    decoding="async"
-                    className="h-full w-full object-cover"
-                    onError={() =>
-                      setBroken((prev) => {
-                        const next = new Set(prev);
-                        next.add(it.id);
-                        return next;
-                      })
-                    }
-                  />
-                </div>
-                <div className="p-3">
-                  <p className="truncate text-[14px] font-semibold leading-snug">{name}</p>
-                  {brand && (
-                    <p className="truncate text-[12px]" style={{ color: MUTED }}>
-                      {brand}
-                    </p>
-                  )}
-                  <p
-                    className="mt-1.5 text-[12px] font-semibold tabular-nums"
-                    style={{ color: CLARET }}
+        <div className="mt-12 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-12">
+          {shown.slice(0, 6).map((it, i) => (
+            <div key={it.id} className={i < 3 ? spans[i] : "md:col-span-4"}>
+              <Plate it={it} ratio={ratios[i] ?? "3 / 4"} onBroken={drop} />
+            </div>
+          ))}
+        </div>
+
+        {hidden.length > 0 && (
+          /* THE DEVICE. Loop's own product law — a thing without a
+             photograph is not visible — shown operating in public, against
+             the founder's interest, on rows she would plainly rather show.
+             Today those rows are a power drill and a cooler: the two most
+             on-wedge objects in the entire inventory, hidden by her own
+             rule. No growth playbook produces this paragraph, which is
+             exactly why it is worth more than another testimonial.
+
+             Names and prices come from the database, never hand-written.
+             A competing proposal invented a caption for the television
+             ("face down on the bed, the way it came off the wall") when the
+             photograph shows it wall-mounted and switched on — a fabricated
+             caption on the page that promises nothing is a guess is the
+             worst failure available here. */
+          <div className="mt-16 max-w-[620px]">
+            <p
+              className="text-[13px] uppercase"
+              style={{ letterSpacing: "0.1em", color: MUTED }}
+            >
+              {hidden.length === 1
+                ? "And one you can't see"
+                : `And ${hidden.length} you can't see`}
+            </p>
+            <ul className="mt-4">
+              {hidden.map((it) => (
+                <li
+                  key={it.id}
+                  className="flex items-baseline justify-between gap-6 py-3 text-[16px]"
+                  style={{ borderTop: `1px solid ${RULE_ON_CHAMPAGNE}` }}
+                >
+                  <span>{displayText(it.name) ?? "Something useful"}</span>
+                  <span
+                    className="shrink-0 text-[14px] font-semibold"
+                    style={{
+                      color: MUTED,
+                      fontVariantNumeric: "tabular-nums",
+                    }}
                   >
                     {priceLabel(it)}
-                  </p>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
+                  </span>
+                </li>
+              ))}
+            </ul>
+            <p
+              className="mt-5 text-[15px] leading-[1.6]"
+              style={{ color: "#4A4540" }}
+            >
+              On offer, and nobody can find them — because on Loop a thing
+              without a photograph isn't visible to anyone. That's my rule,
+              and it costs me the two things people ask for most.
+            </p>
+          </div>
+        )}
 
-        {/* The band proves Loop is real, then used to dead-end. Browsing is
-            open to signed-out visitors (see PublicProfile), so the one piece
-            of evidence on the page should be reachable from it. */}
-        <div className="mt-8">
+        <div className="mt-12">
           <Link
             to="/community"
-            className="text-[15px] font-semibold hover:opacity-70"
+            className="text-[15px] font-semibold transition-opacity hover:opacity-70"
             style={{ color: CLARET }}
           >
-            See everything on Loop &rarr;
+            Browse all of it &rarr;
           </Link>
         </div>
       </div>
