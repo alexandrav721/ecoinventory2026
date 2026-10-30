@@ -56,12 +56,23 @@ export function PageTitle() {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    const exact = EXACT[pathname];
+    /* Normalise the trailing slash before matching. React Router treats
+       /privacy and /privacy/ as the same route, but a plain object lookup
+       does not — so /privacy/ silently fell through to the site default and
+       the tab stopped saying Privacy. Found while using the trailing-slash
+       form as a workaround for a stale edge cache on the bare path, which is
+       exactly the sort of URL a real visitor or a reviewer can arrive on. */
+    const path =
+      pathname.length > 1 && pathname.endsWith("/")
+        ? pathname.slice(0, -1)
+        : pathname;
+
+    const exact = EXACT[path];
     if (exact) {
       document.title = exact;
       return;
     }
-    const prefix = PREFIX.find(([p]) => pathname.startsWith(p));
+    const prefix = PREFIX.find(([p]) => path.startsWith(p));
     document.title = prefix ? prefix[1] : SITE;
   }, [pathname]);
 
