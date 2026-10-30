@@ -41,8 +41,30 @@ type Listing = {
   brand: string | null;
   image_urls: string[] | null;
   rent_price: number | null;
+  rent_window: string | null;
   sharing_price: number | null;
   is_for_borrow: boolean | null;
+};
+
+/**
+ * How the owner priced it. NOT a guess.
+ *
+ * This said "/ week" for every rental, hardcoded. Every rental in the
+ * database is priced per DAY, so the shop window advertised the workout
+ * bench at "$50 / week" when its owner is asking $50 a day — a sevenfold
+ * understatement, on the page that promises "Nothing here is a guess".
+ *
+ * An unrecognised window renders no period at all rather than falling back
+ * to a day, for the reason the app's own rentWindow.ts gives: defaulting to
+ * day is the OVERCHARGING direction, and a wrong price is worse than a
+ * missing one in both directions.
+ */
+const WINDOW_LABEL: Record<string, string> = {
+  day: "a day",
+  weekend: "a weekend",
+  week: "a week",
+  month: "a month",
+  event: "an event",
 };
 
 /**
@@ -74,8 +96,11 @@ function isOffered(it: Listing): boolean {
  * were competing in one grid. Now: rent, buy, or free to borrow.
  */
 function priceLabel(it: Listing): string {
-  if (it.rent_price != null && it.rent_price > 0)
-    return `$${Math.round(it.rent_price)} / week`;
+  if (it.rent_price != null && it.rent_price > 0) {
+    const per = WINDOW_LABEL[(it.rent_window ?? "").toLowerCase()];
+    const amount = `$${Math.round(it.rent_price)}`;
+    return per ? `${amount} ${per}` : amount;
+  }
   if (it.sharing_price != null && it.sharing_price > 0)
     return `$${Math.round(it.sharing_price)} to buy`;
   // Only reachable for rows where isOffered() already returned true, i.e.
@@ -96,7 +121,7 @@ export function RealListings() {
     (async () => {
       const { data, error } = await supabase
         .from("inventory_items")
-        .select("id, name, brand, image_urls, rent_price, sharing_price, is_for_borrow")
+        .select("id, name, brand, image_urls, rent_price, rent_window, sharing_price, is_for_borrow")
         .eq("sharing_level", "public")
         .eq("is_available_for_sharing", true)
         .not("is_sold", "is", true)
@@ -163,8 +188,8 @@ export function RealListings() {
             On Loop <span className="italic" style={{ color: CLARET }}>right now</span>
           </h2>
           <p className="max-w-sm text-sm" style={{ color: MUTED }}>
-            Real things, in real FiDi apartments, photographed by the people
-            who own them. No stock, nothing generated.
+            Real things in real apartments, photographed by the people who
+            own them. No stock, nothing generated.
           </p>
         </div>
 
