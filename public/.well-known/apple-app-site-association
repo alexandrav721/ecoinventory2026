@@ -1,0 +1,18 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "S44ULLRAB9.com.celebrateloop.app",
+        "appIDs": ["S44ULLRAB9.com.celebrateloop.app"],
+        "paths": ["/invite/*"],
+        "components": [
+          {
+            "/": "/invite/*",
+            "comment": "Referral links from the app open in Loop, not Safari."
+          }
+        ]
+      }
+    ]
+  }
+}
