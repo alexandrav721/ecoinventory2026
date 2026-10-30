@@ -1,15 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Apple, Phone, ArrowLeft } from "lucide-react";
 import { z } from "zod";
 import { useTranslation } from "react-i18next";
-import { CHAMPAGNE, CLARET, HAIRLINE, INK, LoopLockup, LoopMark, MUTED } from "@/components/brand";
+import { CLARET, FAINT, HAIRLINE, INK, LoopLockup, LoopMark, MUTED, PAPER } from "@/components/brand";
 
 const authSchema = z.object({
   email: z.string().trim().email("Please enter a valid email address").max(255, "Email must be less than 255 characters"),
@@ -25,6 +21,13 @@ const authSchema = z.object({
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
+  /* The address we just sent a confirmation link to. Non-null means "show
+     the check-your-email screen". Signing up used to toast "Account
+     created." and navigate straight to /dashboard — but this project has
+     email confirmation ON (mailer_autoconfirm is false), so there is no
+     session yet and the new member landed on a dashboard they could not
+     use, never having been told an email was on its way. */
+  const [sentTo, setSentTo] = useState<string | null>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
@@ -126,7 +129,7 @@ const Auth = () => {
         toast.success(t('auth.signInSuccess'));
         navigate("/dashboard");
       } else {
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
@@ -137,8 +140,15 @@ const Auth = () => {
           },
         });
         if (error) throw error;
-        toast.success(t('auth.signUpSuccess'));
-        navigate("/dashboard");
+        /* Supabase returns a session only when confirmation is switched
+           off. Branch on the fact rather than on an assumption, so this
+           keeps working whichever way that setting is left. */
+        if (data.session) {
+          toast.success(t('auth.signUpSuccess'));
+          navigate("/dashboard");
+        } else {
+          setSentTo(email);
+        }
       }
     } catch (error: any) {
       /* "Invalid login credentials" is what Supabase says both when the
@@ -233,311 +243,369 @@ const Auth = () => {
     }
   };
 
-  return (
-    <div className="min-h-screen grid lg:grid-cols-2 bg-background">
-      {/* THE LEFT PANEL USED TO BE A STOCK PHOTOGRAPH — a woman holding a
-          camera and a plant, under a black gradient, with "§ 01 — Welcome"
-          over it. Two problems: literal stock photography is the exact
-          thing that came back as "kind of gross", and it belonged to the
-          old eco-inventory product, not to Loop.
+  /* ── Shared field + button styling ──────────────────────────────────
+     Deliberately not the shadcn <Card> / <Input> / <Button> defaults. This
+     page is the front door's doorhandle, and it was wearing a different
+     design system: a bordered card floating on grey, a segmented
+     Email|Phone control, and — worst — a left panel still advertising "You
+     already own four umbrellas" and the colour tiles, both of which were
+     cut from the landing page. The site and its sign-in page were selling
+     two different products.
 
-          It is now built the way the landing page is built: colour from
-          the objects themselves. Each tile is a thing in the colour that
-          thing actually is, so the panel is cheerful without an asset that
-          can be badly chosen. Nothing here is a photo, an illustration or
-          a gradient. */}
-      <div
-        className="relative hidden lg:flex lg:flex-col lg:justify-between overflow-hidden p-10"
-        style={{ background: CHAMPAGNE }}
-      >
-        <div className="flex items-center justify-between">
-          <Link to="/" className="inline-flex items-center gap-2.5 hover:opacity-70">
-            <LoopLockup size={30} type={24} />
+     Same vocabulary as the landing page now: paper ground, one centred
+     column, hairline rounded fields, an ink pill, Instrument Serif italic
+     for the one line that carries the page. */
+  const fieldCls =
+    "w-full rounded-full px-5 py-3.5 text-base outline-none transition-colors focus:border-current";
+  const fieldStyle = {
+    background: PAPER,
+    color: INK,
+    border: `1px solid ${HAIRLINE}`,
+  } as const;
+  const pillCls =
+    "w-full inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 text-base font-semibold transition-opacity hover:opacity-90 disabled:opacity-60";
+
+  const label = (htmlFor: string, text: string) => (
+    <label
+      htmlFor={htmlFor}
+      className="block text-[13px] font-semibold mb-1.5"
+      style={{ color: MUTED }}
+    >
+      {text}
+    </label>
+  );
+
+  return (
+    <div className="min-h-screen" style={{ background: PAPER, color: INK }}>
+      <header className="px-5 py-5">
+        <div className="mx-auto flex max-w-5xl items-center justify-between">
+          <Link to="/" className="inline-flex items-center hover:opacity-70">
+            <LoopLockup size={28} type={22} />
           </Link>
           <Link
             to="/"
-            className="inline-flex items-center gap-2 text-sm hover:opacity-70"
+            className="inline-flex items-center gap-1.5 text-sm hover:opacity-70"
             style={{ color: MUTED }}
           >
             <ArrowLeft className="w-4 h-4" />
-            {t('nav.home')}
+            {t("nav.home")}
           </Link>
         </div>
+      </header>
 
-        <div className="max-w-md">
-          <h2
-            className="text-[clamp(2.2rem,3.6vw,3.2rem)] leading-[1.05]"
-            style={{ fontFamily: "Instrument Serif, Georgia, serif", color: INK }}
-          >
-            You already own
-            <br />
-            <span className="italic" style={{ color: CLARET }}>
-              four umbrellas
-            </span>
-            .
-          </h2>
-          <p className="mt-5 text-[15px] leading-relaxed" style={{ color: "#4A4540" }}>
-            Loop remembers what you have, so you stop buying it twice.
-          </p>
-
-          {/* A quiet echo of the landing page's pile — same idea, smaller,
-              and it reads as the same product rather than a second one. */}
-          <div className="mt-9 grid grid-cols-4 gap-2" style={{ maxWidth: 360 }}>
-            {[
-              ["Dutch oven", "#C65A33", "#FFFFFF"],
-              ["Stand mixer", "#E8C45C", INK],
-              ["Steam cleaner", "#2E6F6B", "#FFFFFF"],
-              ["Throw", "#E7DCC6", INK],
-              ["Espresso", "#9FC2D6", INK],
-              ["Suitcase", "#3E4C7A", "#FFFFFF"],
-              ["Drill", "#D9823B", "#FFFFFF"],
-              ["Tent", "#4F7F4A", "#FFFFFF"],
-            ].map(([name, fill, ink]) => (
-              <div
-                key={name}
-                className="rounded-xl p-2"
-                style={{ background: fill, aspectRatio: "1 / 1.12" }}
+      <main className="mx-auto w-full max-w-sm px-5 pb-20 pt-6 sm:pt-12">
+        {sentTo ? (
+          /* ── Check your email ──────────────────────────────────────────
+             The screen that did not exist. Signing up navigated to
+             /dashboard with no session, so the one thing a new member
+             needed to know — that a link is on its way — was never said. */
+          <div className="text-center">
+            <div className="flex justify-center">
+              <LoopMark size={44} />
+            </div>
+            <h1
+              className="mt-7 text-[30px] italic leading-tight"
+              style={{ fontFamily: "Instrument Serif, Georgia, serif" }}
+            >
+              Check your email
+            </h1>
+            <p
+              className="mt-4 text-[15px] leading-relaxed"
+              style={{ color: "#4A4540" }}
+            >
+              We sent a link to <strong style={{ color: INK }}>{sentTo}</strong>.
+              Tap it and you're in. It can take a minute, and it sometimes
+              lands in spam.
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                setSentTo(null);
+                setIsLogin(true);
+              }}
+              className="mt-8 text-sm font-semibold hover:opacity-70"
+              style={{ color: CLARET }}
+            >
+              Back to sign in
+            </button>
+          </div>
+        ) : (
+          <>
+            <div className="text-center">
+              <div className="flex justify-center">
+                <LoopMark size={44} />
+              </div>
+              <h1
+                className="mt-7 text-[30px] italic leading-tight"
+                style={{ fontFamily: "Instrument Serif, Georgia, serif" }}
               >
-                <p
-                  className="text-[10px] font-semibold leading-tight"
-                  style={{ color: ink }}
-                >
-                  {name}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
+                {isForgotPassword
+                  ? "Reset your password"
+                  : isLogin
+                    ? t("auth.welcomeBack")
+                    : "Join Loop"}
+              </h1>
+              <p className="mt-3 text-[15px]" style={{ color: MUTED }}>
+                {isForgotPassword
+                  ? "We'll email you a link to set a new one."
+                  : isLogin
+                    ? "Sign in to see what's near you."
+                    : "Borrow, lend and rent on your block."}
+              </p>
+            </div>
 
-        <p className="text-xs" style={{ color: MUTED }}>
-          Borrow, lend and rent on your block. FiDi, New York.
-        </p>
-      </div>
-
-      {/* Form panel */}
-      <div className="flex flex-col items-center justify-center px-4 py-8 lg:py-12 bg-gradient-subtle">
-        <div className="w-full max-w-md mb-4 lg:hidden">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            {t('nav.home')}
-          </Link>
-        </div>
-      {/* No shadow: index.css calls blurry drop shadows a 2014 card
-          metaphor that reads cheap. A hairline does the same job. */}
-      <Card
-        className="w-full max-w-md shadow-none"
-        style={{ border: `1px solid ${HAIRLINE}` }}
-      >
-        <CardHeader className="text-center space-y-2">
-          <div className="flex justify-center mb-5">
-            {/* The real Loop mark. This was a leaf glyph in a green
-                gradient circle — the old eco-inventory badge, a different
-                company's logo on Loop's sign-in page. */}
-            <LoopMark size={48} />
-          </div>
-          <CardTitle
-            className="text-[28px] font-normal italic leading-tight"
-            style={{ fontFamily: "Instrument Serif, Georgia, serif" }}
-          >
-            {isForgotPassword ? "Reset your password" : isLogin ? t('auth.welcomeBack') : t('auth.joinEco')}
-          </CardTitle>
-          <CardDescription>
-            {isForgotPassword
-              ? "Enter your email and we'll send you a link to reset your password."
-              : isLogin
-              ? t('auth.signInDesc')
-              : t('auth.createAccountDesc')}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {isForgotPassword ? (
-            <>
-              <form onSubmit={handleForgotPassword} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="reset-email">{t('auth.email')}</Label>
-                  <Input
-                    id="reset-email"
-                    type="email"
-                    placeholder="you@example.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
-                </div>
-                <Button type="submit" className="w-full" disabled={loading}>
-                  {loading ? t('auth.pleaseWait') : "Send reset link"}
-                </Button>
-              </form>
-              <div className="mt-4 text-center text-sm">
-                <button
-                  type="button"
-                  onClick={() => setIsForgotPassword(false)}
-                  className="text-primary hover:underline"
-                >
-                  Back to sign in
-                </button>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="flex gap-2 mb-4">
-                <Button
-                  type="button"
-                  variant={!usePhone ? "default" : "outline"}
-                  onClick={() => setUsePhone(false)}
-                  className="flex-1"
-                >
-                  Email
-                </Button>
-                <Button
-                  type="button"
-                  variant={usePhone ? "default" : "outline"}
-                  onClick={() => setUsePhone(true)}
-                  className="flex-1"
-                >
-                  <Phone className="w-4 h-4 mr-2" />
-                  Phone
-                </Button>
-              </div>
-
-              {usePhone ? (
-                <form onSubmit={handlePhoneAuth} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="phone">Phone Number</Label>
-                    <Input
-                      id="phone"
-                      type="tel"
-                      placeholder="+1234567890"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <Button type="submit" className="w-full" disabled={loading}>
-                    {loading ? t('auth.pleaseWait') : 'Send Code'}
-                  </Button>
-                </form>
-              ) : (
-                <form onSubmit={handleAuth} className="space-y-4">
-                  {!isLogin && (
-                    <div className="space-y-2">
-                      <Label htmlFor="fullName">{t('auth.fullName')}</Label>
-                      <Input
-                        id="fullName"
-                        type="text"
-                        placeholder="John Doe"
-                        value={fullName}
-                        onChange={(e) => setFullName(e.target.value)}
-                        required={!isLogin}
-                      />
-                    </div>
-                  )}
-                  <div className="space-y-2">
-                    <Label htmlFor="email">{t('auth.email')}</Label>
-                    <Input
-                      id="email"
+            {isForgotPassword ? (
+              <>
+                <form onSubmit={handleForgotPassword} className="mt-8 space-y-4">
+                  <div>
+                    {label("reset-email", t("auth.email"))}
+                    <input
+                      id="reset-email"
                       type="email"
-                      placeholder="you@example.com"
+                      autoComplete="email"
+                      placeholder="you@email.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
+                      className={fieldCls}
+                      style={fieldStyle}
                     />
                   </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <Label htmlFor="password">{t('auth.password')}</Label>
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className={pillCls}
+                    style={{ backgroundColor: INK, color: PAPER }}
+                  >
+                    {loading ? t("auth.pleaseWait") : "Send reset link"}
+                  </button>
+                </form>
+                <div className="mt-6 text-center">
+                  <button
+                    type="button"
+                    onClick={() => setIsForgotPassword(false)}
+                    className="text-sm font-semibold hover:opacity-70"
+                    style={{ color: CLARET }}
+                  >
+                    Back to sign in
+                  </button>
+                </div>
+              </>
+            ) : usePhone ? (
+              <>
+                <form onSubmit={handlePhoneAuth} className="mt-8 space-y-4">
+                  <div>
+                    {label("phone", "Phone number")}
+                    <input
+                      id="phone"
+                      type="tel"
+                      autoComplete="tel"
+                      placeholder="+1 555 000 0000"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      required
+                      className={fieldCls}
+                      style={fieldStyle}
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className={pillCls}
+                    style={{ backgroundColor: INK, color: PAPER }}
+                  >
+                    {loading ? t("auth.pleaseWait") : "Send code"}
+                  </button>
+                </form>
+                <div className="mt-6 text-center">
+                  <button
+                    type="button"
+                    onClick={() => setUsePhone(false)}
+                    className="text-sm font-semibold hover:opacity-70"
+                    style={{ color: CLARET }}
+                  >
+                    Use email instead
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <form onSubmit={handleAuth} className="mt-8 space-y-4">
+                  {!isLogin && (
+                    <div>
+                      {label("fullName", t("auth.fullName"))}
+                      <input
+                        id="fullName"
+                        type="text"
+                        autoComplete="name"
+                        placeholder="Your name"
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
+                        required={!isLogin}
+                        className={fieldCls}
+                        style={fieldStyle}
+                      />
+                    </div>
+                  )}
+                  <div>
+                    {label("email", t("auth.email"))}
+                    <input
+                      id="email"
+                      type="email"
+                      autoComplete="email"
+                      placeholder="you@email.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      className={fieldCls}
+                      style={fieldStyle}
+                    />
+                  </div>
+                  <div>
+                    <div className="flex items-baseline justify-between">
+                      {label("password", t("auth.password"))}
                       {isLogin && (
                         <button
                           type="button"
                           onClick={() => setIsForgotPassword(true)}
-                          className="text-xs text-primary hover:underline"
+                          className="text-[13px] hover:opacity-70"
+                          style={{ color: CLARET }}
                         >
                           Forgot password?
                         </button>
                       )}
                     </div>
-                    <Input
+                    <input
                       id="password"
                       type="password"
+                      autoComplete={isLogin ? "current-password" : "new-password"}
                       placeholder="••••••••"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
-                      minLength={6}
+                      minLength={8}
+                      className={fieldCls}
+                      style={fieldStyle}
                     />
+                    {!isLogin && (
+                      /* Said nothing, then rejected the password after the
+                         fact. authSchema wants 8+ with an upper, a lower
+                         and a number — so say that before they type. */
+                      <p className="mt-2 text-xs" style={{ color: MUTED }}>
+                        At least 8 characters, with a capital, a lowercase
+                        and a number.
+                      </p>
+                    )}
                   </div>
-                  <Button type="submit" className="w-full" disabled={loading}>
-                    {loading ? t('auth.pleaseWait') : isLogin ? t('auth.signIn') : t('auth.signUp')}
-                  </Button>
-                </form>
-              )}
-
-              <div className="relative my-6">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background px-2 text-muted-foreground">
-                    Or continue with
-                  </span>
-                </div>
-              </div>
-
-              <div className="grid gap-3">
-                {providerReady('google') && (
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => handleSocialAuth('google')}
-                  disabled={loading}
-                  className="w-full"
-                >
-                  <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
-                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                  </svg>
-                  {isLogin ? 'Sign in' : 'Sign up'} with Google
-                </Button>
-                )}
-                {/* Only when the project actually has Apple configured.
-                    This rendered unconditionally while the website's
-                    Supabase project had no Apple provider at all, so it was
-                    a button that could only ever fail. */}
-                {providerReady('apple') && (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => handleSocialAuth('apple')}
+                  <button
+                    type="submit"
                     disabled={loading}
-                    className="w-full"
+                    className={pillCls}
+                    style={{ backgroundColor: INK, color: PAPER }}
                   >
-                    <Apple className="w-5 h-5 mr-2" />
-                    {isLogin ? 'Sign in' : 'Sign up'} with Apple
-                  </Button>
-                )}
-              </div>
+                    {loading
+                      ? t("auth.pleaseWait")
+                      : isLogin
+                        ? t("auth.signIn")
+                        : "Create account"}
+                  </button>
+                </form>
 
-              <div className="mt-4 text-center text-sm">
-                <button
-                  type="button"
-                  onClick={() => setIsLogin(!isLogin)}
-                  className="text-primary hover:underline"
-                >
-                  {isLogin
-                    ? t('auth.noAccount')
-                    : t('auth.haveAccount')}
-                </button>
-              </div>
-            </>
-          )}
-        </CardContent>
-      </Card>
-      </div>
+                {providerReady("google") || providerReady("apple") ? (
+                  <div className="my-7 flex items-center gap-4">
+                    <span className="h-px flex-1" style={{ background: HAIRLINE }} />
+                    <span className="text-xs" style={{ color: FAINT }}>
+                      or
+                    </span>
+                    <span className="h-px flex-1" style={{ background: HAIRLINE }} />
+                  </div>
+                ) : (
+                  <div className="h-7" />
+                )}
+
+                <div className="space-y-3">
+                  {providerReady("google") && (
+                    <button
+                      type="button"
+                      onClick={() => handleSocialAuth("google")}
+                      disabled={loading}
+                      className={pillCls}
+                      style={{
+                        backgroundColor: PAPER,
+                        color: INK,
+                        border: `1px solid ${HAIRLINE}`,
+                      }}
+                    >
+                      <svg className="w-5 h-5" viewBox="0 0 24 24" aria-hidden>
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                      </svg>
+                      Continue with Google
+                    </button>
+                  )}
+                  {/* Only when the project actually has Apple configured —
+                      this used to render unconditionally, so it was a
+                      button that could only ever fail. */}
+                  {providerReady("apple") && (
+                    <button
+                      type="button"
+                      onClick={() => handleSocialAuth("apple")}
+                      disabled={loading}
+                      className={pillCls}
+                      style={{
+                        backgroundColor: PAPER,
+                        color: INK,
+                        border: `1px solid ${HAIRLINE}`,
+                      }}
+                    >
+                      <Apple className="w-5 h-5" />
+                      Continue with Apple
+                    </button>
+                  )}
+                </div>
+
+                <div className="mt-8 space-y-3 text-center">
+                  <button
+                    type="button"
+                    onClick={() => setIsLogin(!isLogin)}
+                    className="text-sm hover:opacity-70"
+                    style={{ color: MUTED }}
+                  >
+                    {isLogin ? (
+                      <>
+                        New here?{" "}
+                        <span className="font-semibold" style={{ color: CLARET }}>
+                          Create an account
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        Already on Loop?{" "}
+                        <span className="font-semibold" style={{ color: CLARET }}>
+                          Sign in
+                        </span>
+                      </>
+                    )}
+                  </button>
+                  <div>
+                    <button
+                      type="button"
+                      onClick={() => setUsePhone(true)}
+                      className="inline-flex items-center gap-1.5 text-[13px] hover:opacity-70"
+                      style={{ color: FAINT }}
+                    >
+                      <Phone className="w-3.5 h-3.5" />
+                      Use a phone number instead
+                    </button>
+                  </div>
+                </div>
+              </>
+            )}
+          </>
+        )}
+      </main>
     </div>
   );
 };
