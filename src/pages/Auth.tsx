@@ -367,7 +367,7 @@ const Auth = () => {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
-                      className={fieldCls}
+                      className={`loop-field ${fieldCls}`}
                       style={fieldStyle}
                     />
                   </div>
@@ -404,7 +404,7 @@ const Auth = () => {
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       required
-                      className={fieldCls}
+                      className={`loop-field ${fieldCls}`}
                       style={fieldStyle}
                     />
                   </div>
@@ -442,7 +442,7 @@ const Auth = () => {
                         value={fullName}
                         onChange={(e) => setFullName(e.target.value)}
                         required={!isLogin}
-                        className={fieldCls}
+                        className={`loop-field ${fieldCls}`}
                         style={fieldStyle}
                       />
                     </div>
@@ -457,7 +457,7 @@ const Auth = () => {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
-                      className={fieldCls}
+                      className={`loop-field ${fieldCls}`}
                       style={fieldStyle}
                     />
                   </div>
@@ -484,7 +484,7 @@ const Auth = () => {
                       onChange={(e) => setPassword(e.target.value)}
                       required
                       minLength={8}
-                      className={fieldCls}
+                      className={`loop-field ${fieldCls}`}
                       style={fieldStyle}
                     />
                     {!isLogin && (

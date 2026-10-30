@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-label="Loop">
+  <!-- Loop's actual mark, same geometry as src/components/brand.tsx and the
+       iOS icon. It replaces public/favicon.ico, which was a 73x74 PNG
+       mislabelled as an .ico and was Lovable's logo: an orange-to-purple
+       gradient heart, in colours that appear nowhere in this palette, on a
+       brand whose own stylesheet says the app has no gradients. -->
+  <rect width="1024" height="1024" rx="230" fill="#8C2E48"/>
+  <path d="M 805 405 A 312 312 0 1 1 619 219" fill="none" stroke="#F7F2EA"
+        stroke-width="30" stroke-linecap="round"/>
+  <path d="M 380 326 L 380 698 L 658 698" fill="none" stroke="#FFFFFF"
+        stroke-width="88" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

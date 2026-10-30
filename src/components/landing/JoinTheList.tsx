@@ -150,7 +150,7 @@ export function JoinTheList({ dark = false }: { dark?: boolean }) {
             if (state.phase === "error") setState({ phase: "idle" });
           }}
           aria-invalid={state.phase === "error"}
-          className="min-w-0 flex-1 rounded-full px-5 py-3.5 text-base outline-none transition-colors focus:border-current"
+          className="loop-field min-w-0 flex-1 rounded-full px-5 py-3.5 text-base outline-none transition-colors"
           style={{
             background: dark ? "rgba(255,255,255,0.08)" : PAPER,
             color: ink,

@@ -275,3 +275,30 @@ input.loop-rate {
   -moz-appearance: textfield;
   appearance: textfield;
 }
+
+/* ── Keyboard focus, and the selection colour ─────────────────────────────
+ *
+ * Both fields on the public site were invisible to a keyboard. The inputs
+ * carried the Tailwind classes `outline-none ... focus:border-current`
+ * alongside an INLINE `border: 1px solid #E5E1DC`. An inline declaration
+ * beats a class, so border-colour was identical focused and unfocused and
+ * the outline had been removed — a WCAG 2.4.7 failure on the one action on
+ * the landing page and on every field of the sign-in page.
+ *
+ * Fixed with an outline rather than a border change, because an outline
+ * does not shift layout and cannot be overridden by the inline border.
+ * :focus-visible, so a mouse click does not draw a ring but Tab does.
+ * Inline styles cannot express either of these, which is why both live
+ * here. */
+.loop-field:focus-visible {
+  outline: 2px solid #8c2e48;
+  outline-offset: 2px;
+}
+
+/* Dragging across the headline used to flash macOS system blue — a colour
+ * that appears nowhere in this brand. This is claret at the tint where
+ * 16px ink text still clears AA on it. */
+::selection {
+  background: #f7d9e0;
+  color: #1b1917;
+}
