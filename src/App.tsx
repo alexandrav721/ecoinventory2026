@@ -7,7 +7,6 @@ import { PageTitle } from "@/components/PageTitle";
 import { useEffect, useState } from "react";
 import { DemoProvider, useDemo } from "@/contexts/DemoContext";
 import { supabase } from "@/integrations/supabase/client";
-import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import ResetPassword from "./pages/ResetPassword";
 import Dashboard from "./pages/Dashboard";
