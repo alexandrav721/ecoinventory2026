@@ -34,46 +34,59 @@ export default function People() {
 
   useEffect(() => {
     (async () => {
+      /* This page used to bounce signed-out visitors straight to /auth,
+         which made it the second dead end on a site whose landing page
+         says "browse freely" — /community links here as "find people to
+         follow", so one click out of the marketplace hit a login wall.
+         Nothing on this page needs an account to RENDER: the personalised
+         parts (your own row, your friends, your blocks, the follow button)
+         simply have nothing to say to a stranger, and every one of them is
+         already null-guarded. */
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        navigate("/auth");
-        return;
-      }
-      const { data: myProfile } = await supabase
-        .from("profiles")
-        .select("id, city")
-        .eq("id", user.id)
-        .single();
-      setMe({ id: user.id, city: myProfile?.city ?? null });
+      const uid = user?.id ?? null;
 
-      // Friendships (mutual accepted)
-      const { data: fr } = await supabase
-        .from("friendships")
-        .select("user_id, friend_id, status")
-        .or(`user_id.eq.${user.id},friend_id.eq.${user.id}`)
-        .eq("status", "accepted");
       const fIds = new Set<string>();
-      (fr ?? []).forEach((r: any) => {
-        fIds.add(r.user_id === user.id ? r.friend_id : r.user_id);
-      });
-      setFriendIds(fIds);
+      const mIds = new Set<string>();
 
-      /* Blocks, for the item counts below. The website had never read this
-         table, so somebody blocked on the phone still had their things
-         counted here. */
-      const { data: muteRows } = await (supabase as any)
-        .from("mutes")
-        .select("muted_id")
-        .eq("muter_id", user.id);
-      const mIds = new Set<string>(
-        ((muteRows ?? []) as { muted_id: string }[]).map((r) => r.muted_id)
-      );
+      if (uid) {
+        const { data: myProfile } = await supabase
+          .from("profiles")
+          .select("id, city")
+          .eq("id", uid)
+          .single();
+        setMe({ id: uid, city: myProfile?.city ?? null });
+
+        // Friendships (mutual accepted)
+        const { data: fr } = await supabase
+          .from("friendships")
+          .select("user_id, friend_id, status")
+          .or(`user_id.eq.${uid},friend_id.eq.${uid}`)
+          .eq("status", "accepted");
+        (fr ?? []).forEach((r: any) => {
+          fIds.add(r.user_id === uid ? r.friend_id : r.user_id);
+        });
+        setFriendIds(fIds);
+
+        /* Blocks, for the item counts below. The website had never read
+           this table, so somebody blocked on the phone still had their
+           things counted here. */
+        const { data: muteRows } = await (supabase as any)
+          .from("mutes")
+          .select("muted_id")
+          .eq("muter_id", uid);
+        ((muteRows ?? []) as { muted_id: string }[]).forEach((r) =>
+          mIds.add(r.muted_id)
+        );
+      }
 
       // All other profiles
       const { data: all } = await supabase
         .from("profiles")
         .select("id, public_display_name, full_name, public_avatar_url, avatar_url, city, state")
-        .neq("id", user.id)
+        /* A signed-out visitor has no row of their own to leave out.
+           PostgREST needs a real uuid here, so the filter is applied only
+           when there is one. */
+        .neq("id", uid ?? "00000000-0000-0000-0000-000000000000")
         .limit(200);
 
       const ids = (all ?? []).map((p: any) => p.id);
