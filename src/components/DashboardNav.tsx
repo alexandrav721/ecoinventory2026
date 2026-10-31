@@ -165,11 +165,15 @@ const DashboardNav = () => {
             asChild
             variant="ghost"
             size="sm"
-            className={`${NAV_BASE} ${location.pathname === "/how-it-works" ? NAV_ON : NAV_OFF}`}
+            className={`${NAV_BASE} ${location.pathname === "/support" ? NAV_ON : NAV_OFF}`}
           >
-            <Link to="/how-it-works">
+            {/* Was /how-it-works, which is now a redirect to the landing
+                page — and the landing page sends a signed-in member on to
+                /home, so this nav item would have bounced them in a small
+                circle. /support is the real, maintained explanation. */}
+            <Link to="/support">
               <Info className="w-3.5 h-3.5" />
-              <span>How it works</span>
+              <span>Help</span>
             </Link>
           </Button>
         </nav>

@@ -86,7 +86,19 @@ const App = () => (
           <Routes>
             <Route path="/" element={<RootRoute />} />
             <Route path="/marketplace" element={<Community />} />
-            <Route path="/welcome" element={<Index />} />
+            {/* /welcome and /how-it-works were a SECOND landing page —
+                "Buy less. Access more." over twelve colour tiles — and the
+                twelve things on it do not exist. Dutch oven, stand mixer,
+                steam cleaner, camping tent, sewing machine: none is in the
+                database, and each carried an invented price ("$9 /
+                weekend", "$12 / weekend"). A publicly reachable page of
+                fabricated listings, one click from a page that promises
+                "Nothing here is a guess", is not a styling problem.
+
+                The real landing page now does this job and does it with
+                real inventory, so both paths go there. Index.tsx is left on
+                disk, unrouted, rather than deleted. */}
+            <Route path="/welcome" element={<Navigate to="/" replace />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/dashboard" element={<Dashboard />} />
@@ -115,7 +127,7 @@ const App = () => (
             <Route path="/articles/organizing-inventory" element={<OrganizingInventory />} />
             <Route path="/articles/item-depreciation" element={<ItemDepreciation />} />
             <Route path="/articles/building-community" element={<BuildingSharingCommunity />} />
-            <Route path="/how-it-works" element={<Index />} />
+            <Route path="/how-it-works" element={<Navigate to="/" replace />} />
             <Route path="/about" element={<Navigate to="/how-it-works" replace />} />
             <Route path="/demo" element={<Demo />} />
             <Route path="/marketplace/item/:id" element={<MarketplaceItem />} />
