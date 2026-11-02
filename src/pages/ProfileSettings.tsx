@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import AppHeader from "@/components/AppHeader";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { ChangePassword } from "@/components/dashboard/ChangePassword";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -356,6 +357,8 @@ const ProfileSettings = () => {
               </div>
             </CardContent>
           </Card>
+
+          <ChangePassword />
         </div>
       </div>
     </div>
