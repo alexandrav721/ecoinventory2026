@@ -103,8 +103,8 @@ const OPTIONAL: Row[] = [
   },
   {
     who: "OpenStreetMap",
-    what: "Your postcode, if you set your area by postcode on the website.",
-    when: "Setting your area",
+    what: "Your IP address and browser, because the map on our home page is drawn with their map tiles. Also your postcode, if you set your area by postcode on the website. The map itself is built from locations rounded to the middle of a half-mile square before they leave our database, so it never shows where anybody actually is.",
+    when: "Visiting this site; setting your area",
   },
 ];
 

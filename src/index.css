@@ -302,3 +302,42 @@ input.loop-rate {
   background: #f7d9e0;
   color: #1b1917;
 }
+
+/* ── The map's basemap ────────────────────────────────────────────────────
+ *
+ * A default OpenStreetMap basemap is the most template-looking object that
+ * could be placed on this site: colourful, busy, and instantly readable as
+ * an embed. Desaturating it takes the geography down to paper and ink so it
+ * reads as context rather than decoration, and leaves claret as the only
+ * colour on the map.
+ *
+ * A filter rather than a greyscale tile provider on purpose — switching
+ * provider would mean adding another company that receives every visitor's
+ * IP address, and OpenStreetMap is already named in the privacy policy. */
+.loop-tiles {
+  filter: grayscale(1) contrast(0.82) brightness(1.08);
+}
+
+/* Leaflet's own chrome, in Loop's palette rather than its default blue. */
+.leaflet-container {
+  font-family: Archivo, system-ui, sans-serif;
+}
+.leaflet-control-attribution {
+  background: rgba(255, 255, 255, 0.86) !important;
+  font-size: 10px !important;
+  color: #5f5a54 !important;
+}
+.leaflet-control-attribution a {
+  color: #8c2e48 !important;
+}
+.leaflet-bar a {
+  color: #1b1917 !important;
+  border-radius: 0 !important;
+}
+.leaflet-tooltip {
+  border: 1px solid #e5e1dc !important;
+  border-radius: 2px !important;
+  box-shadow: none !important;
+  color: #1b1917 !important;
+  font-size: 13px !important;
+}

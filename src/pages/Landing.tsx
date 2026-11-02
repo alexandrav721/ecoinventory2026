@@ -17,6 +17,7 @@ import {
   useOfferedListings,
 } from "@/components/landing/RealListings";
 import { Ledger } from "@/components/landing/Ledger";
+import { ZoneMap } from "@/components/landing/ZoneMap";
 import { displayText } from "@/lib/displayText";
 import { SUPPORT_EMAIL } from "@/lib/contact";
 
@@ -287,6 +288,13 @@ const Landing = () => {
 
       {/* ─── §2 THE LEDGER ───────────────────────────────────────────── */}
       <Ledger />
+
+      {/* ─── §2b AND WHERE THAT IS ────────────────────────────────────
+          Sits directly after the ledger because its heading hinges off it:
+          "Where Loop actually is, today." then "And where that is."
+          Renders nothing until STEP-8's function exists and returns cells,
+          so the page is unchanged until Alexandra runs it. */}
+      <ZoneMap />
 
       {/* ─── §3 EVERYTHING ON LOOP ───────────────────────────────────── */}
       <RealListings
