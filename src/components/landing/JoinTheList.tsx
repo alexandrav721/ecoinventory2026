@@ -1,5 +1,6 @@
 import { useId, useState } from "react";
 import { CLARET, HAIRLINE, INK, MUTED, PAPER } from "@/components/brand";
+import { APP_LINK, APP_STORE_URL } from "@/components/landing/appLinks";
 
 /**
  * The waitlist signup — one email in, nothing readable back out.
@@ -54,7 +55,20 @@ type State =
   | { phase: "done" }
   | { phase: "error"; message: string };
 
-export function JoinTheList({ dark = false }: { dark?: boolean }) {
+export function JoinTheList({
+  dark = false,
+  source = "site",
+}: {
+  dark?: boolean;
+  /** Which position on the page this form is — "hero" or "closing".
+   *  Positional, not descriptive, so the label can change without the
+   *  stored value changing meaning. It answers the one question worth
+   *  asking before FiDi opens: does this page convert on the promise at
+   *  the top or on the argument at the bottom?
+   *  `waitlist.source` is bare text with no CHECK, so a new value cannot
+   *  break the insert. */
+  source?: string;
+}) {
   const id = useId(); // two of these render on one page — ids must differ
   const [email, setEmail] = useState("");
   const [honeypot, setHoneypot] = useState("");
@@ -98,7 +112,7 @@ export function JoinTheList({ dark = false }: { dark?: boolean }) {
           // the inserted row would turn a successful write into a failure.
           Prefer: "return=minimal",
         },
-        body: JSON.stringify({ email: value, source: "site" }),
+        body: JSON.stringify({ email: value, source }),
       });
       if (r.ok || r.status === 409) {
         setState({ phase: "done" });
@@ -118,14 +132,37 @@ export function JoinTheList({ dark = false }: { dark?: boolean }) {
 
   if (state.phase === "done") {
     return (
-      <p
-        className="text-[15px] leading-relaxed"
-        style={{ color: dark ? PAPER : "#4A4540" }}
-        role="status"
-      >
-        Thank you — you're on the list. We'll be in touch when Loop opens near
-        you.
-      </p>
+      <div role="status">
+        <p
+          className="text-[17px] font-semibold"
+          style={{ color: dark ? PAPER : INK }}
+        >
+          You're on the list.
+        </p>
+        {APP_LINK && (
+          <p className="mt-3">
+            <a
+              href={APP_LINK}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[15px] font-semibold hover:opacity-70"
+              style={{ color: CLARET }}
+            >
+              {APP_STORE_URL
+                ? "Get Loop on the App Store \u2192"
+                : "Install the beta now \u2192"}
+            </a>
+          </p>
+        )}
+        <p
+          className="mt-3 text-[15px] leading-relaxed"
+          style={{ color: dark ? PAPER : "#4A4540" }}
+        >
+          One thing that would help more than anything: tell me your building.
+          Reply to the email when it arrives — the list is how I decide which
+          block turns on next, and one person naming a building moves it up.
+        </p>
+      </div>
     );
   }
 
@@ -178,7 +215,7 @@ export function JoinTheList({ dark = false }: { dark?: boolean }) {
           className="inline-flex shrink-0 items-center justify-center rounded-full px-7 py-3.5 text-base font-semibold transition-opacity hover:opacity-90 disabled:opacity-60"
           style={{ backgroundColor: ink, color: onPaper }}
         >
-          {sending ? "One moment…" : "Join the FiDi list"}
+          {sending ? "One moment…" : APP_STORE_URL ? "Add my building" : "Get it first"}
         </button>
       </form>
 
@@ -196,7 +233,12 @@ export function JoinTheList({ dark = false }: { dark?: boolean }) {
       >
         {state.phase === "error"
           ? state.message
-          : "Free, for iPhone. One email when Loop opens on your block. Nothing else, ever."}
+          : APP_STORE_URL
+            ? "One email when Loop opens on your block. Nothing else, ever."
+            : /* "Free to download", not "Free": Loop Premium is a real paid
+                 tier, and a bare "Free" is the kind of small overclaim the
+                 honesty section forbids. */
+              "Free to download, for iPhone. One email the day it's in the App Store, one when Loop opens on your block. Nothing else, ever."}
       </p>
     </div>
   );

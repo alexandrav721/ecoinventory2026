@@ -189,7 +189,13 @@ function Plate({
 }) {
   const name = displayText(it.name) ?? "Something useful";
   return (
-    <figure className="m-0">
+    /* A door, not decoration. Six real photographs sat here inert while the
+       only way further in was a text link underneath them — so the most
+       touchable thing on the page did nothing when touched.
+       /marketplace/item/:id is outside any auth wrapper, so a signed-out
+       visitor can open one today; auth gates the actions, not the looking. */
+    <figure className="group m-0">
+      <Link to={`/marketplace/item/${it.id}`} className="block">
       <div
         className="w-full overflow-hidden"
         style={{
@@ -209,14 +215,17 @@ function Plate({
         />
       </div>
       <figcaption className="pt-3">
-        <p className="text-[15px] font-semibold leading-tight">{name}</p>
-        <p
-          className="mt-1 text-[13px] font-semibold"
-          style={{ color: CLARET, fontVariantNumeric: "tabular-nums" }}
-        >
-          {priceLabel(it)}
-        </p>
-      </figcaption>
+          <p className="text-[15px] font-semibold leading-tight group-hover:underline">
+            {name}
+          </p>
+          <p
+            className="mt-1 text-[13px] font-semibold"
+            style={{ color: CLARET, fontVariantNumeric: "tabular-nums" }}
+          >
+            {priceLabel(it)}
+          </p>
+        </figcaption>
+      </Link>
     </figure>
   );
 }

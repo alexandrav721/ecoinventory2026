@@ -10,7 +10,8 @@ import {
   MUTED,
   PAPER,
 } from "@/components/brand";
-import { JoinTheList } from "@/components/landing/JoinTheList";
+import { GetTheApp } from "@/components/landing/GetTheApp";
+import { APP_LINK } from "@/components/landing/appLinks";
 import {
   RealListings,
   useOfferedListings,
@@ -57,11 +58,6 @@ import { SUPPORT_EMAIL } from "@/lib/contact";
  * this was designed from said seven things from three people, and by the
  * time it was built the database said eleven from four.
  */
-
-// ── Fill these in ────────────────────────────────────────────────────────
-const APP_STORE_URL = ""; // e.g. "https://apps.apple.com/app/id6772380914"
-const TESTFLIGHT_URL = ""; // optional: public TestFlight link while in beta
-// ─────────────────────────────────────────────────────────────────────────
 
 const MEASURE = 620;
 
@@ -123,25 +119,12 @@ function Prose({ children }: { children: React.ReactNode }) {
 }
 
 /** The one action. A waitlist while there is no listing; a download after. */
-function GetTheApp() {
-  const href = APP_STORE_URL || TESTFLIGHT_URL;
-  if (!href) return <JoinTheList />;
-  return (
-    <a
-      href={href}
-      className="inline-flex items-center justify-center rounded-full px-7 py-4 text-base font-semibold transition-opacity hover:opacity-90"
-      style={{ backgroundColor: INK, color: PAPER }}
-    >
-      {APP_STORE_URL ? "Get Loop — free for iPhone" : "Join the beta"}
-    </a>
-  );
-}
-
 const Landing = () => {
   const offered = useOfferedListings();
   const items = offered?.items ?? null;
   const h1On = useEntrance(0);
   const leadOn = useEntrance(90);
+  const appOn = useEntrance(130);
   const photoOn = useEntrance(160);
 
   /* The hero photograph is whatever is genuinely first on Loop, not a
@@ -181,6 +164,21 @@ const Landing = () => {
           >
             {/* The most important item here: a door into the live product
                 that costs a visitor nothing. */}
+            {/* Conditional on the same constant, so the nav is untouched
+                today and gains a real link the day a URL is pasted in. A nav
+                item reading "Get the app" while nothing can be got would
+                just move the dead-button problem into the menu. */}
+            {APP_LINK && (
+              <a
+                href={APP_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold hover:opacity-70"
+                style={{ color: CLARET }}
+              >
+                Get the app &#8599;
+              </a>
+            )}
             <Link to="/community" className="hover:opacity-70">
               Browse
             </Link>
@@ -228,9 +226,11 @@ const Landing = () => {
               floors up. Ask, walk down, bring it back.
             </p>
 
-            <div className="mt-9" style={{ maxWidth: 460 }}>
-              <GetTheApp />
-            </div>
+            <GetTheApp
+              variant="hero"
+              source="hero"
+              style={{ marginTop: 32, ...enter(appOn) }}
+            />
             <p className="mt-5">
               <Link
                 to="/community"
@@ -397,29 +397,118 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* ─── §6 THE LENDING SIDE ─────────────────────────────────────── */}
+      {/* ─── §6 BE THE ONE WHO HAS ONE ──────────────────────────────────
+          Was "The lending side is quieter than you'd think." Read as a woman
+          with a stand mixer, that headline's first job was to tell her there
+          might be a problem — and quiet is the wrong promise, because the
+          good part of lending to 9F is that it isn't quiet. It then spent
+          its second paragraph on Loop's take rate, so the only money figure
+          in the member's section was the money Loop keeps. "You say yes or
+          no" — the entire answer to her largest fear — was buried mid-
+          paragraph as a mechanic.
+
+          The fee survives, compressed to a closing sentence and placed after
+          she has been told the good part. The head hinges off §5's
+          pull-quote: that section now ends "Not 'who posted a steam
+          cleaner.' Who has one." and this one opens by handing her the
+          role. Two sections, one hinge, no new device. */}
       <section className="px-6 py-20 md:px-12 md:py-24">
         <div className="mx-auto max-w-[1100px]">
-          {/* The previous head here read "Your closet is already earning."
-              Nobody is earning yet. On a page promising nothing is a guess,
-              that was the one headline that was one. */}
-          <SectionHead>The lending side is quieter than you'd think.</SectionHead>
+          <SectionHead>
+            Be the one who
+            <br />
+            <span className="italic" style={{ color: CLARET }}>
+              has one.
+            </span>
+          </SectionHead>
           <div className="mt-8">
             <Prose>
               <p>
-                Add a thing once. Set a price, or set none and lend it free.
-                Then it sits in the background until someone two floors up
-                needs it, and the ask comes to you. You say yes or no. There's
-                no listing to write and nothing to negotiate.
+                There's a stand mixer in a cupboard in this building that
+                comes out twice a year. A tile saw behind the winter coats. A
+                steam cleaner nobody has looked at since the spring. Somebody
+                on your floor needs one of them this weekend, and is about to
+                either buy it or go without. You already have it.
               </p>
               <p>
-                Money moves through Stripe. Loop holds it until you both
-                confirm the handoff, then it lands in your bank. Loop takes
-                10%, minimum a dollar. That's the whole business model — no
-                subscription, no listing fee, nothing to cancel. US only for
-                now.
+                Putting it up is one photograph and a price. If you'd rather
+                not charge, don't — free is a setting, not a workaround, and
+                some of the things on this page go out for nothing.
+              </p>
+              <p>
+                Then nothing happens for a while. When something does, it's a
+                message from a person with a name and a profile, asking for
+                one weekend. You say yes, or you say no, and no doesn't need
+                a reason. If you say yes, Loop holds their money until you've
+                both confirmed the handoff, and then it's yours. Loop keeps
+                10%, minimum a dollar. That's the whole business.
               </p>
             </Prose>
+
+            {/* The fears, named out loud. Formally distinct from §4
+                (numbered rows) and §8 (plain ruled lines) so the page is not
+                running one device three times: the fear is set in the
+                display italic, as a sentence somebody actually said.
+
+                EVERY ANSWER HERE IS CHECKED AGAINST THE APP. Three claims
+                proposed for this block were false and are corrected:
+                "your building" is not a sharing level (the levels are
+                private, friends, public, public_anon); blocking is
+                ONE-DIRECTIONAL — it hides them from you, not you from them,
+                and stating it the other way round would be a safety claim a
+                woman in a Manhattan apartment might rely on; and there is no
+                floor or unit field, only city. */}
+            <div className="mt-14" style={{ maxWidth: MEASURE }}>
+              <p
+                className="text-[11px] font-semibold uppercase"
+                style={{ letterSpacing: "0.16em", color: CLARET }}
+              >
+                Before you say no
+              </p>
+              <dl className="mt-6">
+                {[
+                  [
+                    "I don't want a stranger at my door.",
+                    "Then don't have one. Everything you add is private, friends-only or public, and you're the one who picks. Friends-only means the neighbours you've connected with and nobody on the internet. You see who's asking before you answer, and you answer every ask yourself.",
+                  ],
+                  [
+                    "It'll come back broken.",
+                    "Some of it will. I'm not going to tell you Loop replaces your mixer, because it doesn't. What Loop does is hold the money until you've both confirmed the handoff, and give you somewhere to raise it with me when something goes wrong. So start with the thing you'd lend to a neighbour you like.",
+                  ],
+                  [
+                    "I don't want to look like I need the money.",
+                    "Lend it free. It's one setting and it isn't the lesser version — several of the things on this page go out for nothing, from people who just had them spare.",
+                  ],
+                  [
+                    "People will judge what I own.",
+                    "Private is a real setting and this is exactly what it's there for. You're adding one thing, not opening your apartment.",
+                  ],
+                  [
+                    "I'm not haggling with anyone.",
+                    "You won't. You set the price and that's the price — no offers, no bidding, no counter. And if someone is a problem, block them: they're gone from your Loop, their things and their messages, everywhere you'd have seen them.",
+                  ],
+                ].map(([fear, answer]) => (
+                  <div
+                    key={fear}
+                    className="py-6"
+                    style={{ borderTop: `1px solid ${HAIRLINE}` }}
+                  >
+                    <dt
+                      className="text-[19px] italic leading-[1.3] md:text-[20px]"
+                      style={{ fontFamily: "Instrument Serif, Georgia, serif" }}
+                    >
+                      &ldquo;{fear}&rdquo;
+                    </dt>
+                    <dd
+                      className="mt-3 text-[16px] leading-[1.62]"
+                      style={{ color: "#4A4540" }}
+                    >
+                      {answer}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
           </div>
         </div>
       </section>
@@ -491,9 +580,7 @@ const Landing = () => {
             time. The list is how I decide which one is next — if you're in
             FiDi, that's the entire vote.
           </p>
-          <div className="mt-9" style={{ maxWidth: 460 }}>
-            <GetTheApp />
-          </div>
+          <GetTheApp variant="closing" source="closing" style={{ marginTop: 36 }} />
         </div>
       </section>
 

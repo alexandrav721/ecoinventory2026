@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { HAIRLINE, INK, MUTED } from "@/components/brand";
+import { CLARET, HAIRLINE, INK, MUTED } from "@/components/brand";
 
 /**
  * Where Loop actually is, today — counted live, never typed.
@@ -130,13 +130,19 @@ export function Ledger() {
                 borderLeft: i === 0 ? undefined : `1px solid ${HAIRLINE}`,
               }}
             >
+              {/* Magazine scale, because these numerals ARE the section —
+                  at 42px they read as a stat row on any SaaS page. And the
+                  zero is claret: it is the bravest number on the site, the
+                  one every growth playbook says to hide, and the page's
+                  argument rests on it being there. Claret is rationed to
+                  roughly one element per screen, and this is the one. */}
               <dd
-                className="text-[42px] leading-none md:text-[60px]"
+                className="text-[56px] leading-[0.88] md:text-[88px]"
                 style={{
                   fontFamily: "Instrument Serif, Georgia, serif",
                   fontVariantNumeric: "tabular-nums",
-                  color: INK,
-                  letterSpacing: "-0.01em",
+                  color: n === 0 ? CLARET : INK,
+                  letterSpacing: "-0.02em",
                 }}
               >
                 {n}
